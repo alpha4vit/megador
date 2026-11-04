@@ -32,12 +32,6 @@ const catalogItems = [
     href: '#swing',
   },
   {
-    title: 'Заборы-жалюзи',
-    icon: Home,
-    description: 'Металлоштакетник и жалюзи',
-    href: '#fences',
-  },
-  {
     title: 'Автоматика для секционных ворот',
     icon: Cog,
     description: 'Приводы и комплектующие',
@@ -50,10 +44,22 @@ const catalogItems = [
     href: '/catalog/automation-sliding',
   },
   {
+    title: 'Автоматика для распашных ворот',
+    icon: Cog,
+    description: 'Приводы NICE и Alutech',
+    href: '/catalog/automation-swing',
+  },
+  {
     title: 'Шлагбаумы',
     icon: Factory,
     description: 'Nice и Alutech',
     href: '/catalog/barriers',
+  },
+  {
+    title: 'Аксессуары',
+    icon: Cog,
+    description: 'Пульты, датчики и GSM-модули',
+    href: '/catalog/accessories',
   },
 ];
 
