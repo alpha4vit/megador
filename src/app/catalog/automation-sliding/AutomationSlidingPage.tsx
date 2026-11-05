@@ -7,6 +7,9 @@ import {Button} from '@/components/ui/button';
 import {Section} from '@/components/ui/section';
 import {Container} from '@/components/ui/container';
 import ProcessMap, {Step} from '@/components/features/process-map';
+import { useFeedbackModal } from '@/contexts/FeedbackModalContext';
+import { useCart } from '@/contexts/CartContext';
+import { useToast } from '@/contexts/ToastContext';
 
 interface Product {
     id: string;
@@ -23,6 +26,20 @@ interface Product {
 }
 
 function ProductGrid({ products, onProductClick }: { products: Product[]; onProductClick: (product: Product) => void }) {
+    const { addToCart } = useCart();
+    const { showToast } = useToast();
+
+    const handleAddToCart = (e: React.MouseEvent, product: Product) => {
+        e.stopPropagation();
+        addToCart({
+            id: product.id,
+            title: product.title,
+            price: product.price,
+            image: product.image,
+            category: product.subtitle,
+        });
+        showToast('Товар добавлен в корзину', product.title);
+    };
     // Calculate optimal desktop columns for balanced layout
     const getDesktopColumns = (count: number): number => {
         if (count % 3 === 0) return 3; // 6, 9 items -> 3 columns for balanced rows
@@ -97,11 +114,10 @@ function ProductGrid({ products, onProductClick }: { products: Product[]; onProd
                         </div>
                         <Button
                             size="sm"
-                            className="w-full text-xs cta-button-primary"
-                            data-action="measurement-request"
-                            data-product={product.productActionKey}
+                            className="w-full text-xs bg-[#E65F2B] hover:bg-[#d5541e] text-white font-semibold rounded-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
+                            onClick={(e) => handleAddToCart(e, product)}
                         >
-                            ЗАКАЗАТЬ
+                            В корзину
                         </Button>
                     </div>
                 </div>
@@ -111,6 +127,7 @@ function ProductGrid({ products, onProductClick }: { products: Product[]; onProd
 }
 
 export default function AutomationSlidingPage() {
+    const { openModal } = useFeedbackModal();
     const [activeTab, setActiveTab] = useState<'nice-alutech' | 'hispeed'>('nice-alutech');
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [isAnimating, setIsAnimating] = useState(false);
@@ -424,7 +441,15 @@ export default function AutomationSlidingPage() {
                                 </p>
 
                                 {/* CTA Button */}
-                                <Button size="lg" className="w-fit cta-button-primary" data-action="calculate-cost">
+                                <Button 
+                                    size="lg" 
+                                    className="w-fit cta-button-primary" 
+                                    onClick={() => openModal({
+                                        scope: 'consultation',
+                                        title: 'Подобрать привод',
+                                        subtitle: 'Наш специалист поможет подобрать идеальный привод под параметры ваших ворот',
+                                    })}
+                                >
                                     Подобрать привод под мои ворота
                                     <ArrowRight className="ml-2 w-5 h-5"/>
                                 </Button>
@@ -542,7 +567,15 @@ export default function AutomationSlidingPage() {
                         <p className="text-lg text-gray-600 mb-8">
                             Получить консультацию по выбору →
                         </p>
-                        <Button size="lg" className="cta-button-primary" data-action="measurement-request">
+                        <Button 
+                            size="lg" 
+                            className="cta-button-primary" 
+                            onClick={() => openModal({
+                                scope: 'consultation',
+                                title: 'Консультация по выбору',
+                                subtitle: 'Наш специалист поможет подобрать идеальный привод под параметры ваших ворот',
+                            })}
+                        >
                             Получить консультацию по выбору
                             <ArrowRight className="ml-2 w-5 h-5"/>
                         </Button>
@@ -609,8 +642,15 @@ export default function AutomationSlidingPage() {
                                 <Button
                                     size="lg"
                                     className="w-full cta-button-primary"
-                                    data-action="measurement-request"
-                                    data-product={selectedProduct.productActionKey}
+                                    onClick={() => openModal({
+                                        scope: 'product',
+                                        productInfo: {
+                                            name: selectedProduct.title,
+                                            brand: selectedProduct.subtitle,
+                                            price: selectedProduct.price,
+                                            specs: selectedProduct.specs,
+                                        },
+                                    })}
                                 >
                                     ЗАКАЗАТЬ
                                 </Button>
@@ -672,8 +712,15 @@ export default function AutomationSlidingPage() {
                         <Button
                             size="lg"
                             className="w-full cta-button-primary"
-                            data-action="measurement-request"
-                            data-product={selectedProduct.productActionKey}
+                            onClick={() => openModal({
+                                scope: 'product',
+                                productInfo: {
+                                    name: selectedProduct.title,
+                                    brand: selectedProduct.subtitle,
+                                    price: selectedProduct.price,
+                                    specs: selectedProduct.specs,
+                                },
+                            })}
                         >
                             ЗАКАЗАТЬ
                         </Button>

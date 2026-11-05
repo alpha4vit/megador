@@ -9,8 +9,10 @@ import {Container} from '@/components/ui/container';
 import {Project, SplitPortfolio} from '@/components/features/split-portfolio';
 import ProductPricingGrid, {PricingTier} from '@/components/features/product-pricing-grid';
 import ProductFeaturesSection from '@/components/features/product-features-section';
+import { useFeedbackModal } from '@/contexts/FeedbackModalContext';
 
 export default function BarriersPage() {
+    const { openModal } = useFeedbackModal();
     const [activeBrand, setActiveBrand] = useState('alutech');
 
     const parseSpecsToFeatures = (specs: string[]) => {
@@ -244,7 +246,16 @@ export default function BarriersPage() {
                                 </p>
 
                                 {/* CTA Button */}
-                                <Button size="lg" className="w-fit cta-button-primary" data-action="calculate-cost">
+                                <Button 
+                                    size="lg" 
+                                    className="w-fit cta-button-primary" 
+                                    onClick={() => openModal({
+                                        scope: 'gate',
+                                        gateInfo: {
+                                            gateType: 'Автоматические шлагбаумы',
+                                        },
+                                    })}
+                                >
                                     Рассчитать стоимость по моим размерам
                                     <ArrowRight className="ml-2 w-5 h-5"/>
                                 </Button>
@@ -313,13 +324,35 @@ export default function BarriersPage() {
                     </div>
                     {activeBrand === 'alutech' ? (
                         <ProductPricingGrid
+                            title="Шлагбаумы ALUTECH"
+                            subtitle="Надежные белорусские шлагбаумы для различных задач"
                             tiers={alutechBarrierTiers}
                             desktopGridCols={2}
+                            onProductClick={(tier) => openModal({
+                                scope: 'product',
+                                productInfo: {
+                                    name: tier.title,
+                                    brand: tier.subtitle,
+                                    price: tier.price,
+                                    specs: tier.features.map(f => `${f.label}: ${f.value}`),
+                                },
+                            })}
                         />
                     ) : (
                         <ProductPricingGrid
+                            title="Шлагбаумы NICE"
+                            subtitle="Итальянские шлагбаумы премиум-класса"
                             tiers={niceBarrierTiers}
                             desktopGridCols={2}
+                            onProductClick={(tier) => openModal({
+                                scope: 'product',
+                                productInfo: {
+                                    name: tier.title,
+                                    brand: tier.subtitle,
+                                    price: tier.price,
+                                    specs: tier.features.map(f => `${f.label}: ${f.value}`),
+                                },
+                            })}
                         />
                     )}
 
@@ -360,7 +393,16 @@ export default function BarriersPage() {
                         <p className="text-lg text-gray-600 mb-8">
                             Оставьте заявку на бесплатный замер и получите точный расчет стоимости в течение 24 часов
                         </p>
-                        <Button size="lg" className="cta-button-primary" data-action="measurement-request">
+                        <Button 
+                            size="lg" 
+                            className="cta-button-primary" 
+                            onClick={() => openModal({
+                                scope: 'gate',
+                                gateInfo: {
+                                    gateType: 'Автоматические шлагбаумы',
+                                },
+                            })}
+                        >
                             Заказать бесплатный замер
                             <ArrowRight className="ml-2 w-5 h-5"/>
                         </Button>

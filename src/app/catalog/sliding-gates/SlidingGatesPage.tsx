@@ -8,8 +8,11 @@ import {Container} from '@/components/ui/container';
 import {SplitPortfolio, Project} from '@/components/features/split-portfolio';
 import ProductPricingGrid from '@/components/features/product-pricing-grid';
 import ProductFeaturesSection from '@/components/features/product-features-section';
+import { useFeedbackModal } from '@/contexts/FeedbackModalContext';
 
 export default function SlidingGatesPage() {
+    const { openModal } = useFeedbackModal();
+
     const pricingTiers = [
         {
             id: 'budget',
@@ -200,7 +203,16 @@ export default function SlidingGatesPage() {
                                 </p>
 
                                 {/* CTA Button */}
-                                <Button size="lg" className="w-fit cta-button-primary" data-action="calculate-cost">
+                                <Button 
+                                    size="lg" 
+                                    className="w-fit cta-button-primary" 
+                                    onClick={() => openModal({
+                                        scope: 'gate',
+                                        gateInfo: {
+                                            gateType: 'Откатные ворота',
+                                        },
+                                    })}
+                                >
                                     Рассчитать стоимость по моим размерам
                                     <ArrowRight className="ml-2 w-5 h-5"/>
                                 </Button>
@@ -280,7 +292,16 @@ export default function SlidingGatesPage() {
                         <p className="text-lg text-gray-600 mb-6">
                             Оставьте заявку на бесплатный замер и получите точный расчет стоимости в течение 24 часов
                         </p>
-                        <Button size="lg" className="cta-button-primary" data-action="measurement-request">
+                        <Button 
+                            size="lg" 
+                            className="cta-button-primary" 
+                            onClick={() => openModal({
+                                scope: 'gate',
+                                gateInfo: {
+                                    gateType: 'Откатные ворота',
+                                },
+                            })}
+                        >
                             Заказать бесплатный замер
                             <ArrowRight className="ml-2 w-5 h-5"/>
                         </Button>

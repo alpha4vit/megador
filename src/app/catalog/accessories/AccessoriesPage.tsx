@@ -7,6 +7,9 @@ import {Button} from '@/components/ui/button';
 import {Section} from '@/components/ui/section';
 import {Container} from '@/components/ui/container';
 import ProcessMap, {Step} from '@/components/features/process-map';
+import { useFeedbackModal } from '@/contexts/FeedbackModalContext';
+import { useCart } from '@/contexts/CartContext';
+import { useToast } from '@/contexts/ToastContext';
 
 interface Product {
     id: string;
@@ -23,6 +26,20 @@ interface Product {
 }
 
 function ProductGrid({ products, onProductClick }: { products: Product[]; onProductClick: (product: Product) => void }) {
+    const { addToCart } = useCart();
+    const { showToast } = useToast();
+
+    const handleAddToCart = (e: React.MouseEvent, product: Product) => {
+        e.stopPropagation();
+        addToCart({
+            id: product.id,
+            title: product.title,
+            price: product.price,
+            image: product.image,
+            category: product.subtitle,
+        });
+        showToast('Товар добавлен в корзину', product.title);
+    };
     // Calculate optimal desktop columns for balanced layout
     const getDesktopColumns = (count: number): number => {
         if (count % 3 === 0) return 3; // 6, 9 items -> 3 columns for balanced rows
@@ -97,11 +114,10 @@ function ProductGrid({ products, onProductClick }: { products: Product[]; onProd
                         </div>
                         <Button
                             size="sm"
-                            className="w-full text-xs cta-button-primary"
-                            data-action="measurement-request"
-                            data-product={product.productActionKey}
+                            className="w-full text-xs bg-[#E65F2B] hover:bg-[#d5541e] text-white font-semibold rounded-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
+                            onClick={(e) => handleAddToCart(e, product)}
                         >
-                            {product.buttonText || 'ЗАКАЗАТЬ'}
+                            В корзину
                         </Button>
                     </div>
                 </div>
@@ -111,6 +127,7 @@ function ProductGrid({ products, onProductClick }: { products: Product[]; onProd
 }
 
 export default function AccessoriesPage() {
+    const { openModal } = useFeedbackModal();
     const [activeTab, setActiveTab] = useState<'remotes' | 'safety' | 'smart'>('remotes');
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [isAnimating, setIsAnimating] = useState(false);
@@ -324,7 +341,7 @@ export default function AccessoriesPage() {
 
                             {/* Mobile backdrop image */}
                             <img
-                                src="/accessories/accessories_test.jpg"
+                                src="/accessories/accessories_mobile_background.png"
                                 className="absolute inset-0 object-cover opacity-60 max-lg:block hidden z-0 pointer-events-none sm:rounded-2xl"
                                 style={{width: '100%', height: '100%'}}
                                 alt="Accessories Mobile Backdrop"
@@ -361,7 +378,15 @@ export default function AccessoriesPage() {
                                 </p>
 
                                 {/* CTA Button */}
-                                <Button size="lg" className="w-fit cta-button-primary" data-action="measurement-request">
+                                <Button 
+                                    size="lg" 
+                                    className="w-fit cta-button-primary" 
+                                    onClick={() => openModal({
+                                        scope: 'consultation',
+                                        title: 'Подобрать аксессуары',
+                                        subtitle: 'Поможем подобрать пульты, датчики и GSM-модули под вашу автоматику',
+                                    })}
+                                >
                                     Подобрать аксессуары
                                     <ArrowRight className="ml-2 w-5 h-5"/>
                                 </Button>
@@ -386,7 +411,7 @@ export default function AccessoriesPage() {
                             {/* Right Column - Product Image */}
                             <div className="hidden lg:block w-full flex items-center justify-center p-4 relative z-20">
                                 <img
-                                    src="/accessories/accessories_test.jpg"
+                                    src="/accessories/accessories_mobile_background.png"
                                     alt="Аксессуары для автоматики и шлагбаумов"
                                     className="w-full max-w-[480px] h-auto object-contain rounded-2xl"
                                 />
@@ -494,7 +519,15 @@ export default function AccessoriesPage() {
                         <p className="text-lg text-gray-600 mb-8">
                             Получите бесплатную консультацию от специалиста по подбору и настройке аксессуаров под вашу автоматику
                         </p>
-                        <Button size="lg" className="cta-button-primary" data-action="measurement-request">
+                        <Button 
+                            size="lg" 
+                            className="cta-button-primary" 
+                            onClick={() => openModal({
+                                scope: 'consultation',
+                                title: 'Консультация по аксессуарам',
+                                subtitle: 'Получите бесплатную консультацию по подбору и настройке аксессуаров',
+                            })}
+                        >
                             Получить бесплатную консультацию
                             <ArrowRight className="ml-2 w-5 h-5"/>
                         </Button>
@@ -561,8 +594,15 @@ export default function AccessoriesPage() {
                                 <Button
                                     size="lg"
                                     className="w-full cta-button-primary"
-                                    data-action="measurement-request"
-                                    data-product={selectedProduct.productActionKey}
+                                    onClick={() => openModal({
+                                        scope: 'product',
+                                        productInfo: {
+                                            name: selectedProduct.title,
+                                            brand: selectedProduct.subtitle,
+                                            price: selectedProduct.price,
+                                            specs: selectedProduct.specs,
+                                        },
+                                    })}
                                 >
                                     ЗАКАЗАТЬ
                                 </Button>
@@ -624,8 +664,15 @@ export default function AccessoriesPage() {
                         <Button
                             size="lg"
                             className="w-full cta-button-primary"
-                            data-action="measurement-request"
-                            data-product={selectedProduct.productActionKey}
+                            onClick={() => openModal({
+                                scope: 'product',
+                                productInfo: {
+                                    name: selectedProduct.title,
+                                    brand: selectedProduct.subtitle,
+                                    price: selectedProduct.price,
+                                    specs: selectedProduct.specs,
+                                },
+                            })}
                         >
                             ЗАКАЗАТЬ
                         </Button>

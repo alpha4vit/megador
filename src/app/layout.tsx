@@ -3,6 +3,11 @@ import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/features/header";
 import { Footer } from "@/components/features/footer";
+import { FeedbackModalProvider } from "@/contexts/FeedbackModalContext";
+import { CartProvider } from "@/contexts/CartContext";
+import { ToastProvider } from "@/contexts/ToastContext";
+import FeedbackModal from "@/components/features/feedback-modal";
+import FloatingCart from "@/components/features/floating-cart";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -68,9 +73,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${inter.variable} ${montserrat.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
-        <Header />
-        <main className="flex-1 pt-16 sm:pt-20">{children}</main>
-        <Footer />
+        <ToastProvider>
+          <CartProvider>
+            <FeedbackModalProvider>
+              <Header />
+              <main className="flex-1 pt-16 sm:pt-20">{children}</main>
+              <Footer />
+              <FeedbackModal />
+              <FloatingCart />
+            </FeedbackModalProvider>
+          </CartProvider>
+        </ToastProvider>
       </body>
     </html>
   );

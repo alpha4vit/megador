@@ -252,7 +252,8 @@ export const Header = () => {
 
           {/* Navigation */}
           <nav className="flex-1 overflow-y-auto p-4 space-y-2">
-            {/* Catalog Accordion */}
+            {/* LEGACY ACCORDION LAYOUT (PRESERVED FOR ROLLBACK) */}
+            {/*
             <div>
               <button
                 className="w-full flex items-center justify-between p-4 rounded-lg text-lg font-medium text-[#2F3E46] hover:bg-[#F8F9FA] transition-colors min-h-[56px]"
@@ -264,10 +265,9 @@ export const Header = () => {
                 />
               </button>
 
-              {/* Accordion Content */}
               <div
                 className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                  isCatalogAccordionOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                  isCatalogAccordionOpen ? 'max-h-none opacity-100' : 'max-h-0 opacity-0'
                 }`}
               >
                 <div className="space-y-1 pl-4 py-2">
@@ -292,6 +292,30 @@ export const Header = () => {
                   })}
                 </div>
               </div>
+            </div>
+            */}
+
+            {/* FLATTENED CATALOG LIST - Direct display without accordion */}
+            <div className="space-y-1">
+              {catalogItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = isActiveCatalogItem(item.href);
+                return (
+                  <Link
+                    key={item.title}
+                    href={item.href}
+                    className={`group flex items-center p-4 rounded-lg text-base transition-all duration-200 ease-in-out min-h-[56px] cursor-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E65F2B] focus-visible:ring-offset-2 ${
+                      isActive 
+                        ? 'bg-[#FFF5F0] text-[#E65F2B]' 
+                        : 'text-[#2F3E46] hover:bg-[#F8F9FA] focus:bg-[#F8F9FA] hover:text-[#E65F2B] focus:text-[#E65F2B]'
+                    }`}
+                    onClick={closeMobileMenu}
+                  >
+                    <Icon className={`w-5 h-5 mr-3 transition-colors ${isActive ? 'text-[#E65F2B]' : 'text-[#E65F2B]'}`} />
+                    <span>{item.title}</span>
+                  </Link>
+                );
+              })}
             </div>
 
             {/* Other Links */}
@@ -319,7 +343,7 @@ export const Header = () => {
           </nav>
 
           {/* Fixed CTA at Bottom */}
-          <div className="p-4 border-t border-gray-200 bg-white">
+          <div className="p-4 border-t border-gray-200 bg-white pb-8">
             <Button className="w-full py-4 text-lg min-h-[56px]" onClick={closeMobileMenu}>
               Заказать замер
             </Button>

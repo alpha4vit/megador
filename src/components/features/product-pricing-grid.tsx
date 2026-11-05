@@ -46,6 +46,7 @@ export interface ProductPricingGridProps {
         contentBlocks?: ComparisonContentBlock[];
     };
     desktopGridCols?: 2 | 3 | 4;
+    onProductClick?: (tier: PricingTier) => void;
 }
 
 export default function ProductPricingGrid({
@@ -53,7 +54,8 @@ export default function ProductPricingGrid({
     subtitle,
     tiers,
     comparisonMatrix,
-    desktopGridCols = 3
+    desktopGridCols = 3,
+    onProductClick
 }: ProductPricingGridProps) {
     const [isComparisonOpen, setIsComparisonOpen] = useState(false);
     const [activePricingSlide, setActivePricingSlide] = useState(0);
@@ -192,8 +194,7 @@ export default function ProductPricingGrid({
                             <Button
                                 size="lg"
                                 className="w-full cta-button-primary"
-                                data-action="measurement-request"
-                                data-product={tier.productActionKey}
+                                onClick={() => onProductClick?.(tier)}
                             >
                                 Заказать замер
                             </Button>
