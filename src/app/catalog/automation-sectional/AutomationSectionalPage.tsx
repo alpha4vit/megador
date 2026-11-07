@@ -187,7 +187,7 @@ export default function AutomationSectionalPage() {
             specs: ['Цепной привод', 'До 75 кг', '2 пульта'],
             price: 'от 359 BYN',
             productActionKey: 'nice-shel-75kce',
-            image: '/automation-sectional/shel75kce.jpg',
+            image: '/automation-sectional/webp/shel75kce.webp',
             description: 'Привод NICE SHEL 75KCE оснащен технологией BLUEBUS для надежной передачи данных. Встроенная система обнаружения препятствий обеспечивает безопасность эксплуатации. Функция регулировки скорости позволяет плавно открывать и закрывать ворота. Автоматическое обучение конечных положений упрощает настройку и гарантирует точную работу механизма.',
         },
         {
@@ -199,7 +199,7 @@ export default function AutomationSectionalPage() {
             specs: ['Цепной привод', 'До 100 кг', 'Краевой датчик'],
             price: 'от 420 BYN',
             productActionKey: 'nice-spin23-bdkce',
-            image: '/automation-sectional/spin23bdkce.jpg',
+            image: '/automation-sectional/webp/spin23bdkce.webp',
             description: 'Привод NICE Spin23BDKCE использует технологию BLUEBUS для стабильной работы. Система обнаружения препятствий останавливает ворота при встрече с объектом. Регулировка скорости обеспечивает плавное движение створки. Автоматическое обучение конечных положений позволяет быстро настроить привод без сложных манипуляций.',
         },
         {
@@ -211,7 +211,7 @@ export default function AutomationSectionalPage() {
             specs: ['Цепной привод', 'До 80 кг', '2 пульта'],
             price: 'от 390 BYN',
             productActionKey: 'nice-spin22-bdkce',
-            image: '/automation-sectional/spin23bdkce.jpg',
+            image: '/automation-sectional/webp/spin23bdkce.webp',
             description: 'Компактный привод NICE Spin22BDKCE оснащен технологией BLUEBUS для надежной коммуникации. Встроенный датчик препятствий обеспечивает безопасность при эксплуатации. Функция регулировки скорости позволяет настроить оптимальный режим работы. Автоматическое обучение конечных положений упрощает первоначальную настройку.',
         },
         {
@@ -223,7 +223,7 @@ export default function AutomationSectionalPage() {
             specs: ['Штоковый привод', 'До 50 кг', '2 пульта'],
             price: 'от 380 BYN',
             productActionKey: 'alutech-lg-500',
-            image: '/automation-sectional/spin22bdkce.jpeg',
+            image: '/automation-sectional/webp/spin22bdkce.webp',
             description: 'Привод Alutech Levigato LG-500 оснащен безопасным 24В двигателем с функцией аварийного разблокирования. Таймер с LED подсветкой обеспечивает удобство использования в темноте. Совместим с воротами высотой от 2.4 до 3.3 метров. Поддерживает подключение оптических датчиков безопасности для дополнительной защиты.',
         },
         {
@@ -235,7 +235,7 @@ export default function AutomationSectionalPage() {
             specs: ['Штоковый привод', 'До 60 кг', 'Краевой датчик'],
             price: 'от 420 BYN',
             productActionKey: 'alutech-lg-600f',
-            image: '/automation-sectional/alutech_levigato_lg_600f.jpeg',
+            image: '/automation-sectional/webp/alutech_levigato_lg_600f.webp',
             description: 'Привод Alutech Levigato LG-600F оснащен безопасным 24В двигателем с аварийным разблокированием. Таймер с LED подсветкой обеспечивает удобство эксплуатации. Подходит для ворот высотой от 2.4 до 3.3 метров. Включает краевой датчик и поддерживает оптические датчики безопасности для максимальной защиты.',
         },
         {
@@ -247,7 +247,7 @@ export default function AutomationSectionalPage() {
             specs: ['Штоковый привод', 'До 80 кг', 'Краевой датчик'],
             price: 'от 480 BYN',
             productActionKey: 'alutech-lg-800',
-            image: '/automation-sectional/alutech_levigato_lg_800.jpg',
+            image: '/automation-sectional/webp/alutech_levigato_lg_800.webp',
             description: 'Мощный привод Alutech Levigato LG-800 с безопасным 24В двигателем и аварийным разблокированием. Таймер с LED подсветкой для удобного использования. Совместим с воротами высотой от 2.4 до 3.3 метров. Оснащен краевым датчиком и поддерживает оптические датчики безопасности.',
         },
         {
@@ -259,7 +259,7 @@ export default function AutomationSectionalPage() {
             specs: ['Штоковый привод', 'До 100 кг', 'Краевой датчик'],
             price: 'от 550 BYN',
             productActionKey: 'alutech-lg-1000f',
-            image: '/automation-sectional/alutech_Levigato_lg_1000f.jpg',
+            image: '/automation-sectional/webp/alutech_Levigato_lg_1000f.webp',
             description: 'Профессиональный привод Alutech Levigato LG-1000F с безопасным 24В двигателем и аварийным разблокированием. Таймер с LED подсветкой для удобства. Совместим с воротами высотой от 2.4 до 3.3 метров. Включает краевой датчик и поддерживает оптические датчики безопасности для тяжелых ворот.',
         },
         {
@@ -271,7 +271,7 @@ export default function AutomationSectionalPage() {
             specs: ['Штоковый привод', 'До 120 кг', 'Краевой датчик'],
             price: 'от 620 BYN',
             productActionKey: 'alutech-lg-1200',
-            image: '/automation-sectional/alutech_Levigato_lg_1200.jpg',
+            image: '/automation-sectional/webp/alutech_Levigato_lg_1200.webp',
             description: 'Премиум привод Alutech Levigato LG-1200 с мощным безопасным 24В двигателем и аварийным разблокированием. Таймер с LED подсветкой для максимального удобства. Совместим с воротами высотой от 2.4 до 3.3 метров. Оснащен краевым датчиком и поддерживает оптические датчики безопасности для самых тяжелых ворот.',
         },
     ];
@@ -287,7 +287,7 @@ export default function AutomationSectionalPage() {
             specs: ['Валовый привод', 'До 2000 кг', '4 пульта'],
             price: 'от 830 BYN',
             productActionKey: 'nice-so-2000',
-            image: '/automation-sectional/nice_so_2000.jpg',
+            image: '/automation-sectional/webp/nice_so_2000.webp',
             description: 'Промышленный привод NICE SO 2000 предназначен для тяжелых секционных ворот весом до 2000 кг. Валовый привод обеспечивает надежную передачу усилия. Оснащен технологией BLUEBUS для стабильной работы системы. Включает 4 пульта дистанционного управления и поддерживает интеграцию с системами безопасности промышленного уровня.',
         },
         {
@@ -299,7 +299,7 @@ export default function AutomationSectionalPage() {
             specs: ['Валовый привод', 'До 3000 кг', '4 пульта'],
             price: 'от 1200 BYN',
             productActionKey: 'targo',
-            image: '/automation-sectional/alutech_targo.png',
+            image: '/automation-sectional/webp/alutech_targo.webp',
             description: 'Тяжелый промышленный привод TARGO разработан для экстремальных нагрузок до 3000 кг. Мощный валовый привод обеспечивает надежную работу в условиях интенсивной эксплуатации. Включает 4 пульта дистанционного управления. Поддерживает подключение промышленных систем безопасности и интеграцию с системами контроля доступа.',
         },
     ];
@@ -315,7 +315,7 @@ export default function AutomationSectionalPage() {
             specs: ['Ременная', 'LGR-4200B', 'Полимер'],
             price: 'от 196 BYN',
             productActionKey: 'lgr-4200b',
-            image: '/automation-sectional/alutech_lgr_4200b.jpg',
+            image: '/automation-sectional/webp/alutech_lgr_4200b.webp',
             buttonText: 'ЗАКАЗАТЬ',
         },
         {
@@ -327,7 +327,7 @@ export default function AutomationSectionalPage() {
             specs: ['Ременная', 'LGR-3600B', 'Полимер'],
             price: 'от 163 BYN',
             productActionKey: 'lgr-3600b',
-            image: '/automation-sectional/alutech_lgr_3600b.jpg',
+            image: '/automation-sectional/webp/alutech_lgr_3600b.webp',
             buttonText: 'ЗАКАЗАТЬ',
         },
         {
@@ -339,7 +339,7 @@ export default function AutomationSectionalPage() {
             specs: ['Ременная', 'LGR-3300B', 'Полимер'],
             price: 'от 146 BYN',
             productActionKey: 'lgr-3300b',
-            image: '/automation-sectional/alutech_lgr_3300b.jpg',
+            image: '/automation-sectional/webp/alutech_lgr_3300b.webp',
             buttonText: 'ЗАКАЗАТЬ',
         },
         {
@@ -351,7 +351,7 @@ export default function AutomationSectionalPage() {
             specs: ['Цепная', 'LGR-4200C', 'Сталь'],
             price: 'от 158 BYN',
             productActionKey: 'lgr-4200c',
-            image: '/automation-sectional/alutech_lgr_4200с.jpg',
+            image: '/automation-sectional/webp/alutech_lgr_4200с.webp',
             buttonText: 'ЗАКАЗАТЬ',
         },
         {
@@ -363,7 +363,7 @@ export default function AutomationSectionalPage() {
             specs: ['Цепная', 'LGR-3600C', 'Сталь'],
             price: 'от 128 BYN',
             productActionKey: 'lgr-3600c',
-            image: '/automation-sectional/alutech_lgr_3600с.jpg',
+            image: '/automation-sectional/webp/alutech_lgr_3600с.webp',
             buttonText: 'ЗАКАЗАТЬ',
         },
         {
@@ -375,7 +375,7 @@ export default function AutomationSectionalPage() {
             specs: ['Цепная', 'LGR-3300C', 'Сталь'],
             price: 'от 115 BYN',
             productActionKey: 'lgr-3300c',
-            image: '/automation-sectional/alutech_lgr_3300с.jpg',
+            image: '/automation-sectional/webp/alutech_lgr_3300с.webp',
             buttonText: 'ЗАКАЗАТЬ',
         },
     ];
@@ -419,7 +419,7 @@ export default function AutomationSectionalPage() {
 
                             {/* Mobile backdrop image */}
                             <img
-                                src="/automation-sectional/automation-sectional.jpeg"
+                                src="/automation-sectional/webp/automation-sectional.webp"
                                 className="absolute inset-0 object-cover opacity-60 max-lg:block hidden z-0 pointer-events-none sm:rounded-2xl"
                                 style={{width: '100%', height: '100%'}}
                                 alt="Sectional Gate Automation Mobile Backdrop"
@@ -490,7 +490,7 @@ export default function AutomationSectionalPage() {
                             {/* Right Column - Product Image */}
                             <div className="hidden lg:block w-full h-full relative z-20">
                                 <img
-                                    src="/automation-sectional/automation-sectional.jpeg"
+                                    src="/automation-sectional/webp/automation-sectional.webp"
                                     alt="Автоматика для секционных ворот"
                                     className="w-full h-full object-cover rounded-2xl"
                                 />

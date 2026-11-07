@@ -10,7 +10,7 @@ export const Hero = () => {
         }
     };
 
-    const imagePath = "/main-preview.jpeg";
+    const imagePath = "/main/webp/main-preview.webp";
 
     return (
         <section className="w-full pt-4 lg:pt-8 pb-12">

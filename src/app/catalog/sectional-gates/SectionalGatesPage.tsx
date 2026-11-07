@@ -27,17 +27,17 @@ export default function SectionalGatesPage() {
             {id: 'ral-7016', name: 'RAL 7016 Антрацит', value: '#2F3E46', type: 'solid', code: 'RAL 7016'},
         ],
         wood: [
-            {id: 'wood-dark-oak', name: 'Темный дуб', value: '', imageUrl: '/sectional-gates/dark_oak.jpg', type: 'texture'},
-            {id: 'wood-dark-cherry', name: 'Темная вишня', value: '', imageUrl: '/sectional-gates/dark_cherry.jpg', type: 'texture'},
-            {id: 'wood-gold-oak', name: 'Золотой дуб', value: '', imageUrl: '/sectional-gates/gold_oak.jpg', type: 'texture'},
+            {id: 'wood-dark-oak', name: 'Темный дуб', value: '', imageUrl: '/sectional-gates/webp/dark_oak.webp', type: 'texture'},
+            {id: 'wood-dark-cherry', name: 'Темная вишня', value: '', imageUrl: '/sectional-gates/webp/dark_cherry.webp', type: 'texture'},
+            {id: 'wood-gold-oak', name: 'Золотой дуб', value: '', imageUrl: '/sectional-gates/webp/gold_oak.webp', type: 'texture'},
         ],
         digital: [
-            {id: 'digital-brechia', name: 'Бречия Дамаската', value: '', imageUrl: '/sectional-gates/brechia-of-damascus2big.jpg', type: 'digital', textColor: 'light'},
-            {id: 'digital-bricks', name: 'Кирпич винтажный', value: '', imageUrl: '/sectional-gates/bricks_vintage.jpg', type: 'digital', textColor: 'light'},
-            {id: 'digital-slanez', name: 'Светлый сланец', value: '', imageUrl: '/sectional-gates/bright_slanez.jpg', type: 'digital', textColor: 'light'},
-            {id: 'digital-concrete', name: 'Бетон Антик', value: '', imageUrl: '/sectional-gates/concrete-anteak.jpg', type: 'digital', textColor: 'light'},
-            {id: 'digital-pine', name: 'Горная сосна', value: '', imageUrl: '/sectional-gates/gornaya-sosna.jpg', type: 'digital', textColor: 'light'},
-            {id: 'digital-oak', name: 'Моренный дуб', value: '', imageUrl: '/sectional-gates/morenniy-oak.jpg', type: 'digital', textColor: 'light'},
+            {id: 'digital-brechia', name: 'Бречия Дамаската', value: '', imageUrl: '/sectional-gates/webp/brechia-of-damascus2big.webp', type: 'digital', textColor: 'light'},
+            {id: 'digital-bricks', name: 'Кирпич винтажный', value: '', imageUrl: '/sectional-gates/webp/bricks_vintage.webp', type: 'digital', textColor: 'light'},
+            {id: 'digital-slanez', name: 'Светлый сланец', value: '', imageUrl: '/sectional-gates/webp/bright_slanez.webp', type: 'digital', textColor: 'light'},
+            {id: 'digital-concrete', name: 'Бетон Антик', value: '', imageUrl: '/sectional-gates/webp/concrete-anteak.webp', type: 'digital', textColor: 'light'},
+            {id: 'digital-pine', name: 'Горная сосна', value: '', imageUrl: '/sectional-gates/webp/gornaya-sosna.webp', type: 'digital', textColor: 'light'},
+            {id: 'digital-oak', name: 'Моренный дуб', value: '', imageUrl: '/sectional-gates/webp/morenniy-oak.webp', type: 'digital', textColor: 'light'},
         ],
     };
 
@@ -176,7 +176,7 @@ export default function SectionalGatesPage() {
         installationTime: item.timeline,
         priceRange: 'от 1400 BYN',
         description: `Секционные ворота серии ${item.series} в цвете ${item.color}. Размеры: ${item.dimensions}. Профессиональная установка с гарантией.`,
-        image: '/images/portfolio/sectional-gates-placeholder.jpg',
+        image: '/images/portfolio/sectional-gates/webp-placeholder.webp',
     }));
 
     return (
@@ -192,7 +192,7 @@ export default function SectionalGatesPage() {
 
                             {/* LAYER 1: ИСПРАВЛЕНО: Оpacity увеличена до 60%, чтобы ворота и дом стали светлыми, четкими и читаемыми */}
                             <img
-                                src="/sectional-gates/section-preview-ai.jpeg"
+                                src="/sectional-gates/webp/webp/section-preview-ai.webp"
                                 className="absolute inset-0 object-cover opacity-60 max-lg:block hidden z-0 pointer-events-none sm:rounded-2xl"
                                 style={{width: '100%', height: '100%'}}
                                 alt="Sectional Gates Mobile Backdrop"
@@ -267,7 +267,7 @@ export default function SectionalGatesPage() {
                             {/* Right Column - Product Image */}
                             <div className="hidden lg:block w-full h-full relative z-20">
                                 <img
-                                    src="/sectional-gates/section-preview-ai.jpeg"
+                                    src="/sectional-gates/webp/section-preview-ai.webp"
                                     alt="Секционные ворота с автоматикой"
                                     className="w-full h-full object-cover rounded-2xl shadow-xl"
                                 />

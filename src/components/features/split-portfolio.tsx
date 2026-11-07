@@ -25,7 +25,7 @@ const defaultProjects: Project[] = [
         installationTime: '1 день',
         priceRange: 'от 3500 BYN',
         description: 'Консольные откатные ворота с сэндвич-наполнением. Установлена автоматика Alutech с пультом управления. Каркас из профильной трубы 60x40 мм с порошковой покраской.',
-        image: '/main/sliding.jpeg',
+        image: '/main/webp/sliding.webp',
     },
     {
         id: 2,
@@ -36,7 +36,7 @@ const defaultProjects: Project[] = [
         installationTime: '1 день',
         priceRange: 'от 1400 BYN',
         description: 'Панорамные секционные ворота серии Prestige. Двойные ролики, уплотнители EPDM. Возможность цифрового принта "под дерево".',
-        image: '/main/sectional2.jpeg',
+        image: '/main/webp/sectional2.webp',
     },
     {
         id: 3,
@@ -47,7 +47,7 @@ const defaultProjects: Project[] = [
         installationTime: '3-4 дня',
         priceRange: 'от 45 BYN/м.кв',
         description: 'Объемное деревянное ограждение из переплетенных досок. Обеспечивает полную приватность участка, обладает высокой прочностью и оригинальной фактурой.',
-        image: '/main/fence.jpeg',
+        image: '/main/webp/fence.webp',
     },
     {
         id: 4,
@@ -58,7 +58,7 @@ const defaultProjects: Project[] = [
         installationTime: '1 день',
         priceRange: 'от 2500 BYN',
         description: 'Теплые распашные ворота из сэндвич-панелей с декоративными коваными элементами. Встроенная калитка с электрозамком.',
-        image: '/main/swing.jpeg',
+        image: '/main/webp/swing.webp',
     },
 ];
 

@@ -209,7 +209,7 @@ export default function BarriersPage() {
 
                             {/* LAYER 1: Mobile backdrop image */}
                             <img
-                                src="/barriers/barriers-preview.jpeg"
+                                src="/barriers/webp/barriers-preview.webp"
                                 className="absolute inset-0 object-cover opacity-60 max-lg:block hidden z-0 pointer-events-none sm:rounded-2xl"
                                 style={{width: '100%', height: '100%'}}
                                 alt="Automatic Barriers Mobile Backdrop"
@@ -280,7 +280,7 @@ export default function BarriersPage() {
                             {/* Right Column - Product Image */}
                             <div className="hidden lg:block w-full h-full relative z-20">
                                 <img
-                                    src="/barriers/barriers-preview.jpeg"
+                                    src="/barriers/webp/barriers-preview.webp"
                                     alt="Автоматические шлагбаумы"
                                     className="w-full h-full object-cover rounded-2xl shadow-xl"
                                 />

@@ -187,7 +187,7 @@ export default function AutomationSlidingPage() {
             specs: ['До 400 кг', '24В питание', '2 пульта'],
             price: 'от 1150 BYN',
             productActionKey: 'nice-rb400',
-            image: '/automation-sliding/ROBUS400.jpg',
+            image: '/automation-sliding/webp/ROBUS400.webp',
             description: 'Привод NICE RB400 предназначен для откатных ворот весом до 400 кг. Оснащен надежным 24В двигателем с функцией аварийного разблокирования. Включает 2 пульта дистанционного управления. Поддерживает подключение оптических датчиков безопасности для дополнительной защиты.',
         },
         {
@@ -199,7 +199,7 @@ export default function AutomationSlidingPage() {
             specs: ['До 600 кг', '24В питание', '2 пульта'],
             price: 'от 1235 BYN',
             productActionKey: 'nice-rb600',
-            image: '/automation-sliding/ROBUS400.jpg',
+            image: '/automation-sliding/webp/ROBUS400.webp',
             description: 'Привод NICE RB600 разработан для откатных ворот весом до 600 кг. Мощный 24В двигатель обеспечивает плавную работу. Включает 2 пульта дистанционного управления. Поддерживает интеграцию с системами безопасности.',
         },
         {
@@ -211,7 +211,7 @@ export default function AutomationSlidingPage() {
             specs: ['До 1000 кг', '24В питание', '4 пульта'],
             price: 'от 1355 BYN',
             productActionKey: 'nice-rb1000',
-            image: '/automation-sliding/ROBUS400.jpg',
+            image: '/automation-sliding/webp/ROBUS400.webp',
             description: 'Привод NICE RB1000 предназначен для тяжелых откатных ворот весом до 1000 кг. Оснащен мощным 24В двигателем с аварийным разблокированием. Включает 4 пульта дистанционного управления. Поддерживает подключение промышленных систем безопасности.',
         },
         {
@@ -223,7 +223,7 @@ export default function AutomationSlidingPage() {
             specs: ['До 400 кг', '230В питание', '2 пульта'],
             price: 'от 760 BYN',
             productActionKey: 'nice-rd400',
-            image: '/automation-sliding/road400.jpg',
+            image: '/automation-sliding/webp/road400.webp',
             description: 'Компактный привод NICE RD400 для откатных ворот весом до 400 кг. Работает от сети 230В. Включает 2 пульта дистанционного управления. Идеален для установки в ограниченном пространстве.',
         },
         {
@@ -235,7 +235,7 @@ export default function AutomationSlidingPage() {
             specs: ['До 600 кг', '230В питание', '2 пульта'],
             price: 'от 955 BYN',
             productActionKey: 'nice-ro-600',
-            image: '/automation-sliding/nice_ro_600.webp',
+            image: '/automation-sliding/webp/nice_ro_600.webp',
             description: 'Привод NICE RO 600 для откатных ворот весом до 600 кг. Работает от сети 230В. Включает 2 пульта дистанционного управления. Обеспечивает надежную работу в условиях интенсивной эксплуатации.',
         },
         {
@@ -247,7 +247,7 @@ export default function AutomationSlidingPage() {
             specs: ['До 1000 кг', '230В питание', '4 пульта'],
             price: 'от 1605 BYN',
             productActionKey: 'nice-rox1000',
-            image: '/automation-sliding/nice_rox_1000.jpg',
+            image: '/automation-sliding/webp/nice_rox_1000.webp',
             description: 'Профессиональный привод NICE ROX1000 для тяжелых откатных ворот весом до 1000 кг. Работает от сети 230В. Включает 4 пульта дистанционного управления. Поддерживает интеграцию с системами контроля доступа.',
         },
         {
@@ -259,7 +259,7 @@ export default function AutomationSlidingPage() {
             specs: ['До 500 кг', '24В питание', '2 пульта'],
             price: 'от 770 BYN',
             productActionKey: 'alutech-rto500kit',
-            image: '/automation-sliding/alutech_rto_500_kit.jpg',
+            image: '/automation-sliding/webp/alutech_rto_500_kit.webp',
             description: 'Комплект привода Alutech RTO500KIT для откатных ворот весом до 500 кг. Оснащен безопасным 24В двигателем с аварийным разблокированием. Включает 2 пульта дистанционного управления. Полный комплект для монтажа.',
         },
         {
@@ -271,7 +271,7 @@ export default function AutomationSlidingPage() {
             specs: ['До 500 кг', '24В питание', '2 пульта'],
             price: 'от 790 BYN',
             productActionKey: 'alutech-rto500mkit',
-            image: '/automation-sliding/alutech_rto_2000_mkit.jpeg',
+            image: '/automation-sliding/webp/alutech_rto_2000_mkit.webp',
             description: 'Комплект привода Alutech RTO500MKIT с усиленным мотором для откатных ворот весом до 500 кг. Безопасный 24В двигатель с аварийным разблокированием. Включает 2 пульта дистанционного управления.',
         },
         {
@@ -283,7 +283,7 @@ export default function AutomationSlidingPage() {
             specs: ['До 1000 кг', '24В питание', '4 пульта'],
             price: 'от 870 BYN',
             productActionKey: 'alutech-rto1000kit',
-            image: '/automation-sliding/alutech_rto_500_kit.jpg',
+            image: '/automation-sliding/webp/alutech_rto_500_kit.webp',
             description: 'Комплект привода Alutech RTO1000KIT для откатных ворот весом до 1000 кг. Мощный 24В двигатель с аварийным разблокированием. Включает 4 пульта дистанционного управления. Полный комплект для монтажа.',
         },
         {
@@ -295,7 +295,7 @@ export default function AutomationSlidingPage() {
             specs: ['До 1000 кг', '24В питание', '4 пульта'],
             price: 'от 895 BYN',
             productActionKey: 'alutech-rto1000mkit',
-            image: '/automation-sliding/alutech_rto_2000_mkit.jpeg',
+            image: '/automation-sliding/webp/alutech_rto_2000_mkit.webp',
             description: 'Комплект привода Alutech RTO1000MKIT с усиленным мотором для откатных ворот весом до 1000 кг. Безопасный 24В двигатель с аварийным разблокированием. Включает 4 пульта дистанционного управления.',
         },
         {
@@ -307,7 +307,7 @@ export default function AutomationSlidingPage() {
             specs: ['До 2000 кг', '24В питание', '4 пульта'],
             price: 'от 1105 BYN',
             productActionKey: 'alutech-rto2000kit',
-            image: '/automation-sliding/alutech_rto_500_kit.jpg',
+            image: '/automation-sliding/webp/alutech_rto_500_kit.webp',
             description: 'Комплект привода Alutech RTO2000KIT для тяжелых откатных ворот весом до 2000 кг. Мощный 24В двигатель с аварийным разблокированием. Включает 4 пульта дистанционного управления. Полный комплект для промышленного монтажа.',
         },
         {
@@ -319,7 +319,7 @@ export default function AutomationSlidingPage() {
             specs: ['До 2000 кг', '24В питание', '4 пульта'],
             price: 'от 1135 BYN',
             productActionKey: 'alutech-rto2000mkit',
-            image: '/automation-sliding/alutech_rto_2000_mkit.jpeg',
+            image: '/automation-sliding/webp/alutech_rto_2000_mkit.webp',
             description: 'Премиум комплект привода Alutech RTO2000MKIT с усиленным мотором для тяжелых откатных ворот весом до 2000 кг. Безопасный 24В двигатель с аварийным разблокированием. Включает 4 пульта дистанционного управления.',
         },
     ];
@@ -335,7 +335,7 @@ export default function AutomationSlidingPage() {
             specs: ['До 500 кг', 'Высокая скорость', '2 пульта'],
             price: 'от 1400 BYN',
             productActionKey: 'nice-hispeed-rb500hskit',
-            image: '/automation-sliding/nice_rb500hs.jpg',
+            image: '/automation-sliding/webp/nice_rb500hs.webp',
             description: 'Высокоскоростной привод Nice Hi-Speed Rb500HSKIT обеспечивает быстрое открытие откатных ворот весом до 500 кг. Идеален для интенсивного использования. Включает 2 пульта дистанционного управления.',
         },
         {
@@ -347,7 +347,7 @@ export default function AutomationSlidingPage() {
             specs: ['До 1200 кг', 'Высокая скорость', '4 пульта'],
             price: 'от 2775 BYN',
             productActionKey: 'nice-hispeed-run1200hs',
-            image: '/automation-sliding/nice_run_1200hs.jpg',
+            image: '/automation-sliding/webp/nice_run_1200hs.webp',
             description: 'Высокоскоростной привод Nice Hi-Speed Run1200HS обеспечивает максимальную скорость открытия для тяжелых откатных ворот весом до 1200 кг. Включает 4 пульта дистанционного управления. Поддерживает интеграцию с системами контроля доступа.',
         },
         {
@@ -359,7 +359,7 @@ export default function AutomationSlidingPage() {
             specs: ['До 250 кг', 'Высокая скорость', '2 пульта'],
             price: 'от 1320 BYN',
             productActionKey: 'nice-hispeed-rb250hs',
-            image: '/automation-sliding/nice_robus250hs.jpg',
+            image: '/automation-sliding/webp/nice_robus250hs.webp',
             description: 'Компактный высокоскоростной привод Nice Hi-Speed Rb 250HS для легких откатных ворот весом до 250 кг. Обеспечивает быстрое открытие при компактных размерах. Включает 2 пульта дистанционного управления.',
         },
     ];
@@ -403,7 +403,7 @@ export default function AutomationSlidingPage() {
 
                             {/* Mobile backdrop image */}
                             <img
-                                src="/automation-sliding/automation_sliding2.jpeg"
+                                src="/automation-sliding/webp/automation_sliding2.webp"
                                 className="absolute inset-0 object-cover opacity-60 max-lg:block hidden z-0 pointer-events-none sm:rounded-2xl"
                                 style={{width: '100%', height: '100%'}}
                                 alt="Sliding Gate Automation Mobile Backdrop"
@@ -474,7 +474,7 @@ export default function AutomationSlidingPage() {
                             {/* Right Column - Product Image */}
                             <div className="hidden lg:block w-full h-full max-h-[500px] relative overflow-hidden rounded-2xl z-20">
                                 <img
-                                    src="/automation-sliding/automation_sliding2.jpeg"
+                                    src="/automation-sliding/webp/automation_sliding2.webp"
                                     alt="Автоматика для откатных ворот"
                                     className="absolute inset-0 w-full h-full object-cover object-center"
                                 />

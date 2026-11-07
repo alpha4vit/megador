@@ -187,7 +187,7 @@ export default function AutomationSwingPage() {
             specs: ['Блок д/у', '2 пульта д/у', 'Для легких ворот'],
             price: 'от 1880 BYN',
             productActionKey: 'nice-wingo-3524-kce',
-            image: '/automation-swing/wingo2024kce_2.jpg',
+            image: '/automation-swing/webp/wingo2024kce_2.webp',
             description: 'Комплект Nice Wingo 3524 KCE включает блок управления и 2 пульта дистанционного управления. Предназначен для автоматизации распашных ворот с легким весом. Обеспечивает надежную и плавную работу механизма.',
         },
         {
@@ -199,7 +199,7 @@ export default function AutomationSwingPage() {
             specs: ['Блок д/у', '2 пульта', 'Линия фотоэлементов'],
             price: 'от 2050 BYN',
             productActionKey: 'nice-wingo-3524kit1',
-            image: '/automation-swing/wingo2024kce_2.jpg',
+            image: '/automation-swing/webp/wingo2024kce_2.webp',
             description: 'Комплект Nice Wingo 3524KIT1 оснащен блоком управления, 2 пультами и линией фотоэлементов для дополнительной безопасности. Обеспечивает автоматическую остановку при обнаружении препятствий.',
         },
         {
@@ -211,7 +211,7 @@ export default function AutomationSwingPage() {
             specs: ['Блок д/у', '2 пульта д/у', 'Универсальный'],
             price: 'от 1700 BYN',
             productActionKey: 'nice-too3000-klt',
-            image: '/automation-swing/nice_to3000klt.webp',
+            image: '/automation-swing/webp/nice_to3000klt.webp',
             description: 'Привод Nice TOO3000 KLT с блоком управления и 2 пультами. Универсальное решение для автоматизации распашных ворот различных размеров. Простая установка и настройка.',
         },
         {
@@ -223,7 +223,7 @@ export default function AutomationSwingPage() {
             specs: ['Блок д/у', '2 пульта д/у', 'Усиленный'],
             price: 'от 2120 BYN',
             productActionKey: 'nice-to4016r-kit',
-            image: '/automation-swing/nice_to4016p.jpg',
+            image: '/automation-swing/webp/nice_to4016p.webp',
             description: 'Комплект Nice TO4016Р KIT с усиленным приводом, блоком управления и 2 пультами. Предназначен для распашных ворот с повышенным весом. Обеспечивает надежную работу при интенсивной эксплуатации.',
         },
         {
@@ -235,7 +235,7 @@ export default function AutomationSwingPage() {
             specs: ['Блок д/у', '2 пульта', 'Линия фотоэлементов'],
             price: 'от 2250 BYN',
             productActionKey: 'nice-to4016kit1',
-            image: '/automation-swing/nice_to4016p.jpg',
+            image: '/automation-swing/webp/nice_to4016p.webp',
             description: 'Комплект Nice TO4016KIT1 включает блок управления, 2 пульта и линию фотоэлементов. Обеспечивает максимальный уровень безопасности благодаря системе обнаружения препятствий.',
         },
         {
@@ -247,7 +247,7 @@ export default function AutomationSwingPage() {
             specs: ['Блок д/у', '2 пульта д/у', 'Мощный'],
             price: 'от 2130 BYN',
             productActionKey: 'nice-to5016r-kit',
-            image: '/automation-swing/nice_5016p.webp',
+            image: '/automation-swing/webp/nice_5016p.webp',
             description: 'Мощный привод Nice TO5016Р KIT с блоком управления и 2 пультами. Предназначен для тяжелых распашных ворот. Гарантирует плавную и надежную работу механизма.',
         },
         {
@@ -259,7 +259,7 @@ export default function AutomationSwingPage() {
             specs: ['Блок д/у', '2 пульта д/у', 'Гидравлический'],
             price: 'от 2510 BYN',
             productActionKey: 'nice-hy7005kit',
-            image: '/automation-swing/nice_hy7005.jpg',
+            image: '/automation-swing/webp/nice_hy7005.webp',
             description: 'Гидравлический привод Nice HY7005KIT с блоком управления и 2 пультами. Премиальное решение для автоматизации тяжелых распашных ворот. Обеспечивает плавную работу и длительный срок службы.',
         },
     ];
@@ -275,7 +275,7 @@ export default function AutomationSwingPage() {
             specs: ['Привод линейный - 2 шт', 'Б/у (CUSD-1)', 'Надежный'],
             price: 'от 1430 BYN',
             productActionKey: 'alutech-am-5000kit',
-            image: '/automation-swing/alutech_am5000.webp',
+            image: '/automation-swing/webp/alutech_am5000.webp',
             description: 'Комплект Алютех AM-5000KIT включает 2 линейных привода и блок управления CUSD-1. Предназначен для автоматизации распашных ворот. Обеспечивает надежную и плавную работу механизма.',
         },
         {
@@ -287,7 +287,7 @@ export default function AutomationSwingPage() {
             specs: ['Привод рычажный - 2 шт', 'Б/у (CUSD-1)', 'Компактный'],
             price: 'от 1440 BYN',
             productActionKey: 'alutech-asw-4000kit',
-            image: '/automation-swing/alutech_asw4000.jpg',
+            image: '/automation-swing/webp/alutech_asw4000.webp',
             description: 'Комплект Алютех ASW-4000KIT оснащен 2 рычажными приводами и блоком управления CUSD-1. Компактное решение для автоматизации распашных ворот с ограниченным пространством.',
         },
     ];
@@ -331,7 +331,7 @@ export default function AutomationSwingPage() {
 
                             {/* Mobile backdrop image */}
                             <img
-                                src="/automation-swing/automation_swing.jpeg"
+                                src="/automation-swing/webp/automation_swing.webp"
                                 className="absolute inset-0 object-cover opacity-60 max-lg:block hidden z-0 pointer-events-none sm:rounded-2xl"
                                 style={{width: '100%', height: '100%'}}
                                 alt="Swing Gate Automation Mobile Backdrop"
@@ -402,7 +402,7 @@ export default function AutomationSwingPage() {
                             {/* Right Column - Product Image */}
                             <div className="hidden lg:block w-full h-full relative z-20">
                                 <img
-                                    src="/automation-swing/automation_swing.jpeg"
+                                    src="/automation-swing/webp/automation_swing.webp"
                                     alt="Автоматика для распашных ворот"
                                     className="w-full h-full object-cover object-center rounded-2xl"
                                 />

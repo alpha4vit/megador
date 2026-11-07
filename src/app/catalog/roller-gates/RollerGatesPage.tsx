@@ -29,16 +29,16 @@ export default function RollerGatesPage() {
             {id: 'ral-gray', name: 'Серый', value: '#B4B8B0', type: 'solid', code: 'RAL 7038'},
         ],
         wood: [
-            {id: 'gold-oak', name: 'Золотой дуб', value: '', imageUrl: '/roller-gates/gold_oak.jpg', type: 'texture'},
-            {id: 'irish-oak', name: 'Ирландский дуб', value: '', imageUrl: '/roller-gates/irish_oak.jpg', type: 'texture'},
-            {id: 'walnut', name: 'Орех', value: '', imageUrl: '/roller-gates/walnut.jpg', type: 'texture'},
-            {id: 'cherry', name: 'Вишня', value: '', imageUrl: '/roller-gates/cherry.jpg', type: 'texture'},
+            {id: 'gold-oak', name: 'Золотой дуб', value: '', imageUrl: '/roller-gates/webp/gold_oak.jpg', type: 'texture'},
+            {id: 'irish-oak', name: 'Ирландский дуб', value: '', imageUrl: '/roller-gates/webp/irish_oak.webp', type: 'texture'},
+            {id: 'walnut', name: 'Орех', value: '', imageUrl: '/roller-gates/webp/walnut.webp', type: 'texture'},
+            {id: 'cherry', name: 'Вишня', value: '', imageUrl: '/roller-gates/webp/cherry.webp', type: 'texture'},
         ],
         digital: [
-            {id: 'digital-brechia', name: 'Бречия Дамаската', value: '', imageUrl: '/roller-gates/brechia-of-damascus2big.jpg', type: 'digital', textColor: 'light'},
-            {id: 'digital-bricks', name: 'Кирпич винтажный', value: '', imageUrl: '/bricks_vintage.jpg', type: 'digital', textColor: 'light'},
-            {id: 'digital-slanez', name: 'Светлый сланец', value: '', imageUrl: '/bright_slanez.jpg', type: 'digital', textColor: 'light'},
-            {id: 'digital-concrete', name: 'Бетон Антик', value: '', imageUrl: '/concrete-anteak.jpg', type: 'digital', textColor: 'light'},
+            {id: 'digital-brechia', name: 'Бречия Дамаската', value: '', imageUrl: '/roller-gates/webp/brechia-of-damascus2big.webp', type: 'digital', textColor: 'light'},
+            {id: 'digital-bricks', name: 'Кирпич винтажный', value: '', imageUrl: '/bricks_vintage.webp', type: 'digital', textColor: 'light'},
+            {id: 'digital-slanez', name: 'Светлый сланец', value: '', imageUrl: '/bright_slanez.webp', type: 'digital', textColor: 'light'},
+            {id: 'digital-concrete', name: 'Бетон Антик', value: '', imageUrl: '/concrete-anteak.webp', type: 'digital', textColor: 'light'},
         ],
     };
 
@@ -138,7 +138,7 @@ export default function RollerGatesPage() {
         installationTime: item.timeline,
         priceRange: 'от 1200 BYN',
         description: `Роллетные ворота серии ${item.series} в цвете ${item.color}. Размеры: ${item.dimensions}. Профессиональная установка с гарантией.`,
-        image: '/images/portfolio/roller-gates-placeholder.jpg',
+        image: '/images/portfolio/roller-gates/webp-placeholder.webp',
     }));
 
     return (
@@ -153,7 +153,7 @@ export default function RollerGatesPage() {
 
                             {/* LAYER 1: Mobile backdrop image */}
                             <img
-                                src="/roller-gates/rollet-preview.jpeg"
+                                src="/roller-gates/webp/rollet-preview.webp"
                                 className="absolute inset-0 object-cover opacity-60 max-lg:block hidden z-0 pointer-events-none sm:rounded-2xl"
                                 style={{width: '100%', height: '100%'}}
                                 alt="Roller Gates Mobile Backdrop"
@@ -224,7 +224,7 @@ export default function RollerGatesPage() {
                             {/* Right Column - Product Image */}
                             <div className="hidden lg:block w-full h-full relative z-20">
                                 <img
-                                    src="/roller-gates/rollet-preview.jpeg"
+                                    src="/roller-gates/webp/rollet-preview.webp"
                                     alt="Роллетные ворота с автоматикой"
                                     className="w-full h-full object-cover rounded-2xl shadow-xl"
                                 />

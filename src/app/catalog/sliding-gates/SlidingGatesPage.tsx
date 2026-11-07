@@ -151,7 +151,7 @@ export default function SlidingGatesPage() {
         installationTime: item.timeline,
         priceRange: 'от 1000 BYN',
         description: `Откатные ворота серии ${item.series} в цвете ${item.color}. Размеры: ${item.dimensions}. Профессиональная установка с гарантией.`,
-        image: '/main/sliding.jpeg',
+        image: '/main/webp/sliding.webp',
     }));
 
     return (
@@ -166,7 +166,7 @@ export default function SlidingGatesPage() {
 
                             {/* LAYER 1: Mobile backdrop image */}
                             <img
-                                src="/main/sliding.jpeg"
+                                src="/main/webp/sliding.webp"
                                 className="absolute inset-0 object-cover opacity-60 max-lg:block hidden z-0 pointer-events-none sm:rounded-2xl"
                                 style={{width: '100%', height: '100%'}}
                                 alt="Sliding Gates Mobile Backdrop"
@@ -237,7 +237,7 @@ export default function SlidingGatesPage() {
                             {/* Right Column - Product Image */}
                             <div className="hidden lg:block w-full h-full relative z-20">
                                 <img
-                                    src="/main/sliding.jpeg"
+                                    src="/main/webp/sliding.webp"
                                     alt="Откатные ворота с автоматикой"
                                     className="w-full h-full object-cover rounded-2xl shadow-xl"
                                 />

@@ -187,7 +187,7 @@ export default function AccessoriesPage() {
             specs: ['4 канала', '433 МГц', 'Совместимость с AN-Motors'],
             price: 'от 45 BYN',
             productActionKey: 'at-4',
-            image: '/accessories/alutech_at4n.jpg',
+            image: '/accessories/webp/alutech_at4n.webp',
             description: 'Универсальный пульт дистанционного управления АТ-4/AT-4N с 4 каналами на частоте 433 МГц. Полностью совместим с автоматикой AN-Motors. Простое программирование.',
         },
         {
@@ -199,7 +199,7 @@ export default function AccessoriesPage() {
             specs: ['2 канала', '433 МГц', 'Совместимость с NICE'],
             price: 'от 75 BYN',
             productActionKey: 'flo2r-s',
-            image: '/accessories/nice_flor2s.webp',
+            image: '/accessories/webp/nice_flor2s.webp',
             description: 'Пульт дистанционного управления Flo2R-S с 2 каналами на частоте 433 МГц. Предназначен для работы с автоматикой NICE. Надежная передача сигнала.',
         },
         {
@@ -211,7 +211,7 @@ export default function AccessoriesPage() {
             specs: ['2 канала', '433 МГц', 'Улучшенный радиус'],
             price: 'от 100 BYN',
             productActionKey: 'flo2re',
-            image: '/accessories/nice_flor2e.jpeg',
+            image: '/accessories/webp/nice_flor2e.webp',
             description: 'Пульт дистанционного управления Flo2RE с расширенным радиусом действия. 2 канала на частоте 433 МГц для работы с автоматикой NICE.',
         },
         {
@@ -223,7 +223,7 @@ export default function AccessoriesPage() {
             specs: ['На 500 пультов', 'Универсальный', '433 МГц'],
             price: 'от 68 BYN',
             productActionKey: 'ar-1-500',
-            image: '/accessories/an_motors_ar_1_500.jpg',
+            image: '/accessories/webp/an_motors_ar_1_500.webp',
             description: 'Универсальный радиоприемник AR-1-500 от AN-Motors для подключения до 500 пультов. Работает на частоте 433 МГц. Совместим с большинством систем автоматики.',
         },
     ];
@@ -239,7 +239,7 @@ export default function AccessoriesPage() {
             specs: ['Инфракрасные', 'Для NICE', 'Высокая точность'],
             price: 'от 290 BYN',
             productActionKey: 'nice-epm',
-            image: '/accessories/nice_epm.jpg',
+            image: '/accessories/webp/nice_epm.webp',
             description: 'Фотоэлементы NICE серии EPM/EPMB для обеспечения безопасности автоматики. Инфракрасные датчики с высокой точностью обнаружения препятствий.',
         },
         {
@@ -251,7 +251,7 @@ export default function AccessoriesPage() {
             specs: ['Инфракрасные', 'Для Alutech', 'Компактные'],
             price: 'от 77 BYN',
             productActionKey: 'alutech-lm-l',
-            image: '/accessories/alutech_lm_l.webp',
+            image: '/accessories/webp/alutech_lm_l.webp',
             description: 'Фотоэлементы Alutech серии LM-L для базовой системы безопасности. Компактные инфракрасные датчики для автоматических ворот.',
         },
         {
@@ -263,7 +263,7 @@ export default function AccessoriesPage() {
             specs: ['Инфракрасные', 'Для Alutech', 'Расширенный диапазон'],
             price: 'от 132 BYN',
             productActionKey: 'alutech-lm-lb',
-            image: '/accessories/alutech_lm_lb.jxl',
+            image: '/accessories/webp/alutech_lm_lb.jxl',
             description: 'Фотоэлементы Alutech серии LM-LB с расширенным диапазоном действия. Усиленные инфракрасные датчики для повышенной безопасности.',
         },
         {
@@ -275,7 +275,7 @@ export default function AccessoriesPage() {
             specs: ['LED', '220В', 'Визуальная сигнализация'],
             price: 'от 130 BYN',
             productActionKey: 'lamp-el',
-            image: '/accessories/nice_el.jpg',
+            image: '/accessories/webp/nice_el.webp',
             description: 'Сигнальная лампа EL для визуального оповещения о работе автоматики. Яркий LED индикатор на 220В для повышения безопасности.',
         },
         {
@@ -287,7 +287,7 @@ export default function AccessoriesPage() {
             specs: ['LED', '24В', 'Компактная'],
             price: 'от 75 BYN',
             productActionKey: 'lamp-sl-u',
-            image: '/accessories/alutech_sl_u.webp',
+            image: '/accessories/webp/alutech_sl_u.webp',
             description: 'Компактная сигнальная лампа SL-U для систем безопасности на 24В. LED индикатор для визуального оповещения о работе ворот.',
         },
     ];
@@ -303,7 +303,7 @@ export default function AccessoriesPage() {
             specs: ['3G/4G', 'Управление со смартфона', 'SMS уведомления'],
             price: 'от 1370 BYN',
             productActionKey: 'sg303ga-wr',
-            image: '/accessories/gsm_sg303ga_wr.png',
+            image: '/accessories/webp/gsm_sg303ga_wr.webp',
             description: 'GSM-модуль SG303GA-WR с поддержкой 3G/4G для удаленного управления воротами со смартфона. Отправка SMS уведомлений о статусе ворот. Совместим с большинством систем автоматики.',
         },
     ];
@@ -341,7 +341,7 @@ export default function AccessoriesPage() {
 
                             {/* Mobile backdrop image */}
                             <img
-                                src="/accessories/accessories_mobile_background.png"
+                                src="/accessories/webp/accessories_mobile_background.webp"
                                 className="absolute inset-0 object-cover opacity-60 max-lg:block hidden z-0 pointer-events-none sm:rounded-2xl"
                                 style={{width: '100%', height: '100%'}}
                                 alt="Accessories Mobile Backdrop"
@@ -411,7 +411,7 @@ export default function AccessoriesPage() {
                             {/* Right Column - Product Image */}
                             <div className="hidden lg:block w-full flex items-center justify-center p-4 relative z-20">
                                 <img
-                                    src="/accessories/accessories_mobile_background.png"
+                                    src="/accessories/webp/accessories_mobile_background.webp"
                                     alt="Аксессуары для автоматики и шлагбаумов"
                                     className="w-full max-w-[480px] h-auto object-contain rounded-2xl"
                                 />
