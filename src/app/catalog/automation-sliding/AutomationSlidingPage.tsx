@@ -1,6 +1,7 @@
 'use client';
 
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import {ArrowRight, Check, Calendar, Wrench, CreditCard, ClipboardCheck, X} from 'lucide-react';
 import {Button} from '@/components/ui/button';
@@ -25,12 +26,25 @@ interface Product {
     description?: string;
 }
 
+interface FlyClone {
+    id: number;
+    image: string;
+    from: { x: number; y: number; w: number; h: number };
+    to: { x: number; y: number };
+}
+
 function ProductGrid({ products, onProductClick }: { products: Product[]; onProductClick: (product: Product) => void }) {
     const { addToCart } = useCart();
     const { showToast } = useToast();
+    const [flyClones, setFlyClones] = useState<FlyClone[]>([]);
+    const cloneIdRef = useRef(0);
 
     const handleAddToCart = (e: React.MouseEvent, product: Product) => {
         e.stopPropagation();
+        const card = (e.currentTarget as HTMLElement).closest('[data-product-card]');
+        const imageEl = card?.querySelector('[data-product-image]');
+        const fromRect = imageEl?.getBoundingClientRect();
+
         addToCart({
             id: product.id,
             title: product.title,
@@ -39,6 +53,38 @@ function ProductGrid({ products, onProductClick }: { products: Product[]; onProd
             category: product.subtitle,
         });
         showToast('Товар добавлен в корзину', product.title);
+
+        if (!fromRect) {
+            window.dispatchEvent(new CustomEvent('megador:cart-arrived'));
+            return;
+        }
+        const from = { x: fromRect.left, y: fromRect.top, w: fromRect.width, h: fromRect.height };
+
+        // Wait for the floating cart to mount (it renders only when cart is non-empty)
+        // before measuring its position.
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                const cartEl = document.querySelector('[data-cart-fab]');
+                const cartRect = cartEl?.getBoundingClientRect();
+                if (!cartRect) {
+                    window.dispatchEvent(new CustomEvent('megador:cart-arrived'));
+                    return;
+                }
+                const id = ++cloneIdRef.current;
+                setFlyClones((prev) => [
+                    ...prev,
+                    {
+                        id,
+                        image: product.image,
+                        from,
+                        to: {
+                            x: cartRect.left + cartRect.width / 2,
+                            y: cartRect.top + cartRect.height / 2,
+                        },
+                    },
+                ]);
+            });
+        });
     };
     // Calculate optimal desktop columns for balanced layout
     const getDesktopColumns = (count: number): number => {
@@ -51,16 +97,18 @@ function ProductGrid({ products, onProductClick }: { products: Product[]; onProd
     const lgGridClass = desktopColumns === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4';
 
     return (
+        <>
         <div className={`grid grid-cols-2 gap-3 md:gap-6 md:grid-cols-3 ${lgGridClass}`}>
             {products.map((product) => (
                 <div
                     key={product.id}
+                    data-product-card
                     className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between cursor-pointer"
                     onClick={() => onProductClick(product)}
                 >
                     {/* Top Area: Product Image */}
-                    <div className="w-full aspect-square bg-slate-50 flex items-center justify-center p-2 rounded-t-lg overflow-hidden">
-                        <img
+                    <div data-product-image className="w-full aspect-square bg-slate-50 flex items-center justify-center p-2 rounded-t-lg overflow-hidden">
+                        <img draggable={false}
                             src={product.image}
                             alt={product.title}
                             className="w-full h-full object-contain mix-blend-multiply"
@@ -123,6 +171,65 @@ function ProductGrid({ products, onProductClick }: { products: Product[]; onProd
                 </div>
             ))}
         </div>
+
+        {/* Fly-to-cart clones */}
+        {flyClones.map((clone) => {
+            const dx = clone.to.x - (clone.from.x + clone.from.w / 2);
+            const dy = clone.to.y - (clone.from.y + clone.from.h / 2);
+            const liftPx = 32;
+            const arcHeight = 90;
+            // Arc apex: above whichever endpoint is higher, so the path always bulges upward
+            const peakY = Math.min(-liftPx, dy) - arcHeight;
+            return (
+                <motion.div
+                    key={clone.id}
+                    className="fixed z-[100] pointer-events-none"
+                    style={{
+                        left: clone.from.x,
+                        top: clone.from.y,
+                        width: clone.from.w,
+                        height: clone.from.h,
+                    }}
+                    initial={{ x: 0 }}
+                    animate={{ x: [0, 0, dx] }}
+                    transition={{
+                        duration: 0.95,
+                        times: [0, 0.2, 1],
+                        ease: ['linear', [0.33, 1, 0.68, 1]],
+                    }}
+                    onAnimationComplete={() => {
+                        window.dispatchEvent(new CustomEvent('megador:cart-arrived'));
+                        setFlyClones((prev) => prev.filter((c) => c.id !== clone.id));
+                    }}
+                >
+                    <motion.div
+                        className="w-full h-full"
+                        initial={{ y: 0, scale: 1, opacity: 1 }}
+                        animate={{
+                            y: [0, -liftPx, peakY, dy],
+                            scale: [1, 1.05, 0.7, 0],
+                            opacity: [1, 1, 1, 0],
+                        }}
+                        transition={{
+                            duration: 0.95,
+                            times: [0, 0.2, 0.62, 1],
+                            ease: [
+                                [0.25, 0.46, 0.45, 0.94],
+                                [0.3, 0, 0.4, 1],
+                                [0.55, 0.06, 0.68, 0.19],
+                            ],
+                        }}
+                    >
+                        <img draggable={false}
+                            src={clone.image}
+                            alt=""
+                            className="w-full h-full object-contain mix-blend-multiply bg-white rounded-lg"
+                        />
+                    </motion.div>
+                </motion.div>
+            );
+        })}
+        </>
     );
 }
 
@@ -402,7 +509,7 @@ export default function AutomationSlidingPage() {
                             className="relative -mx-4 px-6 py-8 sm:-mx-6 sm:p-8 lg:mx-0 lg:p-0 rounded-none sm:rounded-2xl lg:bg-transparent grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center lg:max-h-[500px] text-white lg:text-gray-900 bg-white">
 
                             {/* Mobile backdrop image */}
-                            <img
+                            <img draggable={false}
                                 src="/automation-sliding/webp/automation_sliding2.webp"
                                 className="absolute inset-0 object-cover opacity-60 max-lg:block hidden z-0 pointer-events-none sm:rounded-2xl"
                                 style={{width: '100%', height: '100%'}}
@@ -473,7 +580,7 @@ export default function AutomationSlidingPage() {
 
                             {/* Right Column - Product Image */}
                             <div className="hidden lg:block w-full h-full max-h-[500px] relative overflow-hidden rounded-2xl z-20">
-                                <img
+                                <img draggable={false}
                                     src="/automation-sliding/webp/automation_sliding2.webp"
                                     alt="Автоматика для откатных ворот"
                                     className="absolute inset-0 w-full h-full object-cover object-center"
@@ -595,7 +702,7 @@ export default function AutomationSlidingPage() {
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="w-1/2 bg-white rounded-l-2xl flex items-center justify-center p-8">
-                            <img
+                            <img draggable={false}
                                 src={selectedProduct.image}
                                 alt={selectedProduct.title}
                                 className="w-full h-full object-contain max-h-[500px]"
@@ -670,7 +777,7 @@ export default function AutomationSlidingPage() {
 
                         {/* Product Image */}
                         <div className="w-full aspect-square bg-slate-50 flex items-center justify-center p-4 rounded-xl mb-4">
-                            <img
+                            <img draggable={false}
                                 src={selectedProduct.image}
                                 alt={selectedProduct.title}
                                 className="w-full h-full object-contain"

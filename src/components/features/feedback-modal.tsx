@@ -350,7 +350,7 @@ export default function FeedbackModal() {
           {cart.map((item) => (
             <div key={item.id} className="flex items-center gap-3 bg-white p-3 rounded-lg border border-gray-100">
               {item.image && (
-                <img
+                <img draggable={false}
                   src={item.image}
                   alt={item.title}
                   className="w-16 h-16 object-contain rounded"

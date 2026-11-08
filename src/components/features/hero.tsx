@@ -24,7 +24,7 @@ export const Hero = () => {
 
                     {/* LAYER A: Mobile Background Controls (Visible ONLY below 1024px) */}
                     {/* ИСПРАВЛЕНО: Индекс поднят на -z-20. Теперь картинка гарантированно лежит ПОВЕРХ черного фона */}
-                    <img
+                    <img draggable={false}
                         src={imagePath}
                         className="absolute inset-0 w-full h-full object-cover opacity-65 -z-20 block lg:hidden sm:rounded-2xl"
                         alt="Background Backdrop"
@@ -79,7 +79,7 @@ export const Hero = () => {
 
                     {/* LAYER C: Right Content Column (Desktop Image - Visible ONLY at 1024px+) */}
                     <div className="hidden lg:block w-full h-full">
-                        <img
+                        <img draggable={false}
                             src={imagePath}
                             className="w-full h-full max-h-[calc(100%)] object-cover rounded-2xl shadow-xl"
                             alt="Megador Presentation"

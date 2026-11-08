@@ -78,6 +78,7 @@ export const SplitPortfolio = ({projects = defaultProjects, background = 'white'
     const [activePortfolioSlide, setActivePortfolioSlide] = useState(0);
     const sectionsRef = useRef<(HTMLDivElement | null)[]>([]);
     const portfolioCarouselRef = useRef<HTMLDivElement>(null);
+    const [maxCardHeight, setMaxCardHeight] = useState<number>(0);
 
     // Desktop scroll observer
     useEffect(() => {
@@ -117,8 +118,41 @@ export const SplitPortfolio = ({projects = defaultProjects, background = 'white'
         setActivePortfolioSlide(newIndex);
     };
 
+    // Calculate maximum card height for uniform layout
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        
+        const updateMaxHeight = () => {
+            if (portfolioCarouselRef.current && window.innerWidth < 1024) {
+                const cards = portfolioCarouselRef.current.querySelectorAll('[data-card-item]');
+                let maxHeight = 0;
+                cards.forEach((card) => {
+                    const cardEl = card as HTMLElement;
+                    cardEl.style.height = 'auto';
+                    const height = cardEl.offsetHeight;
+                    if (height > maxHeight) {
+                        maxHeight = height;
+                    }
+                });
+                setMaxCardHeight(maxHeight);
+                cards.forEach((card) => {
+                    (card as HTMLElement).style.height = `${maxHeight}px`;
+                });
+            }
+        };
+
+        // Delay calculation to ensure DOM is fully rendered
+        const timer = setTimeout(updateMaxHeight, 100);
+        window.addEventListener('resize', updateMaxHeight);
+        
+        return () => {
+            clearTimeout(timer);
+            window.removeEventListener('resize', updateMaxHeight);
+        };
+    }, [projects]);
+
     return (
-        <section className={`pt-0 lg:pt-0 pb-4 lg:pb-8 ${backgrounds[background]}`}>
+        <section className={`pt-12 lg:pt-16 pb-4 lg:pb-8 ${backgrounds[background]}`}>
             <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
                 <div className="text-center mb-4 lg:mt-0 lg:mb-6 mx-auto">
                     <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#2F3E46] mb-4"
@@ -141,17 +175,18 @@ export const SplitPortfolio = ({projects = defaultProjects, background = 'white'
                         {projects.map((project) => (
                             <div
                                 key={project.id}
+                                data-card-item
                                 className="flex-shrink-0 w-[85vw] snap-center"
                             >
-                                <div className="bg-[#F8F9FA] rounded-2xl overflow-hidden">
+                                <div className="bg-white rounded-2xl shadow-md overflow-hidden h-full flex flex-col">
                                     {/* Project Image */}
                                     <div
-                                        className="bg-[#F8F9FA] rounded-2xl overflow-hidden shadow-sm border border-gray-100/50">
+                                        className="rounded-2xl overflow-hidden shadow-sm border border-gray-100/50">
                                         {/* Реальное изображение проекта с адаптивными пропорциями 4:3 */}
                                         <div
                                             className="aspect-[4/3] bg-gradient-to-br from-[#2F3E46] to-[#1a252b] relative overflow-hidden w-full">
                                             {project.image ? (
-                                                <img
+                                                <img draggable={false}
                                                     src={project.image}
                                                     alt={project.title}
                                                     // object-cover идеально заполняет контейнер 4:3 без растягивания или сжатия фото
@@ -175,19 +210,19 @@ export const SplitPortfolio = ({projects = defaultProjects, background = 'white'
                                         </div>
                                     </div>
                                     {/* Project Info */}
-                                    <div className="p-5">
-                                        <h3 className="text-lg font-bold text-[#2F3E46] mb-1">{project.title}</h3>
-                                        <p className="text-sm text-gray-500 mb-3">{project.location}</p>
+                                    <div className="p-5 flex-1 flex flex-col">
+                                        <h3 className="text-lg font-bold text-[#2F3E46] mb-1 line-clamp-2">{project.title}</h3>
+                                        <p className="text-sm text-gray-500 mb-3 line-clamp-1">{project.location}</p>
 
                                         {/* Specs Grid */}
-                                        <div className="grid grid-cols-2 gap-2">
+                                        <div className="grid grid-cols-2 gap-2 mt-auto">
                                             <div className="bg-white rounded-lg p-3">
                                                 <p className="text-xs text-gray-500 mb-1">Материал</p>
-                                                <p className="text-sm font-medium text-[#2F3E46] leading-tight">{project.material}</p>
+                                                <p className="text-sm font-medium text-[#2F3E46] leading-tight line-clamp-2">{project.material}</p>
                                             </div>
                                             <div className="bg-white rounded-lg p-3">
                                                 <p className="text-xs text-gray-500 mb-1">Автоматика</p>
-                                                <p className="text-sm font-medium text-[#2F3E46] leading-tight">{project.automation}</p>
+                                                <p className="text-sm font-medium text-[#2F3E46] leading-tight line-clamp-2">{project.automation}</p>
                                             </div>
                                             <div className="bg-white rounded-lg p-3">
                                                 <p className="text-xs text-gray-500 mb-1">Установка</p>
@@ -294,7 +329,7 @@ export const SplitPortfolio = ({projects = defaultProjects, background = 'white'
                                     }`}
                                 >
                                     {project.image ? (
-                                        <img
+                                        <img draggable={false}
                                             src={project.image}
                                             alt={project.title}
                                             className="w-full h-full object-cover animate-fadeIn"

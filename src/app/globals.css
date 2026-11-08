@@ -29,6 +29,11 @@ body {
   font-family: var(--font-inter), Arial, Helvetica, sans-serif;
 }
 
+img {
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
 /* Hide scrollbar utility */
 .scrollbar-none {
   -ms-overflow-style: none;

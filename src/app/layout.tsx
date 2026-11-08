@@ -8,6 +8,7 @@ import { CartProvider } from "@/contexts/CartContext";
 import { ToastProvider } from "@/contexts/ToastContext";
 import FeedbackModal from "@/components/features/feedback-modal";
 import FloatingCart from "@/components/features/floating-cart";
+import { ImageProtectionGuard } from "@/components/features/image-protection-guard";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -74,6 +75,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${inter.variable} ${montserrat.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
+        <ImageProtectionGuard />
         <ToastProvider>
           <CartProvider>
             <FeedbackModalProvider>

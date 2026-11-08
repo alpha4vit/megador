@@ -60,7 +60,7 @@ function ProductGrid({ products, onProductClick }: { products: Product[]; onProd
                 >
                     {/* Top Area: Product Image */}
                     <div className="w-full aspect-square bg-slate-50 flex items-center justify-center p-2 rounded-t-lg overflow-hidden">
-                        <img
+                        <img draggable={false}
                             src={product.image}
                             alt={product.title}
                             className="w-full h-full object-contain mix-blend-multiply"
@@ -330,7 +330,7 @@ export default function AutomationSwingPage() {
                             className="relative -mx-4 px-6 py-8 sm:-mx-6 sm:p-8 lg:mx-0 lg:p-0 rounded-none sm:rounded-2xl lg:bg-transparent md:grid-cols-2 items-center md:h-[500px] md:max-h-[500px] grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-stretch text-white lg:text-gray-900 bg-white">
 
                             {/* Mobile backdrop image */}
-                            <img
+                            <img draggable={false}
                                 src="/automation-swing/webp/automation_swing.webp"
                                 className="absolute inset-0 object-cover opacity-60 max-lg:block hidden z-0 pointer-events-none sm:rounded-2xl"
                                 style={{width: '100%', height: '100%'}}
@@ -401,7 +401,7 @@ export default function AutomationSwingPage() {
 
                             {/* Right Column - Product Image */}
                             <div className="hidden lg:block w-full h-full relative z-20">
-                                <img
+                                <img draggable={false}
                                     src="/automation-swing/webp/automation_swing.webp"
                                     alt="Автоматика для распашных ворот"
                                     className="w-full h-full object-cover object-center rounded-2xl"
@@ -523,7 +523,7 @@ export default function AutomationSwingPage() {
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="w-1/2 bg-white rounded-l-2xl flex items-center justify-center p-8">
-                            <img
+                            <img draggable={false}
                                 src={selectedProduct.image}
                                 alt={selectedProduct.title}
                                 className="w-full h-full object-contain max-h-[500px]"
@@ -598,7 +598,7 @@ export default function AutomationSwingPage() {
 
                         {/* Product Image */}
                         <div className="w-full aspect-square bg-slate-50 flex items-center justify-center p-4 rounded-xl mb-4">
-                            <img
+                            <img draggable={false}
                                 src={selectedProduct.image}
                                 alt={selectedProduct.title}
                                 className="w-full h-full object-contain"

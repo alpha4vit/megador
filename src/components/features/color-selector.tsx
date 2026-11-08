@@ -52,6 +52,14 @@ export default function ColorSelector({colorCollections, title, subtitle, discla
 
     const currentTabBenefits = tabBenefits[activeTab];
 
+    const tabDisclaimers: Record<keyof ColorCollections, string> = {
+        ral: '',
+        wood: '',
+        digital: disclaimer || 'В каталоге представлены популярные примеры цифровой печати. По вашему запросу мы можем нанести на полотно ворот абсолютно любое изображение высокого разрешения, индивидуальный паттерн или реплику текстуры.'
+    };
+
+    const currentDisclaimer = tabDisclaimers[activeTab];
+
     const getContrastTextColor = (backgroundColor: string): string => {
         if (!backgroundColor || backgroundColor === '#F8F9FA') return 'text-gray-700';
 
@@ -95,7 +103,7 @@ export default function ColorSelector({colorCollections, title, subtitle, discla
                             }}
                         >
                             {(selectedColor.type === 'texture' || selectedColor.type === 'digital') && selectedColor.imageUrl ? (
-                                <img
+                                <img draggable={false}
                                     src={selectedColor.imageUrl}
                                     alt={selectedColor.name}
                                     className="absolute inset-0 w-full h-full object-cover rounded-lg"
@@ -111,10 +119,18 @@ export default function ColorSelector({colorCollections, title, subtitle, discla
                             </div>
                         </div>
                     </div>
+
+                    {/* Tab-specific Disclaimer - Below Preview (mobile/tablet only; on md+ it moves under the color grid) */}
+                    {currentDisclaimer && (
+                        <p className="md:hidden text-xs sm:text-sm text-gray-500 italic mt-4 w-full text-left pl-1 leading-relaxed">
+                            {currentDisclaimer}
+                        </p>
+                    )}
                 </div>
 
-                {/* Color Selector */}
-                <div className="flex flex-col order-1 lg:order-2 lg:col-span-7">
+                {/* Color Selector - min-height locked on lg so tab switches don't resize the row;
+                    shortest tab (wood) leaves empty space at the bottom instead of collapsing */}
+                <div className="flex flex-col justify-start items-stretch order-1 lg:order-2 lg:col-span-7 lg:min-h-[430px]">
 
                     {/* Mobile Tab Navigation */}
                     <div
@@ -233,11 +249,7 @@ export default function ColorSelector({colorCollections, title, subtitle, discla
                     {/* Tab Content Grid Stack */}
                     <div className="grid grid-cols-1 items-start w-full">
                         {/* RAL Tab Panel */}
-                        <div className={`grid-in-layer col-start-1 row-start-1 w-full transition-opacity duration-150 ease-in-out ${
-                            activeTab === 'ral'
-                                ? 'opacity-100 pointer-events-auto z-10'
-                                : 'opacity-0 pointer-events-none z-0 invisible'
-                        }`}>
+                        <div className={activeTab === 'ral' ? 'w-full' : 'hidden'}>
                             {/* Mobile Color Scroll Row */}
                             <div
                                 className="md:hidden flex overflow-x-auto whitespace-nowrap scrollbar-none gap-3 py-3 pb-2 mb-3 -mx-2 px-2"
@@ -265,7 +277,7 @@ export default function ColorSelector({colorCollections, title, subtitle, discla
                                                 }}
                                             >
                                                 {(color.type === 'texture' || color.type === 'digital') && color.imageUrl && (
-                                                    <img
+                                                    <img draggable={false}
                                                         src={color.imageUrl}
                                                         alt={color.name}
                                                         className="absolute inset-0 w-full h-full object-cover rounded-t-[10px]"
@@ -307,7 +319,7 @@ export default function ColorSelector({colorCollections, title, subtitle, discla
                                                 }}
                                             >
                                                 {(color.type === 'texture' || color.type === 'digital') && color.imageUrl && (
-                                                    <img
+                                                    <img draggable={false}
                                                         src={color.imageUrl}
                                                         alt={color.name}
                                                         className="absolute inset-0 w-full h-full object-cover rounded-t"
@@ -324,11 +336,7 @@ export default function ColorSelector({colorCollections, title, subtitle, discla
                         </div>
 
                         {/* Wood Tab Panel */}
-                        <div className={`grid-in-layer col-start-1 row-start-1 w-full transition-opacity duration-150 ease-in-out ${
-                            activeTab === 'wood'
-                                ? 'opacity-100 pointer-events-auto z-10'
-                                : 'opacity-0 pointer-events-none z-0 invisible'
-                        }`}>
+                        <div className={activeTab === 'wood' ? 'w-full' : 'hidden'}>
                             {/* Mobile Color Scroll Row */}
                             <div
                                 className="md:hidden flex overflow-x-auto whitespace-nowrap scrollbar-none gap-3 py-3 pb-2 mb-3 -mx-2 px-2"
@@ -356,7 +364,7 @@ export default function ColorSelector({colorCollections, title, subtitle, discla
                                                 }}
                                             >
                                                 {(color.type === 'texture' || color.type === 'digital') && color.imageUrl && (
-                                                    <img
+                                                    <img draggable={false}
                                                         src={color.imageUrl}
                                                         alt={color.name}
                                                         className="absolute inset-0 w-full h-full object-cover rounded-t-[10px]"
@@ -398,7 +406,7 @@ export default function ColorSelector({colorCollections, title, subtitle, discla
                                                 }}
                                             >
                                                 {(color.type === 'texture' || color.type === 'digital') && color.imageUrl && (
-                                                    <img
+                                                    <img draggable={false}
                                                         src={color.imageUrl}
                                                         alt={color.name}
                                                         className="absolute inset-0 w-full h-full object-cover rounded-t"
@@ -413,27 +421,27 @@ export default function ColorSelector({colorCollections, title, subtitle, discla
                                 ))}
                             </div>
 
-                            {/* Tab-specific Benefits Block - Desktop Only */}
-                            <div className="hidden lg:block mt-8 pt-6 border-t border-gray-100 animate-fadeIn">
-                                <div className="space-y-3">
-                                    <p className="text-xs uppercase font-bold tracking-wider text-gray-400 mb-2">Технологические преимущества покрытия:</p>
-                                    {tabBenefits.wood.map((bullet, idx) => (
-                                        <div key={idx} className="flex items-center gap-2 text-sm text-[#2F3E46]">
-                                            <span className="text-[#E65F2B] font-bold">✓</span>
-                                            <span>{bullet}</span>
-                                        </div>
-                                    ))}
+                            {/* Tab-specific Benefits Block - Desktop Only.
+                                Mounted exclusively for the active wood tab so inactive panels
+                                don't reserve layout height inside the stacked grid cell. */}
+                            {activeTab === 'wood' && !currentDisclaimer && (
+                                <div className="hidden lg:block mt-8 pt-6 border-t border-gray-100 animate-fadeIn">
+                                    <div className="space-y-3">
+                                        <p className="text-xs uppercase font-bold tracking-wider text-gray-400 mb-2">Технологические преимущества покрытия:</p>
+                                        {tabBenefits.wood.map((bullet, idx) => (
+                                            <div key={idx} className="flex items-center gap-2 text-sm text-[#2F3E46]">
+                                                <span className="text-[#E65F2B] font-bold">✓</span>
+                                                <span>{bullet}</span>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
 
                         {/* Digital Tab Panel */}
                         {showDigitalTab && (
-                            <div className={`grid-in-layer col-start-1 row-start-1 w-full transition-opacity duration-150 ease-in-out ${
-                                activeTab === 'digital'
-                                    ? 'opacity-100 pointer-events-auto z-10'
-                                    : 'opacity-0 pointer-events-none z-0 invisible'
-                            }`}>
+                            <div className={activeTab === 'digital' ? 'w-full' : 'hidden'}>
                             {/* Mobile Color Scroll Row */}
                             <div
                                 className="md:hidden flex overflow-x-auto whitespace-nowrap scrollbar-none gap-3 py-3 pb-2 mb-3 -mx-2 px-2"
@@ -461,7 +469,7 @@ export default function ColorSelector({colorCollections, title, subtitle, discla
                                                 }}
                                             >
                                                 {(color.type === 'texture' || color.type === 'digital') && color.imageUrl && (
-                                                    <img
+                                                    <img draggable={false}
                                                         src={color.imageUrl}
                                                         alt={color.name}
                                                         className="absolute inset-0 w-full h-full object-cover rounded-t-[10px]"
@@ -503,7 +511,7 @@ export default function ColorSelector({colorCollections, title, subtitle, discla
                                                 }}
                                             >
                                                 {(color.type === 'texture' || color.type === 'digital') && color.imageUrl && (
-                                                    <img
+                                                    <img draggable={false}
                                                         src={color.imageUrl}
                                                         alt={color.name}
                                                         className="absolute inset-0 w-full h-full object-cover rounded-t"
@@ -517,14 +525,16 @@ export default function ColorSelector({colorCollections, title, subtitle, discla
                                     </div>
                                 ))}
                             </div>
-
-                            {/* Digital Printing Disclaimer */}
-                            <p className="text-xs sm:text-sm text-gray-500 italic mt-4 w-full text-left pl-1 leading-relaxed">
-                                {disclaimer || 'В каталоге представлены популярные примеры цифровой печати. По вашему запросу мы можем нанести на полотно ворот абсолютно любое изображение высокого разрешения, индивидуальный паттерн или реплику текстуры.'}
-                            </p>
                         </div>
                         )}
                     </div>
+
+                    {/* Tab-specific Disclaimer - Below color grid (desktop only) */}
+                    {currentDisclaimer && (
+                        <p className="hidden md:block mt-6 text-xs sm:text-sm text-gray-500 italic w-full text-left leading-relaxed">
+                            {currentDisclaimer}
+                        </p>
+                    )}
                 </div>
             </div>
         </>

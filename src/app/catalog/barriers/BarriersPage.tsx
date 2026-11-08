@@ -208,7 +208,7 @@ export default function BarriersPage() {
                             className="relative -mx-4 px-6 py-8 sm:-mx-6 sm:p-8 lg:mx-0 lg:p-0 rounded-none sm:rounded-2xl lg:bg-transparent grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-stretch text-white lg:text-gray-900">
 
                             {/* LAYER 1: Mobile backdrop image */}
-                            <img
+                            <img draggable={false}
                                 src="/barriers/webp/barriers-preview.webp"
                                 className="absolute inset-0 object-cover opacity-60 max-lg:block hidden z-0 pointer-events-none sm:rounded-2xl"
                                 style={{width: '100%', height: '100%'}}
@@ -279,7 +279,7 @@ export default function BarriersPage() {
 
                             {/* Right Column - Product Image */}
                             <div className="hidden lg:block w-full h-full relative z-20">
-                                <img
+                                <img draggable={false}
                                     src="/barriers/webp/barriers-preview.webp"
                                     alt="Автоматические шлагбаумы"
                                     className="w-full h-full object-cover rounded-2xl shadow-xl"

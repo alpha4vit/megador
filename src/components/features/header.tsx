@@ -138,12 +138,12 @@ export const Header = () => {
                         onMouseEnter={handleCatalogEnter}
                         onMouseLeave={handleCatalogLeave}
                     >
-                      {/* Ограничитель ширины сайта, который центрует белую плашку по центру экрана */}
-                      <div className="max-w-[1200px] mx-auto px-4 lg:px-6 w-full">
+                      {/* Ограничитель ширины: узкая карточка, идеально центрированная по экрану */}
+                      <div className="max-w-4xl mx-auto px-4 w-full">
 
-                        <div className="bg-white border border-gray-200 shadow-xl rounded-2xl px-6 py-8 w-full">
-                          {/* ИСПРАВЛЕНО: Сетке принудительно возвращен дисплей grid для десктопа (lg:grid-cols-4), чтобы элементы встали просторно */}
-                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div className="bg-white border border-gray-200 shadow-xl rounded-2xl px-8 py-8 w-full">
+                          {/* 3-колоночная сетка: 9 пунктов складываются в ровно 3 ряда */}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
                             {catalogItems.map((item) => {
                               const Icon = item.icon;
                               const isActive = isActiveCatalogItem(item.href);
@@ -196,17 +196,24 @@ export const Header = () => {
               <a href="#portfolio" className="text-[#2F3E46] hover:text-[#E65F2B] transition-colors">
                 Портфолио
               </a>
-              <a href="#contact" className="text-[#2F3E46] hover:text-[#E65F2B] transition-colors">
+              <Link href="/contacts" className="text-[#2F3E46] hover:text-[#E65F2B] transition-colors">
                 Контакты
-              </a>
+              </Link>
             </nav>
 
             {/* CTA Button */}
             <div className="hidden md:flex items-center space-x-4">
-              <a href="tel:+375296237563" className="flex items-center text-[#2F3E46] hover:text-[#E65F2B] transition-colors">
-                <Phone className="w-5 h-5 mr-2" />
-                <span className="font-medium">+375 (29) 623 75 63</span>
-              </a>
+              <div className="flex items-center text-[#2F3E46]">
+                <Phone className="w-5 h-5 mr-2 flex-shrink-0" />
+                <div className="flex flex-col leading-tight">
+                  <a href="tel:+375296237563" className="text-sm font-medium hover:text-[#E65F2B] transition-colors">
+                    +375 (29) 623-75-63
+                  </a>
+                  <a href="tel:+375339088847" className="text-sm font-medium hover:text-[#E65F2B] transition-colors">
+                    +375 (33) 390-88-47
+                  </a>
+                </div>
+              </div>
               <Button size="sm">Заказать замер</Button>
             </div>
 
@@ -334,7 +341,7 @@ export const Header = () => {
               Портфолио
             </Link>
             <Link
-              href="#contact"
+              href="/contacts"
               className="block p-4 rounded-lg text-lg font-medium text-[#2F3E46] hover:bg-[#F8F9FA] transition-colors min-h-[56px]"
               onClick={closeMobileMenu}
             >

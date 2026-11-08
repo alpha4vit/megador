@@ -60,7 +60,7 @@ function ProductGrid({ products, onProductClick }: { products: Product[]; onProd
                 >
                     {/* Top Area: Product Image */}
                     <div className="w-full aspect-square bg-slate-50 flex items-center justify-center p-2 rounded-t-lg overflow-hidden">
-                        <img
+                        <img draggable={false}
                             src={product.image}
                             alt={product.title}
                             className="w-full h-full object-contain mix-blend-multiply"
@@ -418,7 +418,7 @@ export default function AutomationSectionalPage() {
                             className="relative -mx-4 px-6 py-8 sm:-mx-6 sm:p-8 lg:mx-0 lg:p-0 rounded-none sm:rounded-2xl lg:bg-transparent grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-stretch text-white lg:text-gray-900 bg-white">
 
                             {/* Mobile backdrop image */}
-                            <img
+                            <img draggable={false}
                                 src="/automation-sectional/webp/automation-sectional.webp"
                                 className="absolute inset-0 object-cover opacity-60 max-lg:block hidden z-0 pointer-events-none sm:rounded-2xl"
                                 style={{width: '100%', height: '100%'}}
@@ -489,7 +489,7 @@ export default function AutomationSectionalPage() {
 
                             {/* Right Column - Product Image */}
                             <div className="hidden lg:block w-full h-full relative z-20">
-                                <img
+                                <img draggable={false}
                                     src="/automation-sectional/webp/automation-sectional.webp"
                                     alt="Автоматика для секционных ворот"
                                     className="w-full h-full object-cover rounded-2xl"
@@ -626,7 +626,7 @@ export default function AutomationSectionalPage() {
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="w-1/2 bg-white rounded-l-2xl flex items-center justify-center p-8">
-                            <img
+                            <img draggable={false}
                                 src={selectedProduct.image}
                                 alt={selectedProduct.title}
                                 className="w-full h-full object-contain max-h-[500px]"
@@ -701,7 +701,7 @@ export default function AutomationSectionalPage() {
 
                         {/* Product Image */}
                         <div className="w-full aspect-square bg-slate-50 flex items-center justify-center p-4 rounded-xl mb-4">
-                            <img
+                            <img draggable={false}
                                 src={selectedProduct.image}
                                 alt={selectedProduct.title}
                                 className="w-full h-full object-contain"

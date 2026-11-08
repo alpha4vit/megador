@@ -16,15 +16,25 @@ export const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-start">
                 <MapPin className="w-5 h-5 mr-3 mt-0.5 flex-shrink-0" />
-                <p className="text-gray-300">
+                <a
+                  href="https://yandex.ru/maps/?text=%D0%A0%D0%91%2C%20%D0%B3.%20%D0%9C%D0%B8%D0%BD%D1%81%D0%BA%2C%20%D1%83%D0%BB.%20%D0%A5%D0%B0%D1%80%D1%8C%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B0%D1%8F%2054%D0%90%2C%20%D0%BE%D1%84.%202"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
                   РБ, г. Минск, ул. Харьковская 54А, оф. 2
-                </p>
+                </a>
               </div>
               <div className="flex items-center">
                 <Phone className="w-5 h-5 mr-3 flex-shrink-0" />
-                <a href="tel:+375296237563" className="text-gray-300 hover:text-white transition-colors">
-                  +375 (29) 623 75 63
-                </a>
+                <div className="flex flex-col">
+                  <a href="tel:+375296237563" className="text-gray-300 hover:text-white transition-colors">
+                    +375 (29) 623 75 63
+                  </a>
+                  <a href="tel:+375339088847" className="text-gray-300 hover:text-white transition-colors">
+                    +375 (33) 390 88 47
+                  </a>
+                </div>
               </div>
               <div className="flex items-center">
                 <Mail className="w-5 h-5 mr-3 flex-shrink-0" />

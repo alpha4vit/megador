@@ -56,11 +56,11 @@ function ProductGrid({ products, onProductClick }: { products: Product[]; onProd
                 <div
                     key={product.id}
                     className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between cursor-pointer"
-                    onClick={() => onProductClick(product)}
+                    onContextMenu={(event) => event.preventDefault()} onClick={() => onProductClick(product)}
                 >
                     {/* Top Area: Product Image */}
                     <div className="w-full aspect-square bg-slate-50 flex items-center justify-center p-2 rounded-t-lg overflow-hidden">
-                        <img
+                        <img draggable={false}
                             src={product.image}
                             alt={product.title}
                             className="w-full h-full object-contain mix-blend-multiply"
@@ -340,7 +340,7 @@ export default function AccessoriesPage() {
                             className="relative -mx-4 px-6 py-8 sm:-mx-6 sm:p-8 lg:mx-0 lg:p-0 rounded-none sm:rounded-2xl lg:bg-transparent grid grid-cols-1 md:grid-cols-2 gap-8 items-center text-white lg:text-gray-900">
 
                             {/* Mobile backdrop image */}
-                            <img
+                            <img draggable={false}
                                 src="/accessories/webp/accessories_mobile_background.webp"
                                 className="absolute inset-0 object-cover opacity-60 max-lg:block hidden z-0 pointer-events-none sm:rounded-2xl"
                                 style={{width: '100%', height: '100%'}}
@@ -410,7 +410,7 @@ export default function AccessoriesPage() {
 
                             {/* Right Column - Product Image */}
                             <div className="hidden lg:block w-full flex items-center justify-center p-4 relative z-20">
-                                <img
+                                <img draggable={false}
                                     src="/accessories/webp/accessories_mobile_background.webp"
                                     alt="Аксессуары для автоматики и шлагбаумов"
                                     className="w-full max-w-[480px] h-auto object-contain rounded-2xl"
@@ -491,27 +491,27 @@ export default function AccessoriesPage() {
             </Section>
 
             {/* Stages Block */}
-            <Section background="white" className="py-8 lg:py-20">
-                <Container background="white">
-                    <div className="text-center max-w-3xl mx-auto px-4 mt-6 mb-12 lg:mt-16 lg:mb-12">
-                        <h2
-                            className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#2F3E46] mb-4"
-                            style={{ fontFamily: 'var(--font-montserrat)' }}
-                        >
-                            ЭТАПЫ ОТ ЗВОНКА ДО РЕЗУЛЬТАТА
-                        </h2>
-                        <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
-                            Простой и прозрачный процесс подбора и настройки аксессуаров
-                        </p>
-                    </div>
+            {/*<Section background="white" className="py-8 lg:py-20">*/}
+            {/*    <Container background="white">*/}
+            {/*        <div className="text-center max-w-3xl mx-auto px-4 mt-6 mb-12 lg:mt-16 lg:mb-12">*/}
+            {/*            <h2*/}
+            {/*                className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#2F3E46] mb-4"*/}
+            {/*                style={{ fontFamily: 'var(--font-montserrat)' }}*/}
+            {/*            >*/}
+            {/*                ЭТАПЫ ОТ ЗВОНКА ДО РЕЗУЛЬТАТА*/}
+            {/*            </h2>*/}
+            {/*            <p className="text-base sm:text-lg text-gray-600 leading-relaxed">*/}
+            {/*                Простой и прозрачный процесс подбора и настройки аксессуаров*/}
+            {/*            </p>*/}
+            {/*        </div>*/}
 
-                    <ProcessMap steps={processSteps} />
-                </Container>
-            </Section>
+            {/*        <ProcessMap steps={processSteps} />*/}
+            {/*    </Container>*/}
+            {/*</Section>*/}
 
             {/* CTA Section */}
-            <Section background="muted" className="py-8 lg:py-20">
-                <Container background="muted">
+            <Section background="white" className="py-8 lg:py-20">
+                <Container background="white">
                     <div className="max-w-3xl mx-auto text-center mt-6 mb-4 lg:mt-16 lg:mb-8">
                         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#2F3E46] mb-6">
                             Нужна помощь в выборе или программировании аксессуаров?
@@ -546,8 +546,8 @@ export default function AccessoriesPage() {
                         className={`hidden md:flex rounded-2xl shadow-2xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-hidden transition-all duration-300 ease-out ${isClosing || !isMounted ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <div className="w-1/2 bg-white rounded-l-2xl flex items-center justify-center p-8">
-                            <img
+                        <div className="w-1/2 bg-white rounded-l-2xl flex items-center justify-center p-8 relative">
+                            <img draggable={false}
                                 src={selectedProduct.image}
                                 alt={selectedProduct.title}
                                 className="w-full h-full object-contain max-h-[500px]"
@@ -621,8 +621,8 @@ export default function AccessoriesPage() {
                         </div>
 
                         {/* Product Image */}
-                        <div className="w-full aspect-square bg-slate-50 flex items-center justify-center p-4 rounded-xl mb-4">
-                            <img
+                        <div className="w-full aspect-square bg-slate-50 flex items-center justify-center p-4 rounded-xl mb-4 relative">
+                            <img draggable={false}
                                 src={selectedProduct.image}
                                 alt={selectedProduct.title}
                                 className="w-full h-full object-contain"
