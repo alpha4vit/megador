@@ -109,7 +109,8 @@ export default function RollerGatesPage() {
             color: 'Антрацит',
             automation: 'Marantec',
             dimensions: '3000 x 2500 мм',
-            timeline: '2 дня'
+            timeline: '2 дня',
+            image: "/roller-gates/webp/rollet-preview.webp"
         },
         {
             location: 'Минск, Уручье',
@@ -117,7 +118,8 @@ export default function RollerGatesPage() {
             color: 'Золотой дуб',
             automation: 'Ручное управление',
             dimensions: '3500 x 2500 мм',
-            timeline: '2 дня'
+            timeline: '2 дня',
+            image: "/roller-gates/webp/roller_2.webp"
         },
         {
             location: 'Минский р-н, Ждановичи',
@@ -125,7 +127,8 @@ export default function RollerGatesPage() {
             color: 'RAL 9016 Белый',
             automation: 'Nice',
             dimensions: '3200 x 2500 мм',
-            timeline: '3 дня'
+            timeline: '3 дня',
+            image: "/roller-gates/webp/roller_1.webp"
         },
     ];
 
@@ -138,7 +141,7 @@ export default function RollerGatesPage() {
         installationTime: item.timeline,
         priceRange: 'от 1200 BYN',
         description: `Роллетные ворота серии ${item.series} в цвете ${item.color}. Размеры: ${item.dimensions}. Профессиональная установка с гарантией.`,
-        image: '/images/portfolio/roller-gates/webp-placeholder.webp',
+        image: item.image,
     }));
 
     return (

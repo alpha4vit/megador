@@ -147,7 +147,8 @@ export default function SectionalGatesPage() {
             color: 'Антрацит',
             automation: 'Marantec',
             dimensions: '2500 x 2125 мм',
-            timeline: '3 дня'
+            timeline: '3 дня',
+            image: '/sectional-gates/webp/section-preview-ai.webp'
         },
         {
             location: 'Минск, Цнянка',
@@ -155,7 +156,8 @@ export default function SectionalGatesPage() {
             color: 'Золотой дуб',
             automation: 'Ручное управление',
             dimensions: '3000 x 2125 мм',
-            timeline: '2 дня'
+            timeline: '2 дня',
+            image: '/sectional-gates/webp/sectional_1.webp'
         },
         {
             location: 'Минский р-н, Логойск',
@@ -163,7 +165,8 @@ export default function SectionalGatesPage() {
             color: 'RAL 9016 Белый',
             automation: 'Nice',
             dimensions: '2750 x 2125 мм',
-            timeline: '3 дня'
+            timeline: '3 дня',
+            image: '/sectional-gates/webp/sectional_2.webp'
         },
     ];
 
@@ -176,7 +179,7 @@ export default function SectionalGatesPage() {
         installationTime: item.timeline,
         priceRange: 'от 1400 BYN',
         description: `Секционные ворота серии ${item.series} в цвете ${item.color}. Размеры: ${item.dimensions}. Профессиональная установка с гарантией.`,
-        image: '/images/portfolio/sectional-gates/webp-placeholder.webp',
+        image: item.image,
     }));
 
     return (

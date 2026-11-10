@@ -122,7 +122,8 @@ export default function SlidingGatesPage() {
             color: 'Антрацит',
             automation: 'Alutech SG.02.002',
             dimensions: '4000 x 2000 мм',
-            timeline: '1 день'
+            timeline: '1 день',
+            image: '/sliding-gates/webp/sliding_2.webp'
         },
         {
             location: 'Минский р-н, Смолевичи',
@@ -130,7 +131,8 @@ export default function SlidingGatesPage() {
             color: 'RAL 9016 Белый',
             automation: 'Nice',
             dimensions: '5000 x 2000 мм',
-            timeline: '2 дня'
+            timeline: '2 дня',
+            image: '/sliding-gates/webp/sliding_1.webp'
         },
         {
             location: 'Минск, Уручье',
@@ -138,7 +140,8 @@ export default function SlidingGatesPage() {
             color: 'Профнастил',
             automation: 'Ручное управление',
             dimensions: '3500 x 2000 мм',
-            timeline: '1 день'
+            timeline: '1 день',
+            image: '/sliding-gates/webp/sliding.webp',
         },
     ];
 
@@ -151,7 +154,7 @@ export default function SlidingGatesPage() {
         installationTime: item.timeline,
         priceRange: 'от 1000 BYN',
         description: `Откатные ворота серии ${item.series} в цвете ${item.color}. Размеры: ${item.dimensions}. Профессиональная установка с гарантией.`,
-        image: '/main/webp/sliding.webp',
+        image: item.image,
     }));
 
     return (
@@ -166,7 +169,7 @@ export default function SlidingGatesPage() {
 
                             {/* LAYER 1: Mobile backdrop image */}
                             <img draggable={false}
-                                src="/main/webp/sliding.webp"
+                                src="/sliding-gates/webp/sliding.webp"
                                 className="absolute inset-0 object-cover opacity-60 max-lg:block hidden z-0 pointer-events-none sm:rounded-2xl"
                                 style={{width: '100%', height: '100%'}}
                                 alt="Sliding Gates Mobile Backdrop"
@@ -237,7 +240,7 @@ export default function SlidingGatesPage() {
                             {/* Right Column - Product Image */}
                             <div className="hidden lg:block w-full h-full relative z-20">
                                 <img draggable={false}
-                                    src="/main/webp/sliding.webp"
+                                    src="/sliding-gates/webp/sliding.webp"
                                     alt="Откатные ворота с автоматикой"
                                     className="w-full h-full object-cover rounded-2xl shadow-xl"
                                 />

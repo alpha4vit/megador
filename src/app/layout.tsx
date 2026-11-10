@@ -72,9 +72,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="ru"
+      suppressHydrationWarning
       className={`${inter.variable} ${montserrat.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans">
+      <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>
         <ImageProtectionGuard />
         <ToastProvider>
           <CartProvider>

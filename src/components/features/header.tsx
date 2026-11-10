@@ -216,8 +216,8 @@ export const Header = () => {
                   <a href="tel:+375296237563" className="text-sm font-medium hover:text-[#E65F2B] transition-colors">
                     +375 (29) 623-75-63
                   </a>
-                  <a href="tel:+375339088847" className="text-sm font-medium hover:text-[#E65F2B] transition-colors">
-                    +375 (33) 390-88-47
+                  <a href="tel:+375333026676" className="text-sm font-medium hover:text-[#E65F2B] transition-colors">
+                    +375 (33) 302 66 76
                   </a>
                 </div>
               </div>

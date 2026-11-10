@@ -2,7 +2,7 @@
 
 import {useCallback, useEffect, useState} from 'react';
 import {AnimatePresence, motion} from 'framer-motion';
-import {ArrowRight, Check, ChevronLeft, ChevronRight, MapPin} from 'lucide-react';
+import {ArrowRight, Check, ChevronLeft, ChevronRight, MapPin, X} from 'lucide-react';
 import {Button} from '@/components/ui/button';
 import {PortfolioImageFallback} from './portfolio-image';
 import type {PortfolioProject} from './portfolio-data';
@@ -56,6 +56,7 @@ export function ProjectDetailsModal({project, onClose, onCta}: ProjectDetailsMod
     if (shown === null) return null;
 
     const galleryImages = shown.images.filter(Boolean);
+    const hasImages = galleryImages.length > 0;
     const goPrev = () => setActiveImage((i) => (i - 1 + galleryImages.length) % galleryImages.length);
     const goNext = () => setActiveImage((i) => (i + 1) % galleryImages.length);
     const handleDragEnd = (_: unknown, info: { offset: { x: number }; velocity: { x: number } }) => {
@@ -64,7 +65,7 @@ export function ProjectDetailsModal({project, onClose, onCta}: ProjectDetailsMod
         else if (info.offset.x > 40 || info.velocity.x > 300) goPrev();
     };
 
-    const gallery = galleryImages.length > 0 && (
+    const gallery = hasImages && (
         <div className="flex items-center justify-center bg-[#F8F9FA] p-4 sm:p-6 lg:p-8 lg:flex-1 lg:min-h-0">
             <div className="relative w-full max-w-[560px]">
                 <motion.div
@@ -143,7 +144,7 @@ export function ProjectDetailsModal({project, onClose, onCta}: ProjectDetailsMod
     );
 
     const sidebar = (
-        <div className="flex flex-col p-6 lg:p-8 lg:w-[420px] lg:flex-shrink-0 lg:min-h-0 lg:overflow-y-auto">
+        <div className={`flex flex-col p-6 lg:p-8 lg:min-h-0 lg:overflow-y-auto ${hasImages ? 'lg:w-[420px] lg:flex-shrink-0' : 'lg:w-full'}`}>
             <div className="mb-5">
                 <span className="inline-block text-xs font-semibold uppercase tracking-wide text-[#E65F2B] bg-orange-50 border border-orange-100 rounded-full px-3 py-1 mb-3">
                     {shown.typeLabel}
@@ -180,7 +181,7 @@ export function ProjectDetailsModal({project, onClose, onCta}: ProjectDetailsMod
                 </div>
             )}
 
-            <div className="mt-auto">
+            <div className="mt-auto pb-8">
                 <div className="flex items-baseline justify-between mb-4">
                     <span className="text-sm text-gray-500">Ориентировочная стоимость</span>
                     <span className="text-2xl font-bold text-[#E65F2B]">{shown.cost}</span>
@@ -217,10 +218,19 @@ export function ProjectDetailsModal({project, onClose, onCta}: ProjectDetailsMod
                         animate={{opacity: 1, y: 0, scale: 1}}
                         exit={{opacity: 0, y: 24, scale: 0.95}}
                         transition={EXIT_TRANSITION}
-                        className="w-full lg:max-w-5xl max-h-[92vh] overflow-y-auto lg:overflow-visible"
+                        className={`w-full max-h-[92vh] overflow-y-auto lg:overflow-visible ${hasImages ? 'lg:max-w-5xl' : 'lg:max-w-2xl'}`}
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden w-full flex flex-col lg:flex-row lg:max-h-[85vh]">
+                        <div className="relative bg-white rounded-2xl shadow-2xl overflow-hidden w-full flex flex-col lg:flex-row lg:max-h-[85vh]">
+                            <motion.button
+                                type="button"
+                                onClick={handleClose}
+                                aria-label="Закрыть"
+                                whileTap={{scale: 0.9}}
+                                className="absolute top-3 right-3 z-20 w-11 h-11 rounded-full bg-white/90 hover:bg-white shadow-md flex items-center justify-center text-[#2F3E46] transition-colors"
+                            >
+                                <X className="w-5 h-5"/>
+                            </motion.button>
                             {gallery}
                             {sidebar}
                         </div>
