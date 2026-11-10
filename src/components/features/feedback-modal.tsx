@@ -1,34 +1,252 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, ChevronRight, Check, Plus, Minus, Trash2 } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { X, ChevronRight, ChevronDown, Check, Plus, Minus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useFeedbackModal, FeedbackModalConfig } from '@/contexts/FeedbackModalContext';
+import { useFeedbackModal, FeedbackModalConfig, ModalScope } from '@/contexts/FeedbackModalContext';
 import { useCart, CartItem } from '@/contexts/CartContext';
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080';
+const FEEDBACK_ENDPOINT = `${API_BASE_URL}/feedback`;
+
+type FeedbackMetadata = Record<string, unknown> & { type: string };
+
+type GateKind = 'SECTIONAL_GATES' | 'ROLLER_GATES' | 'SLIDING_GATES' | 'SWING_GATES' | 'BARRIER';
+
+interface FormState {
+  // Gate-specific fields
+  width: string;
+  height: string;
+  headroom: string;
+  withAutomation: boolean | null;
+  withWicket: boolean | null;
+  needFoundation: boolean | null;
+  needPosts: boolean | null;
+  needSupportPost: boolean | null;
+  hasEmergencyOverride: boolean | null;
+  installationType: '' | 'SURFACE_MOUNT' | 'BUILT_IN';
+  intensity: '' | 'LOW' | 'MEDIUM' | 'HIGH';
+  boomType: '' | 'STRAIGHT' | 'FOLDING';
+  accessControlMethod: string;
+  // Contact fields
+  name: string;
+  phone: string;
+  note: string;
+}
+
+const INITIAL_FORM_STATE: FormState = {
+  width: '',
+  height: '',
+  headroom: '',
+  withAutomation: null,
+  withWicket: null,
+  needFoundation: null,
+  needPosts: null,
+  needSupportPost: null,
+  hasEmergencyOverride: null,
+  installationType: '',
+  intensity: '',
+  boomType: '',
+  accessControlMethod: '',
+  name: '',
+  phone: '',
+  note: '',
+};
+
+function parseMillimeters(value: string): number | null {
+  const parsed = parseInt(value.replace(/\D/g, ''), 10);
+  return Number.isNaN(parsed) ? null : parsed;
+}
+
+function detectGateKind(gateType: string): GateKind {
+  const normalized = gateType.toLowerCase();
+  if (normalized.includes('шлагбаум')) return 'BARRIER';
+  if (normalized.includes('роллет')) return 'ROLLER_GATES';
+  if (normalized.includes('откат')) return 'SLIDING_GATES';
+  if (normalized.includes('распаш')) return 'SWING_GATES';
+  return 'SECTIONAL_GATES';
+}
+
+function buildGateMetadata(kind: GateKind, formData: FormState): FeedbackMetadata {
+  const width = parseMillimeters(formData.width);
+  const height = parseMillimeters(formData.height);
+  const headroom = parseMillimeters(formData.headroom);
+
+  switch (kind) {
+    case 'BARRIER':
+      return {
+        type: 'BARRIER',
+        boomLength: width,
+        hasWicket: formData.withWicket,
+        needFoundation: formData.needFoundation,
+        intensity: formData.intensity || null,
+        accessControlMethod: formData.accessControlMethod || null,
+        boomType: formData.boomType || undefined,
+        needSupportPost: formData.needSupportPost,
+      };
+    case 'ROLLER_GATES':
+      return {
+        type: 'ROLLER_GATES',
+        width,
+        height,
+        installationType: formData.installationType || null,
+        hasAutomation: formData.withAutomation,
+        hasEmergencyOverride: formData.hasEmergencyOverride,
+      };
+    case 'SLIDING_GATES':
+      return {
+        type: 'SLIDING_GATES',
+        width,
+        height,
+        headroom,
+        hasAutomation: formData.withAutomation,
+        hasWicket: formData.withWicket,
+        needFoundation: formData.needFoundation,
+      };
+    case 'SWING_GATES':
+      return {
+        type: 'SWING_GATES',
+        width,
+        height,
+        hasAutomation: formData.withAutomation,
+        hasWicket: formData.withWicket,
+        needPosts: formData.needPosts,
+      };
+    case 'SECTIONAL_GATES':
+    default:
+      return {
+        type: 'SECTIONAL_GATES',
+        width,
+        height,
+        headroom,
+        hasAutomation: formData.withAutomation,
+        hasWicket: formData.withWicket,
+      };
+  }
+}
+
+function buildMetadata(
+  scope: ModalScope | undefined,
+  config: FeedbackModalConfig | null,
+  formData: FormState,
+  cart: CartItem[],
+): FeedbackMetadata {
+  const note = formData.note.trim();
+
+  if (scope === 'gate') {
+    const metadata = buildGateMetadata(detectGateKind(config?.gateInfo?.gateType ?? ''), formData);
+    if (config?.portfolioProject) {
+      metadata.portfolioProjectId = config.portfolioProject.id;
+      metadata.portfolioProjectTitle = config.portfolioProject.title;
+    }
+    return metadata;
+  }
+
+  if (scope === 'cart_checkout') {
+    return {
+      type: 'PRODUCT',
+      items: cart.map((item) => ({ name: item.title, quantity: item.quantity })),
+      comment: note || null,
+    };
+  }
+
+  if (scope === 'product' && config?.productInfo) {
+    const { name, price } = config.productInfo;
+    const comment = [name ? `${name}${price ? ` — ${price}` : ''}` : null, note || null]
+      .filter(Boolean)
+      .join('\n');
+    return { type: 'PRODUCT', items: [{ name: config.productInfo.name, quantity: 1 }], comment: comment || null };
+  }
+
+  if (scope === 'consultation') {
+    return { type: 'CONSULTATION', question: note || null };
+  }
+
+  const comment = [config?.title ?? null, note || null].filter(Boolean).join('\n');
+  return { type: 'PRODUCT', items: [], comment: comment || null };
+}
+
+function SuccessState() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.85 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ type: 'spring', stiffness: 260, damping: 17 }}
+      className="flex flex-col items-center justify-center py-12"
+    >
+      <motion.div
+        initial={{ scale: 0.4, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 16, delay: 0.2 }}
+        className="mb-8 p-2"
+      >
+        <motion.svg viewBox="0 0 52 52" className="w-28 h-28" fill="none">
+          <motion.g
+            animate={{ scale: [1, 1.08, 1] }}
+            transition={{ delay: 1.45, duration: 0.45, ease: 'easeOut' }}
+            style={{ transformBox: 'fill-box', transformOrigin: 'center' }}
+          >
+            <motion.circle
+              cx="26"
+              cy="26"
+              r="25"
+              stroke="#22c55e"
+              strokeWidth="3"
+              strokeLinecap="round"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 0.7, ease: 'easeInOut', delay: 0.35 }}
+            />
+            <motion.path
+              d="M15 27l7.5 7.5L37 19"
+              stroke="#22c55e"
+              strokeWidth="4.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 0.5, ease: 'easeOut', delay: 1.0 }}
+            />
+          </motion.g>
+        </motion.svg>
+      </motion.div>
+
+      <motion.h3
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.35, duration: 0.5, ease: 'easeOut' }}
+        className="text-2xl font-bold text-[#2F3E46] mb-2"
+      >
+        Заявка отправлена!
+      </motion.h3>
+      <motion.p
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.5, duration: 0.5, ease: 'easeOut' }}
+        className="text-gray-600 text-center"
+      >
+        Мы свяжемся с вами в ближайшее время
+      </motion.p>
+    </motion.div>
+  );
+}
 
 export default function FeedbackModal() {
   const { isOpen, config, closeModal } = useFeedbackModal();
-  const { cart, updateQuantity, removeFromCart, clearCart } = useCart();
+  const { cart, updateQuantity, removeFromCart, clearCart, getTotalItems } = useCart();
   const [isClosing, setIsClosing] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [isConsentGiven, setIsConsentGiven] = useState(false);
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
 
   // Form state
-  const [formData, setFormData] = useState({
-    // Gate-specific fields
-    width: '',
-    height: '',
-    withAutomation: true as boolean | null,
-    withWicket: true as boolean | null,
-    // Contact fields
-    name: '',
-    phone: '',
-    note: '',
-  });
+  const [formData, setFormData] = useState<FormState>(INITIAL_FORM_STATE);
 
   // Handle escape key
   useEffect(() => {
@@ -54,15 +272,8 @@ export default function FeedbackModal() {
     if (isOpen) {
       setIsMounted(false);
       setStep(1);
-      setFormData({
-        width: '',
-        height: '',
-        withAutomation: true,
-        withWicket: true,
-        name: '',
-        phone: '',
-        note: '',
-      });
+      setSubmitError(null);
+      setFormData(INITIAL_FORM_STATE);
       const timeout = setTimeout(() => {
         setIsMounted(true);
       }, 10);
@@ -91,50 +302,37 @@ export default function FeedbackModal() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Build the submission payload
-    const payload: any = {
-      clientName: formData.name,
-      phone: formData.phone,
-      sourcePage: window.location.pathname,
-      formContextType: config?.scope === 'cart_checkout' ? 'CART_CHECKOUT' : config?.scope?.toUpperCase(),
-      timestamp: new Date().toISOString(),
-      comment: formData.note,
+    setSubmitError(null);
+
+    const phoneDigits = formData.phone.replace(/\D/g, '');
+    const payload = {
+      fullName: formData.name.trim(),
+      phoneNumber: phoneDigits ? `+${phoneDigits}` : '',
+      metadata: buildMetadata(config?.scope, config, formData, cart),
     };
 
-    // Add gate-specific fields if applicable
-    if (config?.scope === 'gate') {
-      payload.width = formData.width;
-      payload.height = formData.height;
-      payload.withAutomation = formData.withAutomation;
-      payload.withWicket = formData.withWicket;
-      payload.gateInfo = config?.gateInfo;
+    try {
+      const response = await fetch(FEEDBACK_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Failed to submit feedback:', error);
+      setIsSubmitting(false);
+      setSubmitError('Не удалось отправить заявку. Пожалуйста, попробуйте ещё раз или свяжитесь с нами по телефону.');
+      return;
     }
 
-    // Add product info if applicable
-    if (config?.scope === 'product' && config?.productInfo) {
-      payload.productInfo = config.productInfo;
-    }
-
-    // Add cart items if cart checkout
-    if (config?.scope === 'cart_checkout') {
-      payload.cartItems = cart.map((item) => ({
-        title: item.title,
-        price: item.price,
-        quantity: item.quantity,
-      }));
-    }
-
-    console.log('Form submitted:', payload);
-    
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    
     // Clear cart on successful cart checkout
     if (config?.scope === 'cart_checkout') {
       clearCart();
     }
-    
+
     setIsSubmitting(false);
     setSubmitSuccess(true);
     
@@ -142,7 +340,7 @@ export default function FeedbackModal() {
     setTimeout(() => {
       setSubmitSuccess(false);
       handleClose();
-    }, 2000);
+    }, 3200);
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -193,38 +391,195 @@ export default function FeedbackModal() {
     );
   };
 
+  const fieldInputClass =
+    'w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E65F2B] focus:border-transparent outline-none transition-all';
+
+  const renderMmField = (
+    label: string,
+    field: 'width' | 'height' | 'headroom',
+    placeholder = 'Например: 3000',
+  ) => (
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+        {label} {/*<span className="text-gray-400 font-normal">- опционально</span>*/}
+      </label>
+      <input
+        type="text"
+        inputMode="numeric"
+        value={formData[field]}
+        onChange={(e) => setFormData({ ...formData, [field]: e.target.value })}
+        placeholder={placeholder}
+        className={fieldInputClass}
+      />
+    </div>
+  );
+
+  const renderSelectField = (
+    label: string,
+    value: string,
+    onChange: (value: string) => void,
+    options: { value: string; label: string }[],
+  ) => (
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+        {label} {/*<span className="text-gray-400 font-normal">- опционально</span>*/}
+      </label>
+      <div className="relative">
+        <select
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className={`${fieldInputClass} appearance-none pr-11`}
+        >
+          <option value="" className="text-gray-400">Не указано</option>
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <ChevronDown className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+      </div>
+    </div>
+  );
+
+  const renderBoolToggle = (
+    label: string,
+    yesLabel: string,
+    noLabel: string,
+    value: boolean | null,
+    onChange: (value: boolean) => void,
+  ) => (
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-3">{label}</label>
+      <div className="relative flex w-full p-1 bg-slate-50 border border-slate-200 rounded-xl select-none">
+        {/* Sliding Background Accent */}
+        <div
+          className={`absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-[#E65F2B] rounded-lg shadow-sm z-0 transition-all duration-300 ease-in-out ${
+            value === null
+              ? 'opacity-0'
+              : value === false
+                ? 'translate-x-full opacity-100'
+                : 'opacity-100'
+          }`}
+        />
+
+        {/* Option 1: Yes */}
+        <button
+          type="button"
+          onClick={() => onChange(true)}
+          className={`flex-1 py-3 px-4 rounded-lg transition-colors duration-300 relative z-10 ${
+            value === true ? 'text-white font-medium' : 'text-slate-600'
+          }`}
+        >
+          {yesLabel}
+        </button>
+
+        {/* Option 2: No */}
+        <button
+          type="button"
+          onClick={() => onChange(false)}
+          className={`flex-1 py-3 px-4 rounded-lg transition-colors duration-300 relative z-10 ${
+            value === false ? 'text-white font-medium' : 'text-slate-600'
+          }`}
+        >
+          {noLabel}
+        </button>
+      </div>
+    </div>
+  );
+
+  const setField = <K extends keyof FormState>(field: K, value: FormState[K]) =>
+    setFormData({ ...formData, [field]: value });
+
+  const renderGateKindFields = (kind: GateKind) => {
+    switch (kind) {
+      case 'BARRIER':
+        return (
+          <>
+            {renderMmField('Длина стрелы (мм)', 'width')}
+            {renderBoolToggle('Калитка', 'С калиткой', 'Без калитки', formData.withWicket, (v) => setField('withWicket', v))}
+            {renderBoolToggle('Фундамент', 'Нужен фундамент', 'Не нужен', formData.needFoundation, (v) => setField('needFoundation', v))}
+            {renderSelectField('Интенсивность', formData.intensity, (v) => setField('intensity', v as FormState['intensity']), [
+              { value: 'LOW', label: 'Низкая' },
+              { value: 'MEDIUM', label: 'Средняя' },
+              { value: 'HIGH', label: 'Высокая' },
+            ])}
+            {renderSelectField('Метод контроля доступа', formData.accessControlMethod, (v) => setField('accessControlMethod', v), [
+              { value: 'Радиопульт', label: 'Радиопульт' },
+              { value: 'Кнопка', label: 'Кнопка вызова' },
+              { value: 'Считыватель карт', label: 'Считыватель карт/брелоков' },
+              { value: 'ANPR', label: 'ANPR (распознавание номеров)' },
+              { value: 'GSM', label: 'GSM/телефон' },
+            ])}
+            {renderSelectField('Тип стрелы', formData.boomType, (v) => setField('boomType', v as FormState['boomType']), [
+              { value: 'STRAIGHT', label: 'Прямой' },
+              { value: 'FOLDING', label: 'Складной' },
+            ])}
+            {renderBoolToggle('Опорная стойка', 'Нужна стойка', 'Не нужна', formData.needSupportPost, (v) => setField('needSupportPost', v))}
+          </>
+        );
+      case 'ROLLER_GATES':
+        return (
+          <>
+            <div className="grid grid-cols-2 gap-4">
+              {renderMmField('Ширина (мм)', 'width')}
+              {renderMmField('Высота (мм)', 'height', 'Например: 2500')}
+            </div>
+            {renderSelectField('Тип установки', formData.installationType, (v) => setField('installationType', v as FormState['installationType']), [
+              { value: 'SURFACE_MOUNT', label: 'Наземный' },
+              { value: 'BUILT_IN', label: 'Встроенный (в откос)' },
+            ])}
+            {renderBoolToggle('Автоматика', 'С автоматикой', 'Без автоматики', formData.withAutomation, (v) => setField('withAutomation', v))}
+            {renderBoolToggle('Аварийный привод', 'С аварийным приводом', 'Без аварийного привода', formData.hasEmergencyOverride, (v) => setField('hasEmergencyOverride', v))}
+          </>
+        );
+      case 'SLIDING_GATES':
+        return (
+          <>
+            <div className="grid grid-cols-2 gap-4">
+              {renderMmField('Ширина (мм)', 'width')}
+              {renderMmField('Высота (мм)', 'height', 'Например: 2125')}
+            </div>
+            {renderBoolToggle('Автоматика', 'С автоматикой', 'Без автоматики', formData.withAutomation, (v) => setField('withAutomation', v))}
+            {renderBoolToggle('Калитка', 'С калиткой', 'Без калитки', formData.withWicket, (v) => setField('withWicket', v))}
+            {renderBoolToggle('Фундамент', 'Нужен фундамент', 'Не нужен', formData.needFoundation, (v) => setField('needFoundation', v))}
+          </>
+        );
+      case 'SWING_GATES':
+        return (
+          <>
+            <div className="grid grid-cols-2 gap-4">
+              {renderMmField('Ширина (мм)', 'width')}
+              {renderMmField('Высота (мм)', 'height', 'Например: 2125')}
+            </div>
+            {renderBoolToggle('Автоматика', 'С автоматикой', 'Без автоматики', formData.withAutomation, (v) => setField('withAutomation', v))}
+            {renderBoolToggle('Калитка', 'С калиткой', 'Без калитки', formData.withWicket, (v) => setField('withWicket', v))}
+            {renderBoolToggle('Столбы', 'Нужны столбы', 'Без столбов', formData.needPosts, (v) => setField('needPosts', v))}
+          </>
+        );
+      case 'SECTIONAL_GATES':
+      default:
+        return (
+          <>
+            <div className="grid grid-cols-2 gap-4">
+              {renderMmField('Ширина (мм)', 'width')}
+              {renderMmField('Высота (мм)', 'height', 'Например: 2125')}
+            </div>
+            {renderMmField('Подпространство (мм)', 'headroom', 'Например: 500')}
+            {renderBoolToggle('Автоматика', 'С автоматикой', 'Без автоматики', formData.withAutomation, (v) => setField('withAutomation', v))}
+            {renderBoolToggle('Калитка', 'С калиткой', 'Без калитки', formData.withWicket, (v) => setField('withWicket', v))}
+          </>
+        );
+    }
+  };
+
   const renderGateParameters = () => {
     if (config.scope !== 'gate') return null;
 
+    const kind = detectGateKind(config.gateInfo?.gateType ?? '');
+
     return (
       <div className="space-y-4 mb-6">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Ширина (мм) - опционально
-            </label>
-            <input
-              type="text"
-              value={formData.width}
-              onChange={(e) => setFormData({ ...formData, width: e.target.value })}
-              placeholder="Например: 3000"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E65F2B] focus:border-transparent outline-none transition-all"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Высота (мм) - опционально
-            </label>
-            <input
-              type="text"
-              value={formData.height}
-              onChange={(e) => setFormData({ ...formData, height: e.target.value })}
-              placeholder="Например: 2125"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E65F2B] focus:border-transparent outline-none transition-all"
-            />
-          </div>
-        </div>
-
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Тип ворот
@@ -237,77 +592,14 @@ export default function FeedbackModal() {
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">
-            Автоматика
-          </label>
-          <div className="relative flex w-full p-1 bg-slate-50 border border-slate-200 rounded-xl select-none">
-            {/* Sliding Background Accent */}
-            <div
-              className={`absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-[#E65F2B] rounded-lg shadow-sm z-0 transition-transform duration-300 ease-in-out ${
-                formData.withAutomation === false ? 'translate-x-full' : ''
-              }`}
-            />
-            
-            {/* Option 1: С автоматикой */}
-            <button
-              type="button"
-              onClick={() => setFormData({ ...formData, withAutomation: true })}
-              className={`flex-1 py-3 px-4 rounded-lg transition-colors duration-300 relative z-10 ${
-                formData.withAutomation === true ? 'text-white font-medium' : 'text-slate-600'
-              }`}
-            >
-              С автоматикой
-            </button>
-            
-            {/* Option 2: Без автоматики */}
-            <button
-              type="button"
-              onClick={() => setFormData({ ...formData, withAutomation: false })}
-              className={`flex-1 py-3 px-4 rounded-lg transition-colors duration-300 relative z-10 ${
-                formData.withAutomation === false ? 'text-white font-medium' : 'text-slate-600'
-              }`}
-            >
-              Без автоматики
-            </button>
+        {config.portfolioProject && (
+          <div className="bg-[#FFF5F0] border border-orange-100 rounded-lg px-4 py-3">
+            <p className="text-xs text-gray-500 mb-0.5">Кейс из раздела «Наши работы»</p>
+            <p className="text-sm font-semibold text-[#2F3E46]">{config.portfolioProject.title}</p>
           </div>
-        </div>
+        )}
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">
-            Калитка
-          </label>
-          <div className="relative flex w-full p-1 bg-slate-50 border border-slate-200 rounded-xl select-none">
-            {/* Sliding Background Accent */}
-            <div
-              className={`absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-[#E65F2B] rounded-lg shadow-sm z-0 transition-transform duration-300 ease-in-out ${
-                formData.withWicket === false ? 'translate-x-full' : ''
-              }`}
-            />
-            
-            {/* Option 1: С калиткой */}
-            <button
-              type="button"
-              onClick={() => setFormData({ ...formData, withWicket: true })}
-              className={`flex-1 py-3 px-4 rounded-lg transition-colors duration-300 relative z-10 ${
-                formData.withWicket === true ? 'text-white font-medium' : 'text-slate-600'
-              }`}
-            >
-              С калиткой
-            </button>
-            
-            {/* Option 2: Без калитки */}
-            <button
-              type="button"
-              onClick={() => setFormData({ ...formData, withWicket: false })}
-              className={`flex-1 py-3 px-4 rounded-lg transition-colors duration-300 relative z-10 ${
-                formData.withWicket === false ? 'text-white font-medium' : 'text-slate-600'
-              }`}
-            >
-              Без калитки
-            </button>
-          </div>
-        </div>
+        {renderGateKindFields(kind)}
       </div>
     );
   };
@@ -344,7 +636,15 @@ export default function FeedbackModal() {
 
     return (
       <div className="bg-slate-50 rounded-xl p-4 mb-6 border border-slate-200">
-        <p className="text-sm font-semibold text-[#2F3E46] mb-4">Ваш заказ ({cart.length} {cart.length === 1 ? 'товар' : cart.length > 1 && cart.length < 5 ? 'товара' : 'товаров'})</p>
+        {(() => {
+          const totalQty = getTotalItems();
+          const mod100 = totalQty % 100;
+          const mod10 = totalQty % 10;
+          const word = mod100 > 10 && mod100 < 20 ? 'товаров' : mod10 > 1 && mod10 < 5 ? 'товара' : mod10 === 1 ? 'товар' : 'товаров';
+          return (
+            <p className="text-sm font-semibold text-[#2F3E46] mb-4">Ваш заказ ({totalQty} {word})</p>
+          );
+        })()}
         
         <div className="space-y-3 max-h-64 overflow-y-auto">
           {cart.map((item) => (
@@ -472,7 +772,7 @@ export default function FeedbackModal() {
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Комментарий (опционально)
+          Комментарий
         </label>
         <textarea
           value={formData.note}
@@ -734,21 +1034,27 @@ export default function FeedbackModal() {
 
         {/* Content */}
         <div className="p-6 overflow-y-auto flex-1">
-          {submitSuccess ? (
-            <div className="flex flex-col items-center justify-center py-12">
-              <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-4">
-                <Check className="w-8 h-8 text-green-600" />
-              </div>
-              <h3 className="text-2xl font-bold text-[#2F3E46] mb-2">Заявка отправлена!</h3>
-              <p className="text-gray-600 text-center">Мы свяжемся с вами в ближайшее время</p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit}>
+          <AnimatePresence initial={false} mode="popLayout">
+            {submitSuccess ? (
+              <SuccessState key="success" />
+            ) : (
+              <motion.form
+                key="feedback-form"
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.25, ease: 'easeIn' }}
+                onSubmit={handleSubmit}
+              >
               {renderProductSummary()}
               {renderCartItems()}
               {renderGateParameters()}
               {renderConsultationIntro()}
               {renderContactForm()}
+
+              {submitError && (
+                <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3 mt-4">
+                  {submitError}
+                </p>
+              )}
 
               <Button
                 type="submit"
@@ -763,8 +1069,9 @@ export default function FeedbackModal() {
                 {isSubmitting ? 'Отправка...' : config?.scope === 'cart_checkout' ? 'Оформить заказ' : 'Отправить заявку'}
                 {!isSubmitting && <ChevronRight className="ml-2 w-5 h-5" />}
               </Button>
-            </form>
-          )}
+              </motion.form>
+            )}
+          </AnimatePresence>
 
           <p className="text-xs text-gray-500 text-center mt-4">
             Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности
@@ -791,21 +1098,27 @@ export default function FeedbackModal() {
         </div>
 
         {/* Content */}
-        {submitSuccess ? (
-          <div className="flex flex-col items-center justify-center py-12">
-            <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-4">
-              <Check className="w-8 h-8 text-green-600" />
-            </div>
-            <h3 className="text-2xl font-bold text-[#2F3E46] mb-2">Заявка отправлена!</h3>
-            <p className="text-gray-600 text-center">Мы свяжемся с вами в ближайшее время</p>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit}>
+        <AnimatePresence initial={false} mode="popLayout">
+          {submitSuccess ? (
+            <SuccessState key="success" />
+          ) : (
+            <motion.form
+              key="feedback-form-mobile"
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.25, ease: 'easeIn' }}
+              onSubmit={handleSubmit}
+            >
             {renderProductSummary()}
             {renderCartItems()}
             {renderGateParameters()}
             {renderConsultationIntro()}
             {renderContactForm()}
+
+            {submitError && (
+              <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3 mt-4">
+                {submitError}
+              </p>
+            )}
 
             <Button
               type="submit"
@@ -820,8 +1133,9 @@ export default function FeedbackModal() {
               {isSubmitting ? 'Отправка...' : config?.scope === 'cart_checkout' ? 'Оформить заказ' : 'Отправить заявку'}
               {!isSubmitting && <ChevronRight className="ml-2 w-5 h-5" />}
             </Button>
-          </form>
-        )}
+            </motion.form>
+          )}
+        </AnimatePresence>
 
         <p className="text-xs text-gray-500 text-center mt-4">
           Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности

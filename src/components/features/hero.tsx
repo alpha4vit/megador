@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import {Button} from '../ui/button';
 
 export const Hero = () => {
@@ -68,10 +69,12 @@ export const Hero = () => {
                                 <Button size="lg" onClick={scrollToQuiz} className="text-base sm:text-lg px-8 py-4">
                                     Рассчитать стоимость
                                 </Button>
-                                <Button size="lg" variant="outline"
-                                        className="text-base sm:text-lg px-8 py-4 border-white text-white lg:border-gray-300 lg:text-gray-700">
+                                <Link
+                                    href="/portfolio"
+                                    className="inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 border-2 border-[#2F3E46] text-[#2F3E46] hover:bg-[#F8F9FA] focus:ring-[#2F3E46] px-8 py-4 text-lg text-base sm:text-lg border-white text-white lg:border-gray-300 lg:text-gray-700"
+                                >
                                     Смотреть портфолио
-                                </Button>
+                                </Link>
                             </div>
 
                         </div>

@@ -1,8 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronRight, ChevronLeft, Home, Warehouse, Factory, Shield, Fence, Cog, Phone, MessageCircle, Check } from 'lucide-react';
 import { Button } from '../ui/button';
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080';
+const FEEDBACK_ENDPOINT = `${API_BASE_URL}/feedback`;
 
 type Destination = 'dacha' | 'house' | 'industrial';
 type ProductType = 'gates' | 'fences' | 'complex';
@@ -11,15 +15,18 @@ type Messenger = 'viber' | 'telegram' | 'whatsapp' | 'sms';
 interface QuizData {
   destination: Destination | null;
   productType: ProductType | null;
-  dimensions: {
-    width: number;
-    height: number;
-  };
   contact: {
     name: string;
     phone: string;
     messenger: Messenger | null;
   };
+}
+
+interface FieldErrors {
+  name?: string;
+  phone?: string;
+  messenger?: string;
+  consent?: string;
 }
 
 const destinations = [
@@ -28,11 +35,23 @@ const destinations = [
   { id: 'industrial' as const, label: 'Промзона', icon: Factory, description: 'Склады и производства' },
 ];
 
+const destinationLabels: Record<Destination, string> = {
+  dacha: 'Дача',
+  house: 'Частный дом',
+  industrial: 'Промзона',
+};
+
 const productTypes = [
   { id: 'gates' as const, label: 'Ворота', icon: Shield, description: 'Секционные, откатные, распашные' },
   { id: 'fences' as const, label: 'Забор', icon: Fence, description: 'Металлоштакетник, жалюзи' },
   { id: 'complex' as const, label: 'Комплексное решение', icon: Cog, description: 'Ворота + забор + автоматика' },
 ];
+
+const productTypeLabels: Record<ProductType, string> = {
+  gates: 'Ворота',
+  fences: 'Забор',
+  complex: 'Комплексное решение',
+};
 
 const messengers = [
   { id: 'viber' as const, label: 'Viber', icon: MessageCircle },
@@ -41,17 +60,124 @@ const messengers = [
   { id: 'sms' as const, label: 'SMS', icon: Phone },
 ];
 
-const totalSteps = 4;
+const messengerLabels: Record<Messenger, string> = {
+  viber: 'Viber',
+  telegram: 'Telegram',
+  whatsapp: 'WhatsApp',
+  sms: 'SMS',
+};
+
+const totalSteps = 3;
+const PHONE_PATTERN = /^\+375 \(\d{2}\) \d{3}-\d{2}-\d{2}$/;
+
+const INITIAL_QUIZ_DATA: QuizData = {
+  destination: null,
+  productType: null,
+  contact: { name: '', phone: '', messenger: null },
+};
+
+function formatPhoneMask(value: string): string {
+  let digits = value.replace(/\D/g, '');
+  if (digits.length > 0) {
+    if (digits[0] === '8') {
+      digits = '3' + digits;
+    }
+    if (digits.startsWith('375')) {
+      digits = digits.substring(3);
+    }
+  }
+  digits = digits.substring(0, 9);
+
+  let formatted = '+375';
+  if (digits.length > 0) {
+    formatted += ' (' + digits.substring(0, 2);
+  }
+  if (digits.length > 2) {
+    formatted += ') ' + digits.substring(2, 5);
+  }
+  if (digits.length > 5) {
+    formatted += '-' + digits.substring(5, 7);
+  }
+  if (digits.length > 7) {
+    formatted += '-' + digits.substring(7, 9);
+  }
+  return formatted;
+}
+
+function QuizSuccessState() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.85 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ type: 'spring', stiffness: 260, damping: 17 }}
+      className="flex flex-col items-center justify-center py-12"
+    >
+      <motion.div
+        initial={{ scale: 0.4, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 16, delay: 0.2 }}
+        className="mb-8 p-2"
+      >
+        <motion.svg viewBox="0 0 52 52" className="w-28 h-28" fill="none">
+          <motion.g
+            animate={{ scale: [1, 1.08, 1] }}
+            transition={{ delay: 1.45, duration: 0.45, ease: 'easeOut' }}
+            style={{ transformBox: 'fill-box', transformOrigin: 'center' }}
+          >
+            <motion.circle
+              cx="26"
+              cy="26"
+              r="25"
+              stroke="#22c55e"
+              strokeWidth="3"
+              strokeLinecap="round"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 0.7, ease: 'easeInOut', delay: 0.35 }}
+            />
+            <motion.path
+              d="M15 27l7.5 7.5L37 19"
+              stroke="#22c55e"
+              strokeWidth="4.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 0.5, ease: 'easeOut', delay: 1.0 }}
+            />
+          </motion.g>
+        </motion.svg>
+      </motion.div>
+
+      <motion.h3
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.35, duration: 0.5, ease: 'easeOut' }}
+        className="text-2xl font-bold text-[#2F3E46] mb-2"
+      >
+        Спасибо за заявку!
+      </motion.h3>
+      <motion.p
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.5, duration: 0.5, ease: 'easeOut' }}
+        className="text-gray-600 text-center"
+      >
+        Наш специалист свяжется с вами в ближайшее время для уточнения деталей и отправки каталога.
+      </motion.p>
+    </motion.div>
+  );
+}
 
 export const LeadQuiz = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [quizData, setQuizData] = useState<QuizData>({
-    destination: null,
-    productType: null,
-    dimensions: { width: 300, height: 200 },
-    contact: { name: '', phone: '', messenger: null },
-  });
+  const [quizData, setQuizData] = useState<QuizData>(INITIAL_QUIZ_DATA);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isConsentGiven, setIsConsentGiven] = useState(false);
+  const [errors, setErrors] = useState<FieldErrors>({});
 
   const handleNext = () => {
     if (currentStep < totalSteps) {
@@ -65,45 +191,101 @@ export const LeadQuiz = () => {
     }
   };
 
-  const handleSubmit = () => {
-    // In a real application, this would send data to a backend
-    console.log('Quiz submitted:', quizData);
-    setIsSubmitted(true);
+  const updateContact = (patch: Partial<QuizData['contact']>) => {
+    setQuizData({ ...quizData, contact: { ...quizData.contact, ...patch } });
+    setErrors((prev) => {
+      const next = { ...prev };
+      if ('name' in patch) delete next.name;
+      if ('phone' in patch) delete next.phone;
+      if ('messenger' in patch) delete next.messenger;
+      return next;
+    });
+  };
+
+  const validateContactStep = (): boolean => {
+    const next: FieldErrors = {};
+    if (!quizData.contact.name.trim()) {
+      next.name = 'Введите ваше имя';
+    }
+    if (!PHONE_PATTERN.test(quizData.contact.phone)) {
+      next.phone = 'Введите номер в формате +375 (XX) XXX-XX-XX';
+    }
+    if (!quizData.contact.messenger) {
+      next.messenger = 'Выберите удобный способ связи';
+    }
+    if (!isConsentGiven) {
+      next.consent = 'Необходимо согласие на обработку персональных данных';
+    }
+    setErrors(next);
+    return Object.keys(next).length === 0;
+  };
+
+  const handleSubmit = async () => {
+    if (isSubmitting) return;
+    if (!validateContactStep()) return;
+
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    const payload = {
+      fullName: quizData.contact.name.trim(),
+      phoneNumber: `+${quizData.contact.phone.replace(/\D/g, '')}`,
+      metadata: {
+        type: 'QUIZ',
+        objectType: quizData.destination ? destinationLabels[quizData.destination] : null,
+        productType: quizData.productType ? productTypeLabels[quizData.productType] : null,
+        messenger: quizData.contact.messenger ? messengerLabels[quizData.contact.messenger] : null,
+      },
+    };
+
+    try {
+      const response = await fetch(FEEDBACK_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
+
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error('Failed to submit quiz:', error);
+      setSubmitError('Не удалось отправить заявку. Пожалуйста, попробуйте ещё раз или свяжитесь с нами по телефону.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const resetQuiz = () => {
     setCurrentStep(1);
-    setQuizData({
-      destination: null,
-      productType: null,
-      dimensions: { width: 300, height: 200 },
-      contact: { name: '', phone: '', messenger: null },
-    });
+    setQuizData(INITIAL_QUIZ_DATA);
     setIsSubmitted(false);
+    setSubmitError(null);
+    setIsConsentGiven(false);
+    setErrors({});
   };
 
   const progress = (currentStep / totalSteps) * 100;
 
-  if (isSubmitted) {
-    return (
-      <div className="bg-[#F8F9FA] rounded-2xl p-8 sm:p-12 max-w-2xl mx-auto text-center">
-        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-          <Check className="w-8 h-8 text-green-600" />
-        </div>
-        <h3 className="text-2xl font-bold text-[#2F3E46] mb-4">Спасибо за заявку!</h3>
-        <p className="text-gray-600 mb-6">
-          Наш специалист свяжется с вами в ближайшее время для уточнения деталей и отправки каталога.
-        </p>
-        <Button onClick={resetQuiz} size="lg">
-          Пройти заново
-        </Button>
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (!isSubmitted) return;
+    const timer = setTimeout(() => {
+      resetQuiz();
+    }, 4000);
+    return () => clearTimeout(timer);
+  }, [isSubmitted]);
+
+  const inputClass = (hasError?: string) =>
+    `w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-[#E65F2B] focus:ring-opacity-20 outline-none transition-all ${
+      hasError ? 'border-red-400 focus:border-red-400' : 'border-gray-300 focus:border-[#E65F2B]'
+    }`;
 
   return (
     <div className="bg-[#F8F9FA] rounded-2xl p-6 sm:p-8 max-w-3xl mx-auto">
       {/* Progress Bar */}
+      {!isSubmitted && (
       <div className="mb-8">
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm font-medium text-gray-600">Шаг {currentStep} из {totalSteps}</span>
@@ -116,9 +298,19 @@ export const LeadQuiz = () => {
           />
         </div>
       </div>
+      )}
 
       {/* Step Content */}
       <div className="min-h-[300px]">
+        <AnimatePresence initial={false} mode="popLayout">
+          {isSubmitted ? (
+            <QuizSuccessState key="success" />
+          ) : (
+            <motion.div
+              key="quiz-form"
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.25, ease: 'easeIn' }}
+            >
         {currentStep === 1 && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             <h3 className="text-2xl font-bold text-[#2F3E46] mb-2">Куда планируете установить?</h3>
@@ -175,106 +367,47 @@ export const LeadQuiz = () => {
 
         {currentStep === 3 && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h3 className="text-2xl font-bold text-[#2F3E46] mb-2">Укажите размеры</h3>
-            <p className="text-gray-600 mb-6">Примерные размеры проема (в см)</p>
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-[#2F3E46] mb-2">
-                  Ширина: {quizData.dimensions.width} см
-                </label>
-                <input
-                  type="range"
-                  min="200"
-                  max="600"
-                  value={quizData.dimensions.width}
-                  onChange={(e) =>
-                    setQuizData({
-                      ...quizData,
-                      dimensions: { ...quizData.dimensions, width: parseInt(e.target.value) },
-                    })
-                  }
-                  className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#E65F2B]"
-                />
-                <div className="flex justify-between text-xs text-gray-500 mt-1">
-                  <span>200 см</span>
-                  <span>600 см</span>
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-[#2F3E46] mb-2">
-                  Высота: {quizData.dimensions.height} см
-                </label>
-                <input
-                  type="range"
-                  min="150"
-                  max="350"
-                  value={quizData.dimensions.height}
-                  onChange={(e) =>
-                    setQuizData({
-                      ...quizData,
-                      dimensions: { ...quizData.dimensions, height: parseInt(e.target.value) },
-                    })
-                  }
-                  className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#E65F2B]"
-                />
-                <div className="flex justify-between text-xs text-gray-500 mt-1">
-                  <span>150 см</span>
-                  <span>350 см</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {currentStep === 4 && (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             <h3 className="text-2xl font-bold text-[#2F3E46] mb-2">Куда отправить каталог?</h3>
             <p className="text-gray-600 mb-6">Оставьте контакты для связи</p>
             <div className="space-y-4">
               <div>
-                <label className="block text-base font-medium text-[#2F3E46] mb-2">Ваше имя</label>
+                <label className="block text-base font-medium text-[#2F3E46] mb-2">
+                  ФИО <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="text"
                   value={quizData.contact.name}
-                  onChange={(e) =>
-                    setQuizData({
-                      ...quizData,
-                      contact: { ...quizData.contact, name: e.target.value },
-                    })
-                  }
+                  onChange={(e) => updateContact({ name: e.target.value })}
                   placeholder="Введите имя"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[#E65F2B] focus:ring-2 focus:ring-[#E65F2B] focus:ring-opacity-20 outline-none transition-all"
+                  className={inputClass(errors.name)}
                 />
+                {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
               </div>
               <div>
-                <label className="block text-base font-medium text-[#2F3E46] mb-2">Телефон</label>
+                <label className="block text-base font-medium text-[#2F3E46] mb-2">
+                  Номер телефона <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="tel"
+                  inputMode="tel"
                   value={quizData.contact.phone}
-                  onChange={(e) =>
-                    setQuizData({
-                      ...quizData,
-                      contact: { ...quizData.contact, phone: e.target.value },
-                    })
-                  }
+                  onChange={(e) => updateContact({ phone: formatPhoneMask(e.target.value) })}
                   placeholder="+375 (XX) XXX-XX-XX"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[#E65F2B] focus:ring-2 focus:ring-[#E65F2B] focus:ring-opacity-20 outline-none transition-all"
+                  className={inputClass(errors.phone)}
                 />
+                {errors.phone && <p className="mt-1 text-sm text-red-500">{errors.phone}</p>}
               </div>
               <div>
-                <label className="block text-base font-medium text-[#2F3E46] mb-2">Предпочтительный мессенджер</label>
+                <label className="block text-base font-medium text-[#2F3E46] mb-2">
+                  Предпочтительный мессенджер <span className="text-red-500">*</span>
+                </label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   {messengers.map((messenger) => {
                     const Icon = messenger.icon;
                     return (
                       <button
                         key={messenger.id}
-                        onClick={() =>
-                          setQuizData({
-                            ...quizData,
-                            contact: { ...quizData.contact, messenger: messenger.id },
-                          })
-                        }
+                        onClick={() => updateContact({ messenger: messenger.id })}
                         className={`p-4 rounded-lg border-2 transition-all flex flex-col items-center ${
                           quizData.contact.messenger === messenger.id
                             ? 'border-[#E65F2B] bg-orange-50'
@@ -287,19 +420,45 @@ export const LeadQuiz = () => {
                     );
                   })}
                 </div>
+                {errors.messenger && <p className="mt-1 text-sm text-red-500">{errors.messenger}</p>}
               </div>
+              <div className="flex items-start gap-3 pt-2">
+                <input
+                  type="checkbox"
+                  id="quiz-consent-checkbox"
+                  checked={isConsentGiven}
+                  onChange={(e) => {
+                    setIsConsentGiven(e.target.checked);
+                    setErrors((prev) => {
+                      const next = { ...prev };
+                      if (e.target.checked) delete next.consent;
+                      return next;
+                    });
+                  }}
+                  className="mt-1 w-5 h-5 accent-[#E65F2B] rounded border-gray-300 focus:ring-2 focus:ring-[#E65F2B] focus:ring-offset-0 cursor-pointer"
+                />
+                <label htmlFor="quiz-consent-checkbox" className="text-sm text-gray-600 leading-relaxed cursor-pointer">
+                  Я согласен на обработку персональных данных в соответствии с политикой конфиденциальности
+                  {errors.consent && <span className="block mt-1 text-red-500">{errors.consent}</span>}
+                </label>
+              </div>
+              {submitError && <p className="text-sm text-red-500">{submitError}</p>}
             </div>
           </div>
         )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Navigation Buttons */}
+      {!isSubmitted && (
       <div className="flex justify-between mt-8 pt-6 border-t border-gray-200">
         <Button
           variant="outline"
           onClick={handleBack}
           disabled={currentStep === 1}
-          className="flex items-center"
+          className="flex items-center transition-all duration-300 ease-in-out active:scale-95"
         >
           <ChevronLeft className="w-4 h-4 mr-2" />
           Назад
@@ -311,7 +470,13 @@ export const LeadQuiz = () => {
               (currentStep === 1 && !quizData.destination) ||
               (currentStep === 2 && !quizData.productType)
             }
-            className="flex items-center"
+            className={`flex items-center transition-all duration-300 ease-in-out active:scale-95 ${
+              currentStep === 1 && !quizData.destination
+                ? 'opacity-60 bg-[#E8A87E] cursor-not-allowed'
+                : currentStep === 2 && !quizData.productType
+                  ? 'opacity-60 bg-[#E8A87E] cursor-not-allowed'
+                  : 'opacity-100 cursor-pointer'
+            }`}
           >
             Далее
             <ChevronRight className="w-4 h-4 ml-2" />
@@ -319,18 +484,19 @@ export const LeadQuiz = () => {
         ) : (
           <Button
             onClick={handleSubmit}
-            disabled={
-              !quizData.contact.name ||
-              !quizData.contact.phone ||
-              !quizData.contact.messenger
-            }
-            className="flex items-center"
+            disabled={isSubmitting || !isConsentGiven}
+            className={`flex items-center transition-all duration-300 ease-in-out active:scale-95 ${
+              isConsentGiven
+                ? 'opacity-100 bg-[#E65F2B] hover:bg-[#D45425] cursor-pointer'
+                : 'opacity-60 bg-[#E8A87E] cursor-not-allowed'
+            }`}
           >
-            Отправить заявку
+            {isSubmitting ? 'Отправка...' : 'Отправить заявку'}
             <Check className="w-4 h-4 ml-2" />
           </Button>
         )}
       </div>
+      )}
     </div>
   );
 };

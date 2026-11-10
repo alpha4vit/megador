@@ -1,15 +1,15 @@
 'use client';
 
-import {useState, useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import Link from 'next/link';
-import {ArrowRight, Check, Calendar, Wrench, CreditCard, ClipboardCheck, X} from 'lucide-react';
+import {ArrowRight, Calendar, Check, ClipboardCheck, Wrench, X} from 'lucide-react';
 import {Button} from '@/components/ui/button';
 import {Section} from '@/components/ui/section';
 import {Container} from '@/components/ui/container';
-import ProcessMap, {Step} from '@/components/features/process-map';
-import { useFeedbackModal } from '@/contexts/FeedbackModalContext';
-import { useCart } from '@/contexts/CartContext';
-import { useToast } from '@/contexts/ToastContext';
+import {Step} from '@/components/features/process-map';
+import {useFeedbackModal} from '@/contexts/FeedbackModalContext';
+import {useCart} from '@/contexts/CartContext';
+import {FlyToCartLayer, useFlyToCart} from '@/components/features/fly-to-cart';
 
 interface Product {
     id: string;
@@ -27,10 +27,14 @@ interface Product {
 
 function ProductGrid({ products, onProductClick }: { products: Product[]; onProductClick: (product: Product) => void }) {
     const { addToCart } = useCart();
-    const { showToast } = useToast();
+    const { clones, spawnFlyClone, dismissFlyClone } = useFlyToCart();
 
     const handleAddToCart = (e: React.MouseEvent, product: Product) => {
         e.stopPropagation();
+        const card = (e.currentTarget as HTMLElement).closest('[data-product-card]');
+        const imageEl = card?.querySelector('[data-product-image]');
+        const fromRect = imageEl?.getBoundingClientRect();
+
         addToCart({
             id: product.id,
             title: product.title,
@@ -38,7 +42,12 @@ function ProductGrid({ products, onProductClick }: { products: Product[]; onProd
             image: product.image,
             category: product.subtitle,
         });
-        showToast('Товар добавлен в корзину', product.title);
+
+        if (fromRect) {
+            spawnFlyClone(fromRect, product.image);
+        } else {
+            window.dispatchEvent(new CustomEvent('megador:cart-arrived'));
+        }
     };
     // Calculate optimal desktop columns for balanced layout
     const getDesktopColumns = (count: number): number => {
@@ -51,15 +60,17 @@ function ProductGrid({ products, onProductClick }: { products: Product[]; onProd
     const lgGridClass = desktopColumns === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4';
 
     return (
+        <>
         <div className={`grid grid-cols-2 gap-3 md:gap-6 md:grid-cols-3 ${lgGridClass}`}>
             {products.map((product) => (
                 <div
                     key={product.id}
+                    data-product-card
                     className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between cursor-pointer"
                     onContextMenu={(event) => event.preventDefault()} onClick={() => onProductClick(product)}
                 >
                     {/* Top Area: Product Image */}
-                    <div className="w-full aspect-square bg-slate-50 flex items-center justify-center p-2 rounded-t-lg overflow-hidden">
+                    <div data-product-image className="w-full aspect-square bg-slate-50 flex items-center justify-center p-2 rounded-t-lg overflow-hidden">
                         <img draggable={false}
                             src={product.image}
                             alt={product.title}
@@ -123,6 +134,9 @@ function ProductGrid({ products, onProductClick }: { products: Product[]; onProd
                 </div>
             ))}
         </div>
+
+        <FlyToCartLayer clones={clones} onDismiss={dismissFlyClone} />
+        </>
     );
 }
 
@@ -180,7 +194,7 @@ export default function AccessoriesPage() {
     const remoteProducts: Product[] = [
         {
             id: 'at-4',
-            title: 'пульт д/у АТ-4, AT-4N',
+            title: 'Пульт д/у АТ-4, AT-4N',
             subtitle: 'Универсальный пульт',
             badgeText: 'Популярный',
             badgeStyle: 'bg-slate-900',
@@ -192,7 +206,7 @@ export default function AccessoriesPage() {
         },
         {
             id: 'flo2r-s',
-            title: 'пульт д/у Flo2R-S',
+            title: 'Пульт д/у Flo2R-S',
             subtitle: 'Пульт для NICE',
             badgeText: 'Оптимальный',
             badgeStyle: 'bg-zinc-700',
@@ -204,7 +218,7 @@ export default function AccessoriesPage() {
         },
         {
             id: 'flo2re',
-            title: 'пульт д/у Flo2RE',
+            title: 'Пульт д/у Flo2RE',
             subtitle: 'Пульт с расширенным диапазоном',
             badgeText: 'Мощный',
             badgeStyle: 'bg-zinc-700',

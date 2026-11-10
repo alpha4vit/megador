@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import {useEffect, useRef, useState} from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Phone, Menu, X, ChevronDown, ChevronRight, Warehouse, Home, Factory, Cog, Shield, Fence, Layers } from 'lucide-react';
-import { Button } from '../ui/button';
+import {usePathname} from 'next/navigation';
+import {ChevronDown, Cog, Factory, Fence, Layers, Menu, Phone, Shield, Warehouse, X} from 'lucide-react';
+import {Button} from '../ui/button';
+import {useFeedbackModal} from '@/contexts/FeedbackModalContext';
 
 const catalogItems = [
   {
@@ -29,7 +30,13 @@ const catalogItems = [
     title: 'Распашные ворота',
     icon: Shield,
     description: 'Кованые и из сэндвич-панелей',
-    href: '#swing',
+    href: '/catalog/swing-gates',
+  },
+  {
+    title: 'Шлагбаумы',
+    icon: Factory,
+    description: 'Nice и Alutech',
+    href: '/catalog/barriers',
   },
   {
     title: 'Автоматика для секционных ворот',
@@ -50,12 +57,6 @@ const catalogItems = [
     href: '/catalog/automation-swing',
   },
   {
-    title: 'Шлагбаумы',
-    icon: Factory,
-    description: 'Nice и Alutech',
-    href: '/catalog/barriers',
-  },
-  {
     title: 'Аксессуары',
     icon: Cog,
     description: 'Пульты, датчики и GSM-модули',
@@ -65,6 +66,8 @@ const catalogItems = [
 
 export const Header = () => {
   const pathname = usePathname();
+  const { openModal } = useFeedbackModal();
+  const openConsultation = () => openModal({ scope: 'consultation' });
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCatalogAccordionOpen, setIsCatalogAccordionOpen] = useState(false);
@@ -190,12 +193,16 @@ export const Header = () => {
                 )}
               </div>
 
-              <a href="#services" className="text-[#2F3E46] hover:text-[#E65F2B] transition-colors">
+              <button
+                type="button"
+                onClick={openConsultation}
+                className="text-[#2F3E46] hover:text-[#E65F2B] transition-colors"
+              >
                 Услуги
-              </a>
-              <a href="#portfolio" className="text-[#2F3E46] hover:text-[#E65F2B] transition-colors">
+              </button>
+              <Link href="/portfolio" className="text-[#2F3E46] hover:text-[#E65F2B] transition-colors">
                 Портфолио
-              </a>
+              </Link>
               <Link href="/contacts" className="text-[#2F3E46] hover:text-[#E65F2B] transition-colors">
                 Контакты
               </Link>
@@ -214,7 +221,7 @@ export const Header = () => {
                   </a>
                 </div>
               </div>
-              <Button size="sm">Заказать замер</Button>
+              <Button size="sm" onClick={openConsultation}>Заказать замер</Button>
             </div>
 
             {/* Mobile Menu Button */}
@@ -326,15 +333,18 @@ export const Header = () => {
             </div>
 
             {/* Other Links */}
-            <Link
-              href="#services"
-              className="block p-4 rounded-lg text-lg font-medium text-[#2F3E46] hover:bg-[#F8F9FA] transition-colors min-h-[56px]"
-              onClick={closeMobileMenu}
+            <button
+              type="button"
+              className="block w-full text-left p-4 rounded-lg text-lg font-medium text-[#2F3E46] hover:bg-[#F8F9FA] transition-colors min-h-[56px]"
+              onClick={() => {
+                closeMobileMenu();
+                openConsultation();
+              }}
             >
               Услуги
-            </Link>
+            </button>
             <Link
-              href="#portfolio"
+              href="/portfolio"
               className="block p-4 rounded-lg text-lg font-medium text-[#2F3E46] hover:bg-[#F8F9FA] transition-colors min-h-[56px]"
               onClick={closeMobileMenu}
             >
@@ -351,7 +361,13 @@ export const Header = () => {
 
           {/* Fixed CTA at Bottom */}
           <div className="p-4 border-t border-gray-200 bg-white pb-8">
-            <Button className="w-full py-4 text-lg min-h-[56px]" onClick={closeMobileMenu}>
+            <Button
+              className="w-full py-4 text-lg min-h-[56px]"
+              onClick={() => {
+                closeMobileMenu();
+                openConsultation();
+              }}
+            >
               Заказать замер
             </Button>
             <a

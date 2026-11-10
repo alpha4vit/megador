@@ -22,7 +22,17 @@ export function ImageProtectionGuard() {
 
             const overlay = document.createElement('div');
             overlay.setAttribute('aria-hidden', 'true');
-            overlay.className = 'absolute inset-0 z-10 bg-transparent';
+            // Cover only the image's own box, not the whole parent —
+            // otherwise the overlay blocks clicks on sibling controls
+            // (e.g. cart quantity buttons inside the same row).
+            overlay.style.position = 'absolute';
+            overlay.style.left = `${image.offsetLeft}px`;
+            overlay.style.top = `${image.offsetTop}px`;
+            overlay.style.width = `${image.offsetWidth}px`;
+            overlay.style.height = `${image.offsetHeight}px`;
+            overlay.style.zIndex = '10';
+            overlay.className = 'bg-transparent';
+            overlay.style.pointerEvents = 'auto';
             parent.dataset.imageProtected = 'true';
             parent.appendChild(overlay);
         };

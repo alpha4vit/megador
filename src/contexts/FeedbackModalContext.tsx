@@ -19,10 +19,16 @@ export interface GateInfo {
   withWicket?: boolean;
 }
 
+export interface PortfolioProjectRef {
+  id: string;
+  title: string;
+}
+
 export interface FeedbackModalConfig {
   scope: ModalScope;
   productInfo?: ProductInfo;
   gateInfo?: GateInfo;
+  portfolioProject?: PortfolioProjectRef;
   title?: string;
   subtitle?: string;
 }
