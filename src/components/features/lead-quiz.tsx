@@ -6,7 +6,7 @@ import { ChevronRight, ChevronLeft, Home, Warehouse, Factory, Shield, Fence, Cog
 import { Button } from '../ui/button';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080';
-const FEEDBACK_ENDPOINT = `${API_BASE_URL}/feedback`;
+const FEEDBACK_ENDPOINT = `${API_BASE_URL}/api/feedback`;
 
 type Destination = 'dacha' | 'house' | 'industrial';
 type ProductType = 'gates' | 'fences' | 'complex';

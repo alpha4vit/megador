@@ -8,7 +8,7 @@ import { useFeedbackModal, FeedbackModalConfig, ModalScope } from '@/contexts/Fe
 import { useCart, CartItem } from '@/contexts/CartContext';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080';
-const FEEDBACK_ENDPOINT = `${API_BASE_URL}/feedback`;
+const FEEDBACK_ENDPOINT = `${API_BASE_URL}/api/feedback`;
 
 type FeedbackMetadata = Record<string, unknown> & { type: string };
 
