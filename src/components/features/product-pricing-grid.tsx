@@ -188,7 +188,7 @@ export default function ProductPricingGrid({
                             <div className="flex items-center justify-between mb-3">
                                 <div>
                                     <div className="text-2xl font-bold text-[#E65F2B]">{tier.price}</div>
-                                    <div className="text-xs text-gray-500">с учетом монтажа</div>
+                                    <div className="text-xs text-gray-500">бесплатный монтаж</div>
                                 </div>
                             </div>
                             <Button

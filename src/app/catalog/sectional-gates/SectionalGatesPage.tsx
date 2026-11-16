@@ -1,18 +1,21 @@
 'use client';
 
-import {useState} from 'react';
 import Link from 'next/link';
 import {ArrowRight, Check, Cpu, ShieldCheck, ThermometerSnowflake} from 'lucide-react';
 import {Button} from '@/components/ui/button';
 import {Section} from '@/components/ui/section';
 import {Container} from '@/components/ui/container';
-import {SplitPortfolio, Project} from '@/components/features/split-portfolio';
-import ColorSelector, {ColorItem, ColorCollections} from '@/components/features/color-selector';
+import {Project, SplitPortfolio} from '@/components/features/split-portfolio';
+import ColorSelector, {ColorCollections} from '@/components/features/color-selector';
 import ProductPricingGrid from '@/components/features/product-pricing-grid';
-import { useFeedbackModal } from '@/contexts/FeedbackModalContext';
+import {useFeedbackModal} from '@/contexts/FeedbackModalContext';
+import {useSiteData} from '@/contexts/SiteDataContext';
+import {DataLoading} from '@/components/features/data-loading';
+import {formatPrice, projectTitle} from '@/data/types';
 
 export default function SectionalGatesPage() {
     const { openModal } = useFeedbackModal();
+    const { getProjects, hydrated } = useSiteData();
 
     const colorCollections: ColorCollections = {
         ral: [
@@ -51,9 +54,9 @@ export default function SectionalGatesPage() {
             features: [
                 {label: 'Толщина панели', value: '40 мм'},
                 {label: 'Тип пружин', value: 'Торсионные'},
-                {label: 'Базовая автоматика', value: 'Nice / Marantec'},
+                {label: 'Базовая автоматика', value: 'Alutech Levigato'},
             ],
-            price: 'от 1800 BYN',
+            price: 'по запросу',
             productActionKey: 'trend',
         },
         {
@@ -65,9 +68,9 @@ export default function SectionalGatesPage() {
             features: [
                 {label: 'Толщина панели', value: '45 мм'},
                 {label: 'Тип пружин', value: 'Торсионные усиленные'},
-                {label: 'Базовая автоматика', value: 'Marantec Pro'},
+                {label: 'Базовая автоматика', value: 'Alutech Levigato'},
             ],
-            price: 'от 2400 BYN',
+            price: 'по запросу',
             productActionKey: 'prestige',
         },
     ];
@@ -140,47 +143,23 @@ export default function SectionalGatesPage() {
         ],
     };
 
-    const portfolioItems = [
-        {
-            location: 'Минский р-н, Тарасово',
-            series: 'Prestige',
-            color: 'Антрацит',
-            automation: 'Marantec',
-            dimensions: '2500 x 2125 мм',
-            timeline: '3 дня',
-            image: '/sectional-gates/webp/section-preview-ai.webp'
-        },
-        {
-            location: 'Минск, Цнянка',
-            series: 'Trend',
-            color: 'Золотой дуб',
-            automation: 'Ручное управление',
-            dimensions: '3000 x 2125 мм',
-            timeline: '2 дня',
-            image: '/sectional-gates/webp/sectional_1.webp'
-        },
-        {
-            location: 'Минский р-н, Логойск',
-            series: 'Prestige',
-            color: 'RAL 9016 Белый',
-            automation: 'Nice',
-            dimensions: '2750 x 2125 мм',
-            timeline: '3 дня',
-            image: '/sectional-gates/webp/sectional_2.webp'
-        },
-    ];
+    const portfolioItems = getProjects('sectional', true);
 
     const sectionalProjects: Project[] = portfolioItems.map((item, index) => ({
         id: index + 1,
-        title: `Секционные ворота ${item.series}`,
+        title: projectTitle(item),
         location: item.location,
         material: `Серия ${item.series}, цвет ${item.color}`,
         automation: item.automation,
         installationTime: item.timeline,
-        priceRange: 'от 1400 BYN',
+        priceRange: formatPrice(item),
         description: `Секционные ворота серии ${item.series} в цвете ${item.color}. Размеры: ${item.dimensions}. Профессиональная установка с гарантией.`,
-        image: item.image,
+        image: item.images[0],
     }));
+
+    if (!hydrated) {
+        return <DataLoading/>;
+    }
 
     return (
         <>
@@ -376,7 +355,7 @@ export default function SectionalGatesPage() {
             {/* Portfolio Showcase */}
             <Section>
                 <Container>
-                    <SplitPortfolio projects={sectionalProjects} />
+                    {sectionalProjects.length > 0 && <SplitPortfolio projects={sectionalProjects} />}
 
                     {/*<div className="text-center mt-12">*/}
                     {/*    <Button size="lg" variant="outline" className="cta-button-secondary"*/}

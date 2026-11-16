@@ -8,7 +8,10 @@ import {Button} from '@/components/ui/button';
 import {Section} from '@/components/ui/section';
 import {Container} from '@/components/ui/container';
 import {useFeedbackModal} from '@/contexts/FeedbackModalContext';
-import {PORTFOLIO_FILTERS, PORTFOLIO_PROJECTS, PortfolioGateType, PortfolioProject} from '@/components/features/portfolio/portfolio-data';
+import {PORTFOLIO_FILTERS, PortfolioProject} from '@/components/features/portfolio/portfolio-data';
+import {formatPrice, projectTitle, type ProjectSection} from '@/data/types';
+import {useSiteData} from '@/contexts/SiteDataContext';
+import {DataLoading} from '@/components/features/data-loading';
 import {PortfolioMap} from '@/components/features/portfolio/portfolio-map';
 import {ProjectDetailsModal} from '@/components/features/portfolio/project-details-modal';
 import {PortfolioImage} from '@/components/features/portfolio/portfolio-image';
@@ -17,14 +20,16 @@ type ViewMode = 'grid' | 'map';
 
 export default function PortfolioPage() {
     const {openModal} = useFeedbackModal();
+    const {getProjects, hydrated} = useSiteData();
+    const PORTFOLIO_PROJECTS = getProjects();
 
-    const [activeFilter, setActiveFilter] = useState<PortfolioGateType | 'ALL'>('ALL');
+    const [activeFilter, setActiveFilter] = useState<ProjectSection | 'ALL'>('ALL');
     const [view, setView] = useState<ViewMode>('grid');
     const [selectedProject, setSelectedProject] = useState<PortfolioProject | null>(null);
 
     const filteredProjects = useMemo(
-        () => activeFilter === 'ALL' ? PORTFOLIO_PROJECTS : PORTFOLIO_PROJECTS.filter((p) => p.type === activeFilter),
-        [activeFilter],
+        () => activeFilter === 'ALL' ? PORTFOLIO_PROJECTS : PORTFOLIO_PROJECTS.filter((p) => p.section === activeFilter),
+        [activeFilter, PORTFOLIO_PROJECTS],
     );
 
     const openCaseForm = (project: PortfolioProject) => {
@@ -37,13 +42,17 @@ export default function PortfolioPage() {
                 },
                 portfolioProject: {
                     id: project.id,
-                    title: project.title,
+                    title: projectTitle(project),
                 },
-                title: `Хочу такие же ворота — ${project.title}`,
+                title: `Хочу такие же ворота — ${projectTitle(project)}`,
                 subtitle: 'Оставьте контакты, и мы подготовим расчёт по аналогичному проекту',
             });
         }, 300);
     };
+
+    if (!hydrated) {
+        return <DataLoading/>;
+    }
 
     return (
         <>
@@ -173,9 +182,9 @@ export default function PortfolioPage() {
                                             >
                                                 <div className="relative aspect-[4/3] overflow-hidden bg-zinc-100">
                                                     <PortfolioImage
-                                                        type={project.type}
+                                                        section={project.section}
                                                         src={project.images[0] ?? ''}
-                                                        alt={project.title}
+                                                        alt={projectTitle(project)}
                                                         loading="lazy"
                                                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                                                         fallbackClassName="transition-transform duration-500 group-hover:scale-105"
@@ -184,12 +193,12 @@ export default function PortfolioPage() {
                                                         {project.typeLabel}
                                                     </span>
                                                     <span className="absolute bottom-3 right-3 text-sm font-bold text-white bg-[#E65F2B] rounded-lg px-2.5 py-1 shadow">
-                                                        {project.cost}
+                                                        {formatPrice(project)}
                                                     </span>
                                                 </div>
                                                 <div className="p-5 flex flex-col flex-1">
                                                     <h3 className="text-base font-bold text-[#2F3E46] leading-snug mb-2 line-clamp-2 group-hover:text-[#E65F2B] transition-colors">
-                                                        {project.title}
+                                                        {projectTitle(project)}
                                                     </h3>
                                                     <div className="flex items-center gap-1.5 text-xs text-gray-500 mb-3">
                                                         <MapPin className="w-3.5 h-3.5 text-[#E65F2B] flex-shrink-0"/>

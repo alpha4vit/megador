@@ -6,6 +6,7 @@ import { Footer } from "@/components/features/footer";
 import { FeedbackModalProvider } from "@/contexts/FeedbackModalContext";
 import { CartProvider } from "@/contexts/CartContext";
 import { ToastProvider } from "@/contexts/ToastContext";
+import { SiteDataProvider } from "@/contexts/SiteDataContext";
 import FeedbackModal from "@/components/features/feedback-modal";
 import FloatingCart from "@/components/features/floating-cart";
 import { ImageProtectionGuard } from "@/components/features/image-protection-guard";
@@ -78,6 +79,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>
         <ImageProtectionGuard />
         <ToastProvider>
+          <SiteDataProvider>
           <CartProvider>
             <FeedbackModalProvider>
               <Header />
@@ -87,6 +89,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               <FloatingCart />
             </FeedbackModalProvider>
           </CartProvider>
+          </SiteDataProvider>
         </ToastProvider>
       </body>
     </html>

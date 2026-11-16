@@ -3,6 +3,7 @@
 import {useEffect, useRef, useState} from 'react';
 import {MapPin} from 'lucide-react';
 import type {PortfolioProject} from './portfolio-data';
+import {projectTitle} from '@/data/types';
 
 interface YMapInstance {
     destroy(): void;
@@ -137,10 +138,12 @@ export function PortfolioMap({projects, onSelectProject}: PortfolioMapProps) {
         });
 
         projects.forEach((project) => {
+            const coordinates = project.coordinates;
+            if (!coordinates) return;
             const placemark = new ymaps.Placemark(
-                project.coordinates,
+                coordinates,
                 {
-                    hintContent: project.title,
+                    hintContent: projectTitle(project),
                 },
                 {
                     preset: 'islands#orangeDotIcon',

@@ -10,20 +10,9 @@ import {Step} from '@/components/features/process-map';
 import {useFeedbackModal} from '@/contexts/FeedbackModalContext';
 import {useCart} from '@/contexts/CartContext';
 import {FlyToCartLayer, useFlyToCart} from '@/components/features/fly-to-cart';
-
-interface Product {
-    id: string;
-    title: string;
-    subtitle: string;
-    badgeText: string;
-    badgeStyle: string;
-    specs: string[];
-    price: string;
-    productActionKey: string;
-    image: string;
-    buttonText?: string;
-    description?: string;
-}
+import {useSiteData} from '@/contexts/SiteDataContext';
+import {DataLoading} from '@/components/features/data-loading';
+import {toProductCard, type ProductCard as Product} from '@/data/types';
 
 function ProductGrid({ products, onProductClick }: { products: Product[]; onProductClick: (product: Product) => void }) {
     const { addToCart } = useCart();
@@ -133,6 +122,9 @@ function ProductGrid({ products, onProductClick }: { products: Product[]; onProd
                     </div>
                 </div>
             ))}
+            {products.length === 0 && (
+                <p className="col-span-full text-center text-gray-500 py-10">В этой категории пока нет товаров</p>
+            )}
         </div>
 
         <FlyToCartLayer clones={clones} onDismiss={dismissFlyClone} />
@@ -142,6 +134,7 @@ function ProductGrid({ products, onProductClick }: { products: Product[]; onProd
 
 export default function AccessoriesPage() {
     const { openModal } = useFeedbackModal();
+    const { getProducts, hydrated } = useSiteData();
     const [activeTab, setActiveTab] = useState<'remotes' | 'safety' | 'smart'>('remotes');
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [isAnimating, setIsAnimating] = useState(false);
@@ -191,136 +184,14 @@ export default function AccessoriesPage() {
     }, [selectedProduct]);
 
     // Tab 1: Пульты управления (4 products)
-    const remoteProducts: Product[] = [
-        {
-            id: 'at-4',
-            title: 'Пульт д/у АТ-4, AT-4N',
-            subtitle: 'Универсальный пульт',
-            badgeText: 'Популярный',
-            badgeStyle: 'bg-slate-900',
-            specs: ['4 канала', '433 МГц', 'Совместимость с AN-Motors'],
-            price: 'от 45 BYN',
-            productActionKey: 'at-4',
-            image: '/accessories/webp/alutech_at4n.webp',
-            description: 'Универсальный пульт дистанционного управления АТ-4/AT-4N с 4 каналами на частоте 433 МГц. Полностью совместим с автоматикой AN-Motors. Простое программирование.',
-        },
-        {
-            id: 'flo2r-s',
-            title: 'Пульт д/у Flo2R-S',
-            subtitle: 'Пульт для NICE',
-            badgeText: 'Оптимальный',
-            badgeStyle: 'bg-zinc-700',
-            specs: ['2 канала', '433 МГц', 'Совместимость с NICE'],
-            price: 'от 75 BYN',
-            productActionKey: 'flo2r-s',
-            image: '/accessories/webp/nice_flor2s.webp',
-            description: 'Пульт дистанционного управления Flo2R-S с 2 каналами на частоте 433 МГц. Предназначен для работы с автоматикой NICE. Надежная передача сигнала.',
-        },
-        {
-            id: 'flo2re',
-            title: 'Пульт д/у Flo2RE',
-            subtitle: 'Пульт с расширенным диапазоном',
-            badgeText: 'Мощный',
-            badgeStyle: 'bg-zinc-700',
-            specs: ['2 канала', '433 МГц', 'Улучшенный радиус'],
-            price: 'от 100 BYN',
-            productActionKey: 'flo2re',
-            image: '/accessories/webp/nice_flor2e.webp',
-            description: 'Пульт дистанционного управления Flo2RE с расширенным радиусом действия. 2 канала на частоте 433 МГц для работы с автоматикой NICE.',
-        },
-        {
-            id: 'ar-1-500',
-            title: 'AR-1-500 AN-Motors радиоприемник',
-            subtitle: 'Универсальный радиоприемник',
-            badgeText: 'Профессиональный',
-            badgeStyle: 'bg-zinc-800',
-            specs: ['На 500 пультов', 'Универсальный', '433 МГц'],
-            price: 'от 68 BYN',
-            productActionKey: 'ar-1-500',
-            image: '/accessories/webp/an_motors_ar_1_500.webp',
-            description: 'Универсальный радиоприемник AR-1-500 от AN-Motors для подключения до 500 пультов. Работает на частоте 433 МГц. Совместим с большинством систем автоматики.',
-        },
-    ];
+    const catalogProducts = getProducts('accessories');
+    const remoteProducts: Product[] = catalogProducts.filter((p) => p.tab === 'remotes').map(toProductCard);
 
     // Tab 2: Элементы безопасности (5 products)
-    const safetyProducts: Product[] = [
-        {
-            id: 'nice-epm',
-            title: 'Фотоэлементы NICE, EPM, EPMB',
-            subtitle: 'Оптические датчики безопасности',
-            badgeText: 'Надежный',
-            badgeStyle: 'bg-slate-900',
-            specs: ['Инфракрасные', 'Для NICE', 'Высокая точность'],
-            price: 'от 290 BYN',
-            productActionKey: 'nice-epm',
-            image: '/accessories/webp/nice_epm.webp',
-            description: 'Фотоэлементы NICE серии EPM/EPMB для обеспечения безопасности автоматики. Инфракрасные датчики с высокой точностью обнаружения препятствий.',
-        },
-        {
-            id: 'alutech-lm-l',
-            title: 'Фотоэлементы Алютех, LM-L',
-            subtitle: 'Базовые датчики безопасности',
-            badgeText: 'Популярный',
-            badgeStyle: 'bg-slate-900',
-            specs: ['Инфракрасные', 'Для Alutech', 'Компактные'],
-            price: 'от 77 BYN',
-            productActionKey: 'alutech-lm-l',
-            image: '/accessories/webp/alutech_lm_l.webp',
-            description: 'Фотоэлементы Alutech серии LM-L для базовой системы безопасности. Компактные инфракрасные датчики для автоматических ворот.',
-        },
-        {
-            id: 'alutech-lm-lb',
-            title: 'Фотоэлементы Алютех, LM-LB',
-            subtitle: 'Усиленные датчики безопасности',
-            badgeText: 'Оптимальный',
-            badgeStyle: 'bg-zinc-700',
-            specs: ['Инфракрасные', 'Для Alutech', 'Расширенный диапазон'],
-            price: 'от 132 BYN',
-            productActionKey: 'alutech-lm-lb',
-            image: '/accessories/webp/alutech_lm_lb.jxl',
-            description: 'Фотоэлементы Alutech серии LM-LB с расширенным диапазоном действия. Усиленные инфракрасные датчики для повышенной безопасности.',
-        },
-        {
-            id: 'lamp-el',
-            title: 'Сигнальная лампа EL',
-            subtitle: 'Предупреждающая сигнализация',
-            badgeText: 'Безопасный',
-            badgeStyle: 'bg-zinc-700',
-            specs: ['LED', '220В', 'Визуальная сигнализация'],
-            price: 'от 130 BYN',
-            productActionKey: 'lamp-el',
-            image: '/accessories/webp/nice_el.webp',
-            description: 'Сигнальная лампа EL для визуального оповещения о работе автоматики. Яркий LED индикатор на 220В для повышения безопасности.',
-        },
-        {
-            id: 'lamp-sl-u',
-            title: 'Сигнальная лампа SL-U',
-            subtitle: 'Компактная сигнализация',
-            badgeText: 'Компакт',
-            badgeStyle: 'bg-zinc-700',
-            specs: ['LED', '24В', 'Компактная'],
-            price: 'от 75 BYN',
-            productActionKey: 'lamp-sl-u',
-            image: '/accessories/webp/alutech_sl_u.webp',
-            description: 'Компактная сигнальная лампа SL-U для систем безопасности на 24В. LED индикатор для визуального оповещения о работе ворот.',
-        },
-    ];
+    const safetyProducts: Product[] = catalogProducts.filter((p) => p.tab === 'safety').map(toProductCard);
 
     // Tab 3: Умные модули (1 product)
-    const smartProducts: Product[] = [
-        {
-            id: 'sg303ga-wr',
-            title: '3/4G GSM-модуль SG303GA-WR',
-            subtitle: 'Умное управление воротами',
-            badgeText: 'Smart',
-            badgeStyle: 'bg-[#E65F2B]',
-            specs: ['3G/4G', 'Управление со смартфона', 'SMS уведомления'],
-            price: 'от 1370 BYN',
-            productActionKey: 'sg303ga-wr',
-            image: '/accessories/webp/gsm_sg303ga_wr.webp',
-            description: 'GSM-модуль SG303GA-WR с поддержкой 3G/4G для удаленного управления воротами со смартфона. Отправка SMS уведомлений о статусе ворот. Совместим с большинством систем автоматики.',
-        },
-    ];
+    const smartProducts: Product[] = catalogProducts.filter((p) => p.tab === 'smart').map(toProductCard);
 
     const processSteps: Step[] = [
         {
@@ -342,6 +213,10 @@ export default function AccessoriesPage() {
             description: 'Программирование пультов, установка датчиков и настройка GSM-модулей',
         },
     ];
+
+    if (!hydrated) {
+        return <DataLoading/>;
+    }
 
     return (
         <>

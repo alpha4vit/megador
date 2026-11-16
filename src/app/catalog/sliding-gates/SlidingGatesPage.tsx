@@ -9,9 +9,13 @@ import {SplitPortfolio, Project} from '@/components/features/split-portfolio';
 import ProductPricingGrid from '@/components/features/product-pricing-grid';
 import ProductFeaturesSection from '@/components/features/product-features-section';
 import { useFeedbackModal } from '@/contexts/FeedbackModalContext';
+import {useSiteData} from '@/contexts/SiteDataContext';
+import {DataLoading} from '@/components/features/data-loading';
+import {formatPrice, projectTitle} from '@/data/types';
 
 export default function SlidingGatesPage() {
     const { openModal } = useFeedbackModal();
+    const { getProjects, hydrated } = useSiteData();
 
     const pricingTiers = [
         {
@@ -115,47 +119,23 @@ export default function SlidingGatesPage() {
         },
     ];
 
-    const portfolioItems = [
-        {
-            location: 'д. Тарасово',
-            series: 'Сэндвич-панель',
-            color: 'Антрацит',
-            automation: 'Alutech SG.02.002',
-            dimensions: '4000 x 2000 мм',
-            timeline: '1 день',
-            image: '/sliding-gates/webp/sliding_2.webp'
-        },
-        {
-            location: 'Минский р-н, Смолевичи',
-            series: 'Алюминий',
-            color: 'RAL 9016 Белый',
-            automation: 'Nice',
-            dimensions: '5000 x 2000 мм',
-            timeline: '2 дня',
-            image: '/sliding-gates/webp/sliding_1.webp'
-        },
-        {
-            location: 'Минск, Уручье',
-            series: 'Каркас',
-            color: 'Профнастил',
-            automation: 'Ручное управление',
-            dimensions: '3500 x 2000 мм',
-            timeline: '1 день',
-            image: '/sliding-gates/webp/sliding.webp',
-        },
-    ];
+    const portfolioItems = getProjects('sliding', true);
 
     const slidingProjects: Project[] = portfolioItems.map((item, index) => ({
         id: index + 1,
-        title: `Откатные ворота ${item.series}`,
+        title: projectTitle(item),
         location: item.location,
         material: `Серия ${item.series}, цвет ${item.color}`,
         automation: item.automation,
         installationTime: item.timeline,
-        priceRange: 'от 1000 BYN',
+        priceRange: formatPrice(item),
         description: `Откатные ворота серии ${item.series} в цвете ${item.color}. Размеры: ${item.dimensions}. Профессиональная установка с гарантией.`,
-        image: item.image,
+        image: item.images[0],
     }));
+
+    if (!hydrated) {
+        return <DataLoading/>;
+    }
 
     return (
         <>
@@ -283,7 +263,7 @@ export default function SlidingGatesPage() {
             />
 
             {/* Portfolio Showcase */}
-            <SplitPortfolio background='muted' projects={slidingProjects} />
+            {slidingProjects.length > 0 && <SplitPortfolio background='muted' projects={slidingProjects} />}
 
             {/* CTA Section */}
             <Section background="white">

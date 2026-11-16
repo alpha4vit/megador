@@ -11,9 +11,13 @@ import ProductPricingGrid from '@/components/features/product-pricing-grid';
 import ControlTypesSection from '@/components/features/control-types-section';
 import InstallationMethods from "@/components/features/installationMethods";
 import { useFeedbackModal } from '@/contexts/FeedbackModalContext';
+import {useSiteData} from '@/contexts/SiteDataContext';
+import {DataLoading} from '@/components/features/data-loading';
+import {formatPrice, projectTitle} from '@/data/types';
 
 export default function RollerGatesPage() {
     const { openModal } = useFeedbackModal();
+    const { getProducts, getProjects, hydrated } = useSiteData();
 
     const colorCollections: ColorCollections = {
         ral: [
@@ -42,50 +46,16 @@ export default function RollerGatesPage() {
         ],
     };
 
-    const pricingTiers = [
-        {
-            id: 'trend',
-            title: 'Alutech Trend',
-            subtitle: '77мм профиль',
-            badgeText: 'Практичный выбор',
-            badgeStyle: 'bg-slate-900',
-            features: [
-                {label: 'Толщина профиля', value: '77 мм'},
-                {label: 'Наполнитель', value: 'Мягкий пенный'},
-                {label: 'Профиль', value: 'AG/77 роликовой прокатки'},
-            ],
-            price: 'от 300 BYN',
-            productActionKey: 'trend',
-        },
-        {
-            id: 'prestige',
-            title: 'Alutech Prestige',
-            subtitle: '77мм утолщенный профиль',
-            badgeText: 'Премиум',
-            badgeStyle: 'bg-[#E65F2B]',
-            features: [
-                {label: 'Толщина профиля', value: '77 мм утолщенный'},
-                {label: 'Наполнитель', value: 'Твердый пенный'},
-                {label: 'Профиль', value: 'AR/77 повышенной прочности'},
-            ],
-            price: 'от 350 BYN',
-            productActionKey: 'prestige',
-        },
-        {
-            id: 'security',
-            title: 'Alutech Security',
-            subtitle: 'Противовзломный сегмент',
-            badgeText: 'Лучшая защита',
-            badgeStyle: 'bg-red-700',
-            features: [
-                {label: 'Толщина профиля', value: '1.0–1.5 мм'},
-                {label: 'Конструкция', value: 'Экструдированный профиль'},
-                {label: 'Взломостойкость', value: 'Класс Р3–Р5'},
-            ],
-            price: 'от 400 BYN',
-            productActionKey: 'security',
-        },
-    ];
+    const pricingTiers = getProducts('roller-gates').map((item) => ({
+        id: item.id,
+        title: item.title,
+        subtitle: item.subtitle,
+        badgeText: item.badgeText,
+        badgeStyle: item.badgeStyle,
+        features: item.specs,
+        price: formatPrice(item),
+        productActionKey: item.productActionKey ?? item.id,
+    }));
 
     const comparisonMatrix = {
         type: 'table' as const,
@@ -102,47 +72,21 @@ export default function RollerGatesPage() {
         ],
     };
 
-    const portfolioItems = [
-        {
-            location: 'Минский р-н, Смолевичи',
-            series: 'Prestige',
-            color: 'Антрацит',
-            automation: 'Marantec',
-            dimensions: '3000 x 2500 мм',
-            timeline: '2 дня',
-            image: "/roller-gates/webp/rollet-preview.webp"
-        },
-        {
-            location: 'Минск, Уручье',
-            series: 'Trend',
-            color: 'Золотой дуб',
-            automation: 'Ручное управление',
-            dimensions: '3500 x 2500 мм',
-            timeline: '2 дня',
-            image: "/roller-gates/webp/roller_2.webp"
-        },
-        {
-            location: 'Минский р-н, Ждановичи',
-            series: 'Prestige',
-            color: 'RAL 9016 Белый',
-            automation: 'Nice',
-            dimensions: '3200 x 2500 мм',
-            timeline: '3 дня',
-            image: "/roller-gates/webp/roller_1.webp"
-        },
-    ];
-
-    const rollerProjects: Project[] = portfolioItems.map((item, index) => ({
+    const rollerProjects: Project[] = getProjects('roller-gates', true).map((item, index) => ({
         id: index + 1,
-        title: `Роллетные ворота ${item.series}`,
+        title: projectTitle(item),
         location: item.location,
-        material: `Серия ${item.series}, цвет ${item.color}`,
+        material: item.series ? `Серия ${item.series}, цвет ${item.color}` : '',
         automation: item.automation,
         installationTime: item.timeline,
-        priceRange: 'от 1200 BYN',
-        description: `Роллетные ворота серии ${item.series} в цвете ${item.color}. Размеры: ${item.dimensions}. Профессиональная установка с гарантией.`,
-        image: item.image,
+        priceRange: formatPrice(item),
+        description: item.description || `Роллетные ворота серии ${item.series} в цвете ${item.color}. Размеры: ${item.dimensions}. Профессиональная установка с гарантией.`,
+        image: item.images[0],
     }));
+
+    if (!hydrated) {
+        return <DataLoading/>;
+    }
 
     return (
         <>

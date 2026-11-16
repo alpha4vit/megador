@@ -10,20 +10,9 @@ import ProcessMap, {Step} from '@/components/features/process-map';
 import { useFeedbackModal } from '@/contexts/FeedbackModalContext';
 import { useCart } from '@/contexts/CartContext';
 import { useFlyToCart, FlyToCartLayer } from '@/components/features/fly-to-cart';
-
-interface Product {
-    id: string;
-    title: string;
-    subtitle: string;
-    badgeText: string;
-    badgeStyle: string;
-    specs: string[];
-    price: string;
-    productActionKey: string;
-    image: string;
-    buttonText?: string;
-    description?: string;
-}
+import {useSiteData} from '@/contexts/SiteDataContext';
+import {DataLoading} from '@/components/features/data-loading';
+import {toProductCard, type ProductCard as Product} from '@/data/types';
 
 function ProductGrid({ products, onProductClick }: { products: Product[]; onProductClick: (product: Product) => void }) {
     const { addToCart } = useCart();
@@ -133,6 +122,9 @@ function ProductGrid({ products, onProductClick }: { products: Product[]; onProd
                     </div>
                 </div>
             ))}
+            {products.length === 0 && (
+                <p className="col-span-full text-center text-gray-500 py-10">В этой категории пока нет товаров</p>
+            )}
         </div>
 
         <FlyToCartLayer clones={clones} onDismiss={dismissFlyClone} />
@@ -142,6 +134,7 @@ function ProductGrid({ products, onProductClick }: { products: Product[]; onProd
 
 export default function AutomationSectionalPage() {
     const { openModal } = useFeedbackModal();
+    const { getProducts, hydrated } = useSiteData();
     const [activeTab, setActiveTab] = useState<'household' | 'industrial' | 'accessories'>('household');
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [isAnimating, setIsAnimating] = useState(false);
@@ -191,208 +184,14 @@ export default function AutomationSectionalPage() {
     }, [selectedProduct]);
 
     // Tab 1: Бытовые/гаражные ворота (8 products)
-    const householdProducts: Product[] = [
-        {
-            id: 'nice-shel-75kce',
-            title: 'NICE SHEL 75KCE',
-            subtitle: 'Базовая модель для гаражей',
-            badgeText: 'Популярный',
-            badgeStyle: 'bg-slate-900',
-            specs: ['Цепной привод', 'До 75 кг', '2 пульта'],
-            price: 'от 359 BYN',
-            productActionKey: 'nice-shel-75kce',
-            image: '/automation-sectional/webp/shel75kce.webp',
-            description: 'Привод NICE SHEL 75KCE оснащен технологией BLUEBUS для надежной передачи данных. Встроенная система обнаружения препятствий обеспечивает безопасность эксплуатации. Функция регулировки скорости позволяет плавно открывать и закрывать ворота. Автоматическое обучение конечных положений упрощает настройку и гарантирует точную работу механизма.',
-        },
-        {
-            id: 'nice-spin23-bdkce',
-            title: 'NICE Spin23BDKCE',
-            subtitle: 'Усиленный привод',
-            badgeText: 'Оптимальный',
-            badgeStyle: 'bg-zinc-700',
-            specs: ['Цепной привод', 'До 100 кг', 'Краевой датчик'],
-            price: 'от 420 BYN',
-            productActionKey: 'nice-spin23-bdkce',
-            image: '/automation-sectional/webp/spin23bdkce.webp',
-            description: 'Привод NICE Spin23BDKCE использует технологию BLUEBUS для стабильной работы. Система обнаружения препятствий останавливает ворота при встрече с объектом. Регулировка скорости обеспечивает плавное движение створки. Автоматическое обучение конечных положений позволяет быстро настроить привод без сложных манипуляций.',
-        },
-        {
-            id: 'nice-spin22-bdkce',
-            title: 'NICE Spin22BDKCE',
-            subtitle: 'Компактный привод',
-            badgeText: 'Компакт',
-            badgeStyle: 'bg-zinc-700',
-            specs: ['Цепной привод', 'До 80 кг', '2 пульта'],
-            price: 'от 390 BYN',
-            productActionKey: 'nice-spin22-bdkce',
-            image: '/automation-sectional/webp/spin23bdkce.webp',
-            description: 'Компактный привод NICE Spin22BDKCE оснащен технологией BLUEBUS для надежной коммуникации. Встроенный датчик препятствий обеспечивает безопасность при эксплуатации. Функция регулировки скорости позволяет настроить оптимальный режим работы. Автоматическое обучение конечных положений упрощает первоначальную настройку.',
-        },
-        {
-            id: 'alutech-lg-500',
-            title: 'Alutech Levigato LG-500',
-            subtitle: 'Базовая модель',
-            badgeText: 'Народный выбор',
-            badgeStyle: 'bg-[#E65F2B]',
-            specs: ['Штоковый привод', 'До 50 кг', '2 пульта'],
-            price: 'от 380 BYN',
-            productActionKey: 'alutech-lg-500',
-            image: '/automation-sectional/webp/spin22bdkce.webp',
-            description: 'Привод Alutech Levigato LG-500 оснащен безопасным 24В двигателем с функцией аварийного разблокирования. Таймер с LED подсветкой обеспечивает удобство использования в темноте. Совместим с воротами высотой от 2.4 до 3.3 метров. Поддерживает подключение оптических датчиков безопасности для дополнительной защиты.',
-        },
-        {
-            id: 'alutech-lg-600f',
-            title: 'Alutech Levigato LG-600F',
-            subtitle: 'Усиленная модель',
-            badgeText: 'Популярный',
-            badgeStyle: 'bg-slate-900',
-            specs: ['Штоковый привод', 'До 60 кг', 'Краевой датчик'],
-            price: 'от 420 BYN',
-            productActionKey: 'alutech-lg-600f',
-            image: '/automation-sectional/webp/alutech_levigato_lg_600f.webp',
-            description: 'Привод Alutech Levigato LG-600F оснащен безопасным 24В двигателем с аварийным разблокированием. Таймер с LED подсветкой обеспечивает удобство эксплуатации. Подходит для ворот высотой от 2.4 до 3.3 метров. Включает краевой датчик и поддерживает оптические датчики безопасности для максимальной защиты.',
-        },
-        {
-            id: 'alutech-lg-800',
-            title: 'Alutech Levigato LG-800',
-            subtitle: 'Мощный привод',
-            badgeText: 'Мощный',
-            badgeStyle: 'bg-zinc-700',
-            specs: ['Штоковый привод', 'До 80 кг', 'Краевой датчик'],
-            price: 'от 480 BYN',
-            productActionKey: 'alutech-lg-800',
-            image: '/automation-sectional/webp/alutech_levigato_lg_800.webp',
-            description: 'Мощный привод Alutech Levigato LG-800 с безопасным 24В двигателем и аварийным разблокированием. Таймер с LED подсветкой для удобного использования. Совместим с воротами высотой от 2.4 до 3.3 метров. Оснащен краевым датчиком и поддерживает оптические датчики безопасности.',
-        },
-        {
-            id: 'alutech-lg-1000f',
-            title: 'Alutech Levigato LG-1000F',
-            subtitle: 'Тяжелые ворота',
-            badgeText: 'Профессиональный',
-            badgeStyle: 'bg-zinc-800',
-            specs: ['Штоковый привод', 'До 100 кг', 'Краевой датчик'],
-            price: 'от 550 BYN',
-            productActionKey: 'alutech-lg-1000f',
-            image: '/automation-sectional/webp/alutech_Levigato_lg_1000f.webp',
-            description: 'Профессиональный привод Alutech Levigato LG-1000F с безопасным 24В двигателем и аварийным разблокированием. Таймер с LED подсветкой для удобства. Совместим с воротами высотой от 2.4 до 3.3 метров. Включает краевой датчик и поддерживает оптические датчики безопасности для тяжелых ворот.',
-        },
-        {
-            id: 'alutech-lg-1200',
-            title: 'Alutech Levigato LG-1200',
-            subtitle: 'Максимальная мощность',
-            badgeText: 'Премиум',
-            badgeStyle: 'bg-black',
-            specs: ['Штоковый привод', 'До 120 кг', 'Краевой датчик'],
-            price: 'от 620 BYN',
-            productActionKey: 'alutech-lg-1200',
-            image: '/automation-sectional/webp/alutech_Levigato_lg_1200.webp',
-            description: 'Премиум привод Alutech Levigato LG-1200 с мощным безопасным 24В двигателем и аварийным разблокированием. Таймер с LED подсветкой для максимального удобства. Совместим с воротами высотой от 2.4 до 3.3 метров. Оснащен краевым датчиком и поддерживает оптические датчики безопасности для самых тяжелых ворот.',
-        },
-    ];
+    const catalogProducts = getProducts('automation-sectional');
+    const householdProducts: Product[] = catalogProducts.filter((p) => p.tab === 'household').map(toProductCard);
 
     // Tab 2: Промышленные ворота (2 products)
-    const industrialProducts: Product[] = [
-        {
-            id: 'nice-so-2000',
-            title: 'NICE SO 2000',
-            subtitle: 'Высоконагруженный привод',
-            badgeText: 'Промышленный',
-            badgeStyle: 'bg-zinc-800',
-            specs: ['Валовый привод', 'До 2000 кг', '4 пульта'],
-            price: 'от 830 BYN',
-            productActionKey: 'nice-so-2000',
-            image: '/automation-sectional/webp/nice_so_2000.webp',
-            description: 'Промышленный привод NICE SO 2000 предназначен для тяжелых секционных ворот весом до 2000 кг. Валовый привод обеспечивает надежную передачу усилия. Оснащен технологией BLUEBUS для стабильной работы системы. Включает 4 пульта дистанционного управления и поддерживает интеграцию с системами безопасности промышленного уровня.',
-        },
-        {
-            id: 'targo',
-            title: 'TARGO',
-            subtitle: 'Тяжелая промышленность',
-            badgeText: 'Тяжелая серия',
-            badgeStyle: 'bg-black',
-            specs: ['Валовый привод', 'До 3000 кг', '4 пульта'],
-            price: 'от 1200 BYN',
-            productActionKey: 'targo',
-            image: '/automation-sectional/webp/alutech_targo.webp',
-            description: 'Тяжелый промышленный привод TARGO разработан для экстремальных нагрузок до 3000 кг. Мощный валовый привод обеспечивает надежную работу в условиях интенсивной эксплуатации. Включает 4 пульта дистанционного управления. Поддерживает подключение промышленных систем безопасности и интеграцию с системами контроля доступа.',
-        },
-    ];
+    const industrialProducts: Product[] = catalogProducts.filter((p) => p.tab === 'industrial').map(toProductCard);
 
     // Tab 3: Комплектующие и рейки (6 products)
-    const accessoriesProducts: Product[] = [
-        {
-            id: 'lgr-4200b',
-            title: 'Рейка зубчатая ременная LGR-4200B',
-            subtitle: 'Ременная направляющая',
-            badgeText: 'Комплектующие',
-            badgeStyle: 'bg-zinc-700',
-            specs: ['Ременная', 'LGR-4200B', 'Полимер'],
-            price: 'от 196 BYN',
-            productActionKey: 'lgr-4200b',
-            image: '/automation-sectional/webp/alutech_lgr_4200b.webp',
-            buttonText: 'ЗАКАЗАТЬ',
-        },
-        {
-            id: 'lgr-3600b',
-            title: 'Рейка зубчатая ременная LGR-3600B',
-            subtitle: 'Ременная направляющая',
-            badgeText: 'Комплектующие',
-            badgeStyle: 'bg-zinc-700',
-            specs: ['Ременная', 'LGR-3600B', 'Полимер'],
-            price: 'от 163 BYN',
-            productActionKey: 'lgr-3600b',
-            image: '/automation-sectional/webp/alutech_lgr_3600b.webp',
-            buttonText: 'ЗАКАЗАТЬ',
-        },
-        {
-            id: 'lgr-3300b',
-            title: 'Рейка зубчатая ременная LGR-3300B',
-            subtitle: 'Ременная направляющая',
-            badgeText: 'Комплектующие',
-            badgeStyle: 'bg-zinc-700',
-            specs: ['Ременная', 'LGR-3300B', 'Полимер'],
-            price: 'от 146 BYN',
-            productActionKey: 'lgr-3300b',
-            image: '/automation-sectional/webp/alutech_lgr_3300b.webp',
-            buttonText: 'ЗАКАЗАТЬ',
-        },
-        {
-            id: 'lgr-4200c',
-            title: 'Рейка приводная цепная LGR-4200C',
-            subtitle: 'Цепная направляющая',
-            badgeText: 'Комплектующие',
-            badgeStyle: 'bg-zinc-700',
-            specs: ['Цепная', 'LGR-4200C', 'Сталь'],
-            price: 'от 158 BYN',
-            productActionKey: 'lgr-4200c',
-            image: '/automation-sectional/webp/alutech_lgr_4200с.webp',
-            buttonText: 'ЗАКАЗАТЬ',
-        },
-        {
-            id: 'lgr-3600c',
-            title: 'Рейка приводная цепная LGR-3600C',
-            subtitle: 'Цепная направляющая',
-            badgeText: 'Комплектующие',
-            badgeStyle: 'bg-zinc-700',
-            specs: ['Цепная', 'LGR-3600C', 'Сталь'],
-            price: 'от 128 BYN',
-            productActionKey: 'lgr-3600c',
-            image: '/automation-sectional/webp/alutech_lgr_3600с.webp',
-            buttonText: 'ЗАКАЗАТЬ',
-        },
-        {
-            id: 'lgr-3300c',
-            title: 'Рейка приводная цепная LGR-3300C',
-            subtitle: 'Цепная направляющая',
-            badgeText: 'Комплектующие',
-            badgeStyle: 'bg-zinc-700',
-            specs: ['Цепная', 'LGR-3300C', 'Сталь'],
-            price: 'от 115 BYN',
-            productActionKey: 'lgr-3300c',
-            image: '/automation-sectional/webp/alutech_lgr_3300с.webp',
-            buttonText: 'ЗАКАЗАТЬ',
-        },
-    ];
+    const accessoriesProducts: Product[] = catalogProducts.filter((p) => p.tab === 'accessories').map(toProductCard);
 
     const processSteps: Step[] = [
         {
@@ -420,6 +219,10 @@ export default function AutomationSectionalPage() {
             description: 'Оплата после выполнения работ и проверки работоспособности системы',
         },
     ];
+
+    if (!hydrated) {
+        return <DataLoading/>;
+    }
 
     return (
         <>

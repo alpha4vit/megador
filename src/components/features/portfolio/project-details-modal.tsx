@@ -6,6 +6,7 @@ import {ArrowRight, Check, ChevronLeft, ChevronRight, MapPin, X} from 'lucide-re
 import {Button} from '@/components/ui/button';
 import {PortfolioImageFallback} from './portfolio-image';
 import type {PortfolioProject} from './portfolio-data';
+import {formatPrice, projectTitle} from '@/data/types';
 
 interface ProjectDetailsModalProps {
     project: PortfolioProject | null;
@@ -79,7 +80,7 @@ export function ProjectDetailsModal({project, onClose, onCta}: ProjectDetailsMod
                         {failedImageIdx === activeImage ? (
                             <PortfolioImageFallback
                                 key={`fallback-${activeImage}`}
-                                type={shown.type}
+                                section={shown.section}
                                 className="absolute inset-0"
                             />
                         ) : (
@@ -87,7 +88,7 @@ export function ProjectDetailsModal({project, onClose, onCta}: ProjectDetailsMod
                                 key={activeImage}
                                 draggable={false}
                                 src={galleryImages[activeImage]}
-                                alt={shown.title}
+                                alt={projectTitle(shown)}
                                 onError={() => setFailedImageIdx(activeImage)}
                                 initial={{opacity: 0, scale: 1.04}}
                                 animate={{opacity: 1, scale: 1}}
@@ -149,7 +150,7 @@ export function ProjectDetailsModal({project, onClose, onCta}: ProjectDetailsMod
                 <span className="inline-block text-xs font-semibold uppercase tracking-wide text-[#E65F2B] bg-orange-50 border border-orange-100 rounded-full px-3 py-1 mb-3">
                     {shown.typeLabel}
                 </span>
-                <h2 className="text-2xl font-bold text-[#2F3E46] leading-snug mb-2">{shown.title}</h2>
+                <h2 className="text-2xl font-bold text-[#2F3E46] leading-snug mb-2">{projectTitle(shown)}</h2>
                 <div className="flex items-center gap-1.5 text-sm text-gray-500">
                     <MapPin className="w-4 h-4 text-[#E65F2B]"/>
                     <span>{shown.location}</span>
@@ -184,7 +185,7 @@ export function ProjectDetailsModal({project, onClose, onCta}: ProjectDetailsMod
             <div className="mt-auto pb-8">
                 <div className="flex items-baseline justify-between mb-4">
                     <span className="text-sm text-gray-500">Ориентировочная стоимость</span>
-                    <span className="text-2xl font-bold text-[#E65F2B]">{shown.cost}</span>
+                    <span className="text-2xl font-bold text-[#E65F2B]">{formatPrice(shown)}</span>
                 </div>
                 <Button
                     size="lg"

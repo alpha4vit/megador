@@ -10,20 +10,9 @@ import ProcessMap, {Step} from '@/components/features/process-map';
 import { useFeedbackModal } from '@/contexts/FeedbackModalContext';
 import { useCart } from '@/contexts/CartContext';
 import { useFlyToCart, FlyToCartLayer } from '@/components/features/fly-to-cart';
-
-interface Product {
-    id: string;
-    title: string;
-    subtitle: string;
-    badgeText: string;
-    badgeStyle: string;
-    specs: string[];
-    price: string;
-    productActionKey: string;
-    image: string;
-    buttonText?: string;
-    description?: string;
-}
+import {useSiteData} from '@/contexts/SiteDataContext';
+import {DataLoading} from '@/components/features/data-loading';
+import {toProductCard, type ProductCard as Product} from '@/data/types';
 
 function ProductGrid({ products, onProductClick }: { products: Product[]; onProductClick: (product: Product) => void }) {
     const { addToCart } = useCart();
@@ -133,6 +122,9 @@ function ProductGrid({ products, onProductClick }: { products: Product[]; onProd
                     </div>
                 </div>
             ))}
+            {products.length === 0 && (
+                <p className="col-span-full text-center text-gray-500 py-10">В этой категории пока нет товаров</p>
+            )}
         </div>
 
         {/* Fly-to-cart clones */}
@@ -143,6 +135,7 @@ function ProductGrid({ products, onProductClick }: { products: Product[]; onProd
 
 export default function AutomationSlidingPage() {
     const { openModal } = useFeedbackModal();
+    const { getProducts, hydrated } = useSiteData();
     const [activeTab, setActiveTab] = useState<'nice-alutech' | 'hispeed'>('nice-alutech');
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [isAnimating, setIsAnimating] = useState(false);
@@ -192,192 +185,11 @@ export default function AutomationSlidingPage() {
     }, [selectedProduct]);
 
     // Tab 1: Приводы NICE & Alutech (12 products)
-    const niceAlutechProducts: Product[] = [
-        {
-            id: 'nice-rb400',
-            title: 'NICE RB400',
-            subtitle: 'Базовый привод для откатных ворот',
-            badgeText: 'Популярный',
-            badgeStyle: 'bg-slate-900',
-            specs: ['До 400 кг', '24В питание', '2 пульта'],
-            price: 'от 1150 BYN',
-            productActionKey: 'nice-rb400',
-            image: '/automation-sliding/webp/ROBUS400.webp',
-            description: 'Привод NICE RB400 предназначен для откатных ворот весом до 400 кг. Оснащен надежным 24В двигателем с функцией аварийного разблокирования. Включает 2 пульта дистанционного управления. Поддерживает подключение оптических датчиков безопасности для дополнительной защиты.',
-        },
-        {
-            id: 'nice-rb600',
-            title: 'NICE RB600',
-            subtitle: 'Усиленный привод',
-            badgeText: 'Оптимальный',
-            badgeStyle: 'bg-zinc-700',
-            specs: ['До 600 кг', '24В питание', '2 пульта'],
-            price: 'от 1235 BYN',
-            productActionKey: 'nice-rb600',
-            image: '/automation-sliding/webp/ROBUS400.webp',
-            description: 'Привод NICE RB600 разработан для откатных ворот весом до 600 кг. Мощный 24В двигатель обеспечивает плавную работу. Включает 2 пульта дистанционного управления. Поддерживает интеграцию с системами безопасности.',
-        },
-        {
-            id: 'nice-rb1000',
-            title: 'NICE RB1000',
-            subtitle: 'Мощный привод',
-            badgeText: 'Мощный',
-            badgeStyle: 'bg-zinc-700',
-            specs: ['До 1000 кг', '24В питание', '4 пульта'],
-            price: 'от 1355 BYN',
-            productActionKey: 'nice-rb1000',
-            image: '/automation-sliding/webp/ROBUS400.webp',
-            description: 'Привод NICE RB1000 предназначен для тяжелых откатных ворот весом до 1000 кг. Оснащен мощным 24В двигателем с аварийным разблокированием. Включает 4 пульта дистанционного управления. Поддерживает подключение промышленных систем безопасности.',
-        },
-        {
-            id: 'nice-rd400',
-            title: 'NICE RD400',
-            subtitle: 'Компактный привод',
-            badgeText: 'Компакт',
-            badgeStyle: 'bg-zinc-700',
-            specs: ['До 400 кг', '230В питание', '2 пульта'],
-            price: 'от 760 BYN',
-            productActionKey: 'nice-rd400',
-            image: '/automation-sliding/webp/road400.webp',
-            description: 'Компактный привод NICE RD400 для откатных ворот весом до 400 кг. Работает от сети 230В. Включает 2 пульта дистанционного управления. Идеален для установки в ограниченном пространстве.',
-        },
-        {
-            id: 'nice-ro-600',
-            title: 'NICE RO 600',
-            subtitle: 'Надежный привод',
-            badgeText: 'Надежный',
-            badgeStyle: 'bg-zinc-700',
-            specs: ['До 600 кг', '230В питание', '2 пульта'],
-            price: 'от 955 BYN',
-            productActionKey: 'nice-ro-600',
-            image: '/automation-sliding/webp/nice_ro_600.webp',
-            description: 'Привод NICE RO 600 для откатных ворот весом до 600 кг. Работает от сети 230В. Включает 2 пульта дистанционного управления. Обеспечивает надежную работу в условиях интенсивной эксплуатации.',
-        },
-        {
-            id: 'nice-rox1000',
-            title: 'NICE ROX1000',
-            subtitle: 'Тяжелые ворота',
-            badgeText: 'Профессиональный',
-            badgeStyle: 'bg-zinc-800',
-            specs: ['До 1000 кг', '230В питание', '4 пульта'],
-            price: 'от 1605 BYN',
-            productActionKey: 'nice-rox1000',
-            image: '/automation-sliding/webp/nice_rox_1000.webp',
-            description: 'Профессиональный привод NICE ROX1000 для тяжелых откатных ворот весом до 1000 кг. Работает от сети 230В. Включает 4 пульта дистанционного управления. Поддерживает интеграцию с системами контроля доступа.',
-        },
-        {
-            id: 'alutech-rto500kit',
-            title: 'Алютех RTO500KIT',
-            subtitle: 'Базовый комплект',
-            badgeText: 'Народный выбор',
-            badgeStyle: 'bg-[#E65F2B]',
-            specs: ['До 500 кг', '24В питание', '2 пульта'],
-            price: 'от 770 BYN',
-            productActionKey: 'alutech-rto500kit',
-            image: '/automation-sliding/webp/alutech_rto_500_kit.webp',
-            description: 'Комплект привода Alutech RTO500KIT для откатных ворот весом до 500 кг. Оснащен безопасным 24В двигателем с аварийным разблокированием. Включает 2 пульта дистанционного управления. Полный комплект для монтажа.',
-        },
-        {
-            id: 'alutech-rto500mkit',
-            title: 'Алютех RTO500MKIT',
-            subtitle: 'Комплект с мотором',
-            badgeText: 'Популярный',
-            badgeStyle: 'bg-slate-900',
-            specs: ['До 500 кг', '24В питание', '2 пульта'],
-            price: 'от 790 BYN',
-            productActionKey: 'alutech-rto500mkit',
-            image: '/automation-sliding/webp/alutech_rto_2000_mkit.webp',
-            description: 'Комплект привода Alutech RTO500MKIT с усиленным мотором для откатных ворот весом до 500 кг. Безопасный 24В двигатель с аварийным разблокированием. Включает 2 пульта дистанционного управления.',
-        },
-        {
-            id: 'alutech-rto1000kit',
-            title: 'Алютех RTO1000KIT',
-            subtitle: 'Усиленный комплект',
-            badgeText: 'Мощный',
-            badgeStyle: 'bg-zinc-700',
-            specs: ['До 1000 кг', '24В питание', '4 пульта'],
-            price: 'от 870 BYN',
-            productActionKey: 'alutech-rto1000kit',
-            image: '/automation-sliding/webp/alutech_rto_500_kit.webp',
-            description: 'Комплект привода Alutech RTO1000KIT для откатных ворот весом до 1000 кг. Мощный 24В двигатель с аварийным разблокированием. Включает 4 пульта дистанционного управления. Полный комплект для монтажа.',
-        },
-        {
-            id: 'alutech-rto1000mkit',
-            title: 'Алютех RTO1000MKIT',
-            subtitle: 'Комплект с мотором',
-            badgeText: 'Мощный',
-            badgeStyle: 'bg-zinc-700',
-            specs: ['До 1000 кг', '24В питание', '4 пульта'],
-            price: 'от 895 BYN',
-            productActionKey: 'alutech-rto1000mkit',
-            image: '/automation-sliding/webp/alutech_rto_2000_mkit.webp',
-            description: 'Комплект привода Alutech RTO1000MKIT с усиленным мотором для откатных ворот весом до 1000 кг. Безопасный 24В двигатель с аварийным разблокированием. Включает 4 пульта дистанционного управления.',
-        },
-        {
-            id: 'alutech-rto2000kit',
-            title: 'Алютех RTO2000KIT',
-            subtitle: 'Тяжелые ворота',
-            badgeText: 'Профессиональный',
-            badgeStyle: 'bg-zinc-800',
-            specs: ['До 2000 кг', '24В питание', '4 пульта'],
-            price: 'от 1105 BYN',
-            productActionKey: 'alutech-rto2000kit',
-            image: '/automation-sliding/webp/alutech_rto_500_kit.webp',
-            description: 'Комплект привода Alutech RTO2000KIT для тяжелых откатных ворот весом до 2000 кг. Мощный 24В двигатель с аварийным разблокированием. Включает 4 пульта дистанционного управления. Полный комплект для промышленного монтажа.',
-        },
-        {
-            id: 'alutech-rto2000mkit',
-            title: 'Алютех RTO2000MKIT',
-            subtitle: 'Максимальная мощность',
-            badgeText: 'Премиум',
-            badgeStyle: 'bg-black',
-            specs: ['До 2000 кг', '24В питание', '4 пульта'],
-            price: 'от 1135 BYN',
-            productActionKey: 'alutech-rto2000mkit',
-            image: '/automation-sliding/webp/alutech_rto_2000_mkit.webp',
-            description: 'Премиум комплект привода Alutech RTO2000MKIT с усиленным мотором для тяжелых откатных ворот весом до 2000 кг. Безопасный 24В двигатель с аварийным разблокированием. Включает 4 пульта дистанционного управления.',
-        },
-    ];
+    const catalogProducts = getProducts('automation-sliding');
+    const niceAlutechProducts: Product[] = catalogProducts.filter((p) => p.tab === 'nice-alutech').map(toProductCard);
 
     // Tab 2: Высокоскоростные приводы (Hi-Speed) (3 products)
-    const hispeedProducts: Product[] = [
-        {
-            id: 'nice-hispeed-rb500hskit',
-            title: 'Высокоскоростной привод Nice Hi-Speed Rb500HSKIT',
-            subtitle: 'Быстрое открытие',
-            badgeText: 'Hi-Speed',
-            badgeStyle: 'bg-[#E65F2B]',
-            specs: ['До 500 кг', 'Высокая скорость', '2 пульта'],
-            price: 'от 1400 BYN',
-            productActionKey: 'nice-hispeed-rb500hskit',
-            image: '/automation-sliding/webp/nice_rb500hs.webp',
-            description: 'Высокоскоростной привод Nice Hi-Speed Rb500HSKIT обеспечивает быстрое открытие откатных ворот весом до 500 кг. Идеален для интенсивного использования. Включает 2 пульта дистанционного управления.',
-        },
-        {
-            id: 'nice-hispeed-run1200hs',
-            title: 'Высокоскоростной привод Nice Hi-Speed Run1200HS',
-            subtitle: 'Максимальная скорость',
-            badgeText: 'Премиум',
-            badgeStyle: 'bg-black',
-            specs: ['До 1200 кг', 'Высокая скорость', '4 пульта'],
-            price: 'от 2775 BYN',
-            productActionKey: 'nice-hispeed-run1200hs',
-            image: '/automation-sliding/webp/nice_run_1200hs.webp',
-            description: 'Высокоскоростной привод Nice Hi-Speed Run1200HS обеспечивает максимальную скорость открытия для тяжелых откатных ворот весом до 1200 кг. Включает 4 пульта дистанционного управления. Поддерживает интеграцию с системами контроля доступа.',
-        },
-        {
-            id: 'nice-hispeed-rb250hs',
-            title: 'Высокоскоростной привод Nice Hi-Speed Rb 250HS',
-            subtitle: 'Компактный Hi-Speed',
-            badgeText: 'Hi-Speed',
-            badgeStyle: 'bg-[#E65F2B]',
-            specs: ['До 250 кг', 'Высокая скорость', '2 пульта'],
-            price: 'от 1320 BYN',
-            productActionKey: 'nice-hispeed-rb250hs',
-            image: '/automation-sliding/webp/nice_robus250hs.webp',
-            description: 'Компактный высокоскоростной привод Nice Hi-Speed Rb 250HS для легких откатных ворот весом до 250 кг. Обеспечивает быстрое открытие при компактных размерах. Включает 2 пульта дистанционного управления.',
-        },
-    ];
+    const hispeedProducts: Product[] = catalogProducts.filter((p) => p.tab === 'hispeed').map(toProductCard);
 
     const processSteps: Step[] = [
         {
@@ -405,6 +217,10 @@ export default function AutomationSlidingPage() {
             description: 'Оплата после выполнения работ и проверки работоспособности системы',
         },
     ];
+
+    if (!hydrated) {
+        return <DataLoading/>;
+    }
 
     return (
         <>

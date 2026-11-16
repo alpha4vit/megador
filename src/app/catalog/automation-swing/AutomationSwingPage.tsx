@@ -10,20 +10,9 @@ import ProcessMap, {Step} from '@/components/features/process-map';
 import { useFeedbackModal } from '@/contexts/FeedbackModalContext';
 import { useCart } from '@/contexts/CartContext';
 import { useFlyToCart, FlyToCartLayer } from '@/components/features/fly-to-cart';
-
-interface Product {
-    id: string;
-    title: string;
-    subtitle: string;
-    badgeText: string;
-    badgeStyle: string;
-    specs: string[];
-    price: string;
-    productActionKey: string;
-    image: string;
-    buttonText?: string;
-    description?: string;
-}
+import {useSiteData} from '@/contexts/SiteDataContext';
+import {DataLoading} from '@/components/features/data-loading';
+import {toProductCard, type ProductCard as Product} from '@/data/types';
 
 function ProductGrid({ products, onProductClick }: { products: Product[]; onProductClick: (product: Product) => void }) {
     const { addToCart } = useCart();
@@ -133,6 +122,9 @@ function ProductGrid({ products, onProductClick }: { products: Product[]; onProd
                     </div>
                 </div>
             ))}
+            {products.length === 0 && (
+                <p className="col-span-full text-center text-gray-500 py-10">В этой категории пока нет товаров</p>
+            )}
         </div>
 
         <FlyToCartLayer clones={clones} onDismiss={dismissFlyClone} />
@@ -142,6 +134,7 @@ function ProductGrid({ products, onProductClick }: { products: Product[]; onProd
 
 export default function AutomationSwingPage() {
     const { openModal } = useFeedbackModal();
+    const { getProducts, hydrated } = useSiteData();
     const [activeTab, setActiveTab] = useState<'nice' | 'alutech'>('nice');
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [isAnimating, setIsAnimating] = useState(false);
@@ -191,120 +184,11 @@ export default function AutomationSwingPage() {
     }, [selectedProduct]);
 
     // Tab 1: Автоматика NICE (7 products)
-    const niceProducts: Product[] = [
-        {
-            id: 'nice-wingo-3524-kce',
-            title: 'Nice Wingo 3524 KCE',
-            subtitle: 'Базовая комплектация',
-            badgeText: 'Популярный',
-            badgeStyle: 'bg-slate-900',
-            specs: ['Блок д/у', '2 пульта д/у', 'Для легких ворот'],
-            price: 'от 1880 BYN',
-            productActionKey: 'nice-wingo-3524-kce',
-            image: '/automation-swing/webp/wingo2024kce_2.webp',
-            description: 'Комплект Nice Wingo 3524 KCE включает блок управления и 2 пульта дистанционного управления. Предназначен для автоматизации распашных ворот с легким весом. Обеспечивает надежную и плавную работу механизма.',
-        },
-        {
-            id: 'nice-wingo-3524kit1',
-            title: 'Nice Wingo 3524KIT1',
-            subtitle: 'Расширенная комплектация',
-            badgeText: 'Оптимальный',
-            badgeStyle: 'bg-zinc-700',
-            specs: ['Блок д/у', '2 пульта', 'Линия фотоэлементов'],
-            price: 'от 2050 BYN',
-            productActionKey: 'nice-wingo-3524kit1',
-            image: '/automation-swing/webp/wingo2024kce_2.webp',
-            description: 'Комплект Nice Wingo 3524KIT1 оснащен блоком управления, 2 пультами и линией фотоэлементов для дополнительной безопасности. Обеспечивает автоматическую остановку при обнаружении препятствий.',
-        },
-        {
-            id: 'nice-too3000-klt',
-            title: 'Nice TOO3000 KLT',
-            subtitle: 'Универсальный привод',
-            badgeText: 'Народный выбор',
-            badgeStyle: 'bg-[#E65F2B]',
-            specs: ['Блок д/у', '2 пульта д/у', 'Универсальный'],
-            price: 'от 1700 BYN',
-            productActionKey: 'nice-too3000-klt',
-            image: '/automation-swing/webp/nice_to3000klt.webp',
-            description: 'Привод Nice TOO3000 KLT с блоком управления и 2 пультами. Универсальное решение для автоматизации распашных ворот различных размеров. Простая установка и настройка.',
-        },
-        {
-            id: 'nice-to4016r-kit',
-            title: 'Nice TO4016Р KIT',
-            subtitle: 'Усиленный привод',
-            badgeText: 'Популярный',
-            badgeStyle: 'bg-slate-900',
-            specs: ['Блок д/у', '2 пульта д/у', 'Усиленный'],
-            price: 'от 2120 BYN',
-            productActionKey: 'nice-to4016r-kit',
-            image: '/automation-swing/webp/nice_to4016p.webp',
-            description: 'Комплект Nice TO4016Р KIT с усиленным приводом, блоком управления и 2 пультами. Предназначен для распашных ворот с повышенным весом. Обеспечивает надежную работу при интенсивной эксплуатации.',
-        },
-        {
-            id: 'nice-to4016kit1',
-            title: 'Nice TO4016KIT1',
-            subtitle: 'Максимальная безопасность',
-            badgeText: 'Безопасный',
-            badgeStyle: 'bg-zinc-700',
-            specs: ['Блок д/у', '2 пульта', 'Линия фотоэлементов'],
-            price: 'от 2250 BYN',
-            productActionKey: 'nice-to4016kit1',
-            image: '/automation-swing/webp/nice_to4016p.webp',
-            description: 'Комплект Nice TO4016KIT1 включает блок управления, 2 пульта и линию фотоэлементов. Обеспечивает максимальный уровень безопасности благодаря системе обнаружения препятствий.',
-        },
-        {
-            id: 'nice-to5016r-kit',
-            title: 'Nice TO5016Р KIT',
-            subtitle: 'Мощный привод',
-            badgeText: 'Мощный',
-            badgeStyle: 'bg-zinc-700',
-            specs: ['Блок д/у', '2 пульта д/у', 'Мощный'],
-            price: 'от 2130 BYN',
-            productActionKey: 'nice-to5016r-kit',
-            image: '/automation-swing/webp/nice_5016p.webp',
-            description: 'Мощный привод Nice TO5016Р KIT с блоком управления и 2 пультами. Предназначен для тяжелых распашных ворот. Гарантирует плавную и надежную работу механизма.',
-        },
-        {
-            id: 'nice-hy7005kit',
-            title: 'Nice HY7005KIT',
-            subtitle: 'Гидравлический привод',
-            badgeText: 'Премиум',
-            badgeStyle: 'bg-black',
-            specs: ['Блок д/у', '2 пульта д/у', 'Гидравлический'],
-            price: 'от 2510 BYN',
-            productActionKey: 'nice-hy7005kit',
-            image: '/automation-swing/webp/nice_hy7005.webp',
-            description: 'Гидравлический привод Nice HY7005KIT с блоком управления и 2 пультами. Премиальное решение для автоматизации тяжелых распашных ворот. Обеспечивает плавную работу и длительный срок службы.',
-        },
-    ];
+    const catalogProducts = getProducts('automation-swing');
+    const niceProducts: Product[] = catalogProducts.filter((p) => p.tab === 'nice').map(toProductCard);
 
     // Tab 2: Автоматика Alutech (2 products)
-    const alutechProducts: Product[] = [
-        {
-            id: 'alutech-am-5000kit',
-            title: 'Алютех AM-5000KIT',
-            subtitle: 'Линейный привод',
-            badgeText: 'Популярный',
-            badgeStyle: 'bg-slate-900',
-            specs: ['Привод линейный - 2 шт', 'Б/у (CUSD-1)', 'Надежный'],
-            price: 'от 1430 BYN',
-            productActionKey: 'alutech-am-5000kit',
-            image: '/automation-swing/webp/alutech_am5000.webp',
-            description: 'Комплект Алютех AM-5000KIT включает 2 линейных привода и блок управления CUSD-1. Предназначен для автоматизации распашных ворот. Обеспечивает надежную и плавную работу механизма.',
-        },
-        {
-            id: 'alutech-asw-4000kit',
-            title: 'Алютех ASW-4000KIT',
-            subtitle: 'Рычажный привод',
-            badgeText: 'Оптимальный',
-            badgeStyle: 'bg-zinc-700',
-            specs: ['Привод рычажный - 2 шт', 'Б/у (CUSD-1)', 'Компактный'],
-            price: 'от 1440 BYN',
-            productActionKey: 'alutech-asw-4000kit',
-            image: '/automation-swing/webp/alutech_asw4000.webp',
-            description: 'Комплект Алютех ASW-4000KIT оснащен 2 рычажными приводами и блоком управления CUSD-1. Компактное решение для автоматизации распашных ворот с ограниченным пространством.',
-        },
-    ];
+    const alutechProducts: Product[] = catalogProducts.filter((p) => p.tab === 'alutech').map(toProductCard);
 
     const processSteps: Step[] = [
         {
@@ -332,6 +216,10 @@ export default function AutomationSwingPage() {
             description: 'Оплата после выполнения работ и проверки работоспособности системы',
         },
     ];
+
+    if (!hydrated) {
+        return <DataLoading/>;
+    }
 
     return (
         <>

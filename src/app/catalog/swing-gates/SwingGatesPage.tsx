@@ -25,9 +25,13 @@ import {Project, SplitPortfolio} from '@/components/features/split-portfolio';
 import ProductFeaturesSection from '@/components/features/product-features-section';
 import ProcessMap, {Step} from '@/components/features/process-map';
 import {useFeedbackModal} from '@/contexts/FeedbackModalContext';
+import {useSiteData} from '@/contexts/SiteDataContext';
+import {DataLoading} from '@/components/features/data-loading';
+import {formatPrice, projectTitle} from '@/data/types';
 
 export default function SwingGatesPage() {
     const {openModal} = useFeedbackModal();
+    const { getProjects, hydrated } = useSiteData();
 
     const gateCategories = [
         {
@@ -199,43 +203,18 @@ export default function SwingGatesPage() {
         },
     ];
 
-    const portfolioItems = [
-        {
-            location: 'д. Ждановичи',
-            series: 'Сэндвич-панель',
-            color: 'Антрацит',
-            automation: 'Nice для распашных ворот',
-            dimensions: '4000 x 2000 мм',
-            timeline: '1 день'
-        },
-        {
-            location: 'Минск, Уручье',
-            series: 'Кованые',
-            color: 'RAL 9016 Белый',
-            automation: 'Alutech AM-5000',
-            dimensions: '3500 x 2000 мм',
-            timeline: '1 день'
-        },
-        {
-            location: 'Минский р-н, Смолевичи',
-            series: 'Профлист',
-            color: 'Профнастил',
-            automation: 'Ручное управление',
-            dimensions: '4500 x 2200 мм',
-            timeline: '2 дня'
-        },
-    ];
+    const portfolioItems = getProjects('swing', true);
 
     const swingProjects: Project[] = portfolioItems.map((item, index) => ({
         id: index + 1,
-        title: `Распашные ворота ${item.series}`,
+        title: projectTitle(item),
         location: item.location,
         material: `Серия ${item.series}, цвет ${item.color}`,
         automation: item.automation,
         installationTime: item.timeline,
-        priceRange: 'от 2000 BYN',
+        priceRange: formatPrice(item),
         description: `Распашные ворота серии ${item.series} в цвете ${item.color}. Размеры: ${item.dimensions}. Профессиональная установка с гарантией.`,
-        image: '/main/webp/swing.webp',
+        image: item.images[0] ?? '/main/webp/swing.webp',
     }));
 
     const processSteps: Step[] = [
@@ -340,6 +319,10 @@ export default function SwingGatesPage() {
             </>
         );
     };
+
+    if (!hydrated) {
+        return <DataLoading/>;
+    }
 
     return (
         <>
@@ -509,7 +492,7 @@ export default function SwingGatesPage() {
             {/* Trust Section */}
 
             {/* Portfolio Showcase */}
-            <SplitPortfolio background='white' projects={swingProjects}/>
+            {swingProjects.length > 0 && <SplitPortfolio background='white' projects={swingProjects}/>}
 
             {/* Price Lists / Downloads */}
             {/*<Section background="muted">*/}

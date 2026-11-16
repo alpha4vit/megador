@@ -10,9 +10,13 @@ import {Project, SplitPortfolio} from '@/components/features/split-portfolio';
 import ProductPricingGrid, {PricingTier} from '@/components/features/product-pricing-grid';
 import ProductFeaturesSection from '@/components/features/product-features-section';
 import { useFeedbackModal } from '@/contexts/FeedbackModalContext';
+import {useSiteData} from '@/contexts/SiteDataContext';
+import {DataLoading} from '@/components/features/data-loading';
+import {formatPrice, projectTitle} from '@/data/types';
 
 export default function BarriersPage() {
     const { openModal } = useFeedbackModal();
+    const { getProjects, hydrated } = useSiteData();
     const [activeBrand, setActiveBrand] = useState('alutech');
 
     const parseSpecsToFeatures = (specs: string[]) => {
@@ -158,44 +162,23 @@ export default function BarriersPage() {
         },
     ];
 
-    const portfolioItems = [
-        {
-            location: 'Минск, Парковка ТЦ',
-            series: 'NICE S-Bar',
-            color: 'Стальной',
-            automation: 'NICE',
-            dimensions: '6000 мм',
-            timeline: '1 день'
-        },
-        {
-            location: 'Минский р-н, Складской комплекс',
-            series: 'NICE M-Bar',
-            color: 'INOX',
-            automation: 'NICE',
-            dimensions: '9000 мм',
-            timeline: '2 дня'
-        },
-        {
-            location: 'Минск, Жилой комплекс',
-            series: 'Алютех AN-Motors',
-            color: 'Стальной',
-            automation: 'AN-Motors',
-            dimensions: '5000 мм',
-            timeline: '1 день'
-        },
-    ];
+    const portfolioItems = getProjects('barriers', true);
 
     const barrierProjects: Project[] = portfolioItems.map((item, index) => ({
         id: index + 1,
-        title: `Шлагбаум ${item.series}`,
+        title: projectTitle(item),
         location: item.location,
         material: `Серия ${item.series}, корпус ${item.color}`,
         automation: item.automation,
         installationTime: item.timeline,
-        priceRange: 'от 2250 BYN',
+        priceRange: formatPrice(item),
         description: `Автоматический шлагбаум серии ${item.series} с корпусом ${item.color}. Длина стрелы: ${item.dimensions}. Профессиональная установка с гарантией.`,
-        image: '/images/portfolio/barriers-placeholder.jpg',
+        image: item.images[0] ?? '/images/portfolio/barriers-placeholder.jpg',
     }));
+
+    if (!hydrated) {
+        return <DataLoading/>;
+    }
 
     return (
         <>
@@ -380,7 +363,7 @@ export default function BarriersPage() {
 
             {/* Portfolio Showcase */}
             <Section background='muted' className="py-8 lg:py-20">
-                    <SplitPortfolio background='muted' projects={barrierProjects} />
+                    {barrierProjects.length > 0 && <SplitPortfolio background='muted' projects={barrierProjects} />}
             </Section>
 
             {/* CTA Section */}
