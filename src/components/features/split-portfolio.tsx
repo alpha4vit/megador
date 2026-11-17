@@ -15,55 +15,10 @@ export interface Project {
     image?: string;
 }
 
-const defaultProjects: Project[] = [
-    {
-        id: 1,
-        title: 'Откатные ворота',
-        location: 'д. Тарасово',
-        material: 'Сэндвич-панель ADS 400, оцинкованная шина',
-        automation: 'Alutech SG.02.002 до 700кг',
-        installationTime: '1 день',
-        priceRange: 'от 3500 BYN',
-        description: 'Консольные откатные ворота с сэндвич-наполнением. Установлена автоматика Alutech с пультом управления. Каркас из профильной трубы 60x40 мм с порошковой покраской.',
-        image: '/main/webp/sliding.webp',
-    },
-    {
-        id: 2,
-        title: 'Секционные ворота',
-        location: 'г. Минск',
-        material: 'Alutech Prestige, толщина 45мм',
-        automation: 'С автоматикой Nice',
-        installationTime: '1 день',
-        priceRange: 'от 1400 BYN',
-        description: 'Панорамные секционные ворота серии Prestige. Двойные ролики, уплотнители EPDM. Возможность цифрового принта "под дерево".',
-        image: '/main/webp/sectional2.webp',
-    },
-    {
-        id: 3,
-        title: 'Забор плетенка',
-        location: 'Минский р-н',
-        material: 'Дерево (строганая доска технической сушки)',
-        automation: 'Без автоматики',
-        installationTime: '3-4 дня',
-        priceRange: 'от 45 BYN/м.кв',
-        description: 'Объемное деревянное ограждение из переплетенных досок. Обеспечивает полную приватность участка, обладает высокой прочностью и оригинальной фактурой.',
-        image: '/main/webp/fence.webp',
-    },
-    {
-        id: 4,
-        title: 'Распашные ворота',
-        location: 'д. Ждановичи',
-        material: 'Сэндвич-панель, кованые элементы',
-        automation: 'Nice для распашных ворот',
-        installationTime: '1 день',
-        priceRange: 'от 6000 BYN',
-        description: 'Распашные ворота из металлического евроштакетника в два ряда. Электромеханический привод с дистанционным управлением.',
-        image: '/main/webp/swing.webp',
-    },
-];
+
 
 interface SplitPortfolioProps {
-    projects?: Project[];
+    projects: Project[];
     background?: 'white' | 'muted' | 'gray';
 }
 
@@ -73,7 +28,7 @@ const backgrounds = {
     gray: 'bg-zinc-50 border-y border-gray-100/50',
 };
 
-export const SplitPortfolio = ({projects = defaultProjects, background = 'white'}: SplitPortfolioProps) => {
+export const SplitPortfolio = ({projects, background = 'white'}: SplitPortfolioProps) => {
     const [activeProject, setActiveProject] = useState(0);
     const [activePortfolioSlide, setActivePortfolioSlide] = useState(0);
     const sectionsRef = useRef<(HTMLDivElement | null)[]>([]);

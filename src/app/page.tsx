@@ -1,6 +1,6 @@
 import { Hero } from "@/components/features/hero";
 import { LeadQuiz } from "@/components/features/lead-quiz";
-import { SplitPortfolio } from "@/components/features/split-portfolio";
+import { ApiSplitPortfolio } from "@/components/features/api-split-portfolio";
 import { Section } from "@/components/ui/section";
 import { Container } from "@/components/ui/container";
 
@@ -26,7 +26,7 @@ export default function Home() {
       </Section>
 
       {/* Split Portfolio Section */}
-      <SplitPortfolio />
+      <ApiSplitPortfolio />
 
       {/* Features Section */}
       <Section background="muted">
