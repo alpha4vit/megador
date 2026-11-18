@@ -11,4 +11,6 @@ export const PORTFOLIO_FILTERS: { id: ProjectSection | 'ALL'; label: string }[] 
     { id: 'sectional', label: 'Секционные' },
     { id: 'roller-gates', label: 'Роллетные ворота' },
     { id: 'barriers', label: 'Шлагбаумы' },
+    { id: 'sun-protection', label: 'Солнцезащита' },
+    { id: 'docking-equipment', label: 'Перегрузочная техника' },
 ];

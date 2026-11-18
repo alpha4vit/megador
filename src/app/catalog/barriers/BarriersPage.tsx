@@ -210,11 +210,7 @@ export default function BarriersPage() {
                                     <Link href="/" className="hover:text-[#E65F2B] transition-colors">
                                         Главная
                                     </Link>
-                                    <span>/</span>
-                                    <Link href="/catalog" className="hover:text-[#E65F2B] transition-colors">
-                                        Каталог
-                                    </Link>
-                                    <span>/</span>
+                                    <span className="text-slate-400" aria-hidden="true">›</span>
                                     <span className="text-white lg:text-slate-900">Автоматические шлагбаумы</span>
                                 </nav>
 

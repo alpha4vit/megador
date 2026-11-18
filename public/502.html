@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Временный сбой — Megador</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: #F8F9FA;
+    color: #1E293B;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .card {
+    max-width: 640px;
+    width: 100%;
+    text-align: center;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    margin-bottom: 24px;
+    border-radius: 999px;
+    background: #FFF5F0;
+    border: 1px solid rgba(230, 95, 43, 0.3);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #E65F2B;
+  }
+  .badge .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #E65F2B;
+    animation: blink 1.2s ease-in-out infinite;
+  }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+  svg { width: 100%; height: auto; max-width: 420px; margin: 0 auto 24px; display: block; }
+  h1 {
+    font-size: clamp(26px, 5vw, 40px);
+    font-weight: 800;
+    color: #2F3E46;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+  p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #64748B;
+    max-width: 480px;
+    margin: 0 auto 28px;
+  }
+  .actions { margin-bottom: 28px; }
+  button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    background: #E65F2B;
+    color: #fff;
+    transition: background 0.2s;
+  }
+  button:hover { background: #D45425; }
+  .phones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 24px;
+  }
+  .phones a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #2F3E46;
+    text-decoration: none;
+  }
+  .phones a:hover { color: #E65F2B; }
+  .phones svg { width: 16px; height: 16px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="badge"><span class="dot"></span>Временный сбой</div>
+
+  <!-- Automatic barrier illustration, code 502 -->
+  <svg viewBox="0 0 420 260" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Шлагбаум, код 502">
+    <defs>
+      <pattern id="boom-stripes" width="18" height="18" patternUnits="userSpaceOnUse" patternTransform="rotate(24)">
+        <rect width="18" height="18" fill="#F8F9FA"/>
+        <rect width="9" height="18" fill="#E65F2B"/>
+      </pattern>
+      <linearGradient id="post-grad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#334155"/>
+        <stop offset="100%" stop-color="#1E293B"/>
+      </linearGradient>
+    </defs>
+    <line x1="16" y1="222" x2="404" y2="222" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round"/>
+    <line x1="16" y1="228" x2="120" y2="228" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round"/>
+    <line x1="300" y1="228" x2="404" y2="228" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round"/>
+    <rect x="34" y="96" width="38" height="118" rx="7" fill="url(#post-grad)"/>
+    <rect x="26" y="208" width="54" height="14" rx="5" fill="#1E293B"/>
+    <rect x="40" y="104" width="4" height="100" rx="2" fill="#475569" opacity="0.6"/>
+    <rect x="46" y="82" width="14" height="15" rx="4" fill="#1E293B"/>
+    <circle cx="53" cy="73" r="8" fill="#E65F2B">
+      <animate attributeName="opacity" values="1;0.25;1" dur="1.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="53" cy="73" r="3.5" fill="#FCA5A5"/>
+    <g transform="rotate(-7 210 92)">
+      <rect x="58" y="80" width="310" height="15" rx="4" fill="url(#boom-stripes)" stroke="#1E293B" stroke-width="1.5"/>
+      <rect x="58" y="86.5" width="310" height="2" fill="#1E293B" opacity="0.25"/>
+    </g>
+    <circle cx="60" cy="95" r="10" fill="#1E293B"/>
+    <circle cx="60" cy="95" r="4" fill="#E65F2B"/>
+    <line x1="292" y1="80" x2="292" y2="106" stroke="#1E293B" stroke-width="2.5" stroke-linecap="round"/>
+    <rect x="256" y="106" width="72" height="46" rx="9" fill="#FFFFFF" stroke="#1E293B" stroke-width="2"/>
+    <rect x="256" y="106" width="72" height="10" rx="5" fill="#E65F2B"/>
+    <text x="292" y="143" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="800" font-size="22" fill="#1E293B" letter-spacing="1">502</text>
+    <path d="M30 216l8-8M38 216l8-8M46 216l8-8" stroke="#E65F2B" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+  </svg>
+
+  <h1>Проезд временно закрыт на обслуживание</h1>
+  <p>Сервер временно недоступен — мы уже восстанавливаем работу. Попробуйте обновить страницу через несколько секунд или свяжитесь с нами напрямую по телефону.</p>
+
+  <div class="actions">
+    <button onclick="location.reload()">Обновить страницу</button>
+  </div>
+
+  <div class="phones">
+    <a href="tel:+375296237563">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      +375 (29) 623 75 63
+    </a>
+    <a href="tel:+375333026676">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      +375 (33) 302 66 76
+    </a>
+  </div>
+</div>
+</body>
+</html>

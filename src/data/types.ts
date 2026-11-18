@@ -12,7 +12,9 @@ export type SectionKey =
     | 'accessories'
     | 'automation-swing'
     | 'automation-sliding'
-    | 'automation-sectional';
+    | 'automation-sectional'
+    | 'sun-protection'
+    | 'docking-equipment';
 
 /** Catalog sections that render product cards (automation pages + accessories). */
 export type ProductSection =
@@ -20,10 +22,12 @@ export type ProductSection =
     | 'automation-swing'
     | 'automation-sliding'
     | 'automation-sectional'
-    | 'roller-gates';
+    | 'roller-gates'
+    | 'sun-protection'
+    | 'docking-equipment';
 
 /** Unified section for completed installations (portfolio + service-page examples). */
-export type ProjectSection = 'sectional' | 'sliding' | 'swing' | 'barriers' | 'roller-gates';
+export type ProjectSection = 'sectional' | 'sliding' | 'swing' | 'barriers' | 'roller-gates' | 'sun-protection' | 'docking-equipment';
 
 /** Localized Russian names for project sections — used as automatic title fallbacks. */
 export const PROJECT_SECTION_LABELS: Record<ProjectSection, string> = {
@@ -32,6 +36,8 @@ export const PROJECT_SECTION_LABELS: Record<ProjectSection, string> = {
     swing: 'Распашные ворота',
     barriers: 'Шлагбаумы',
     'roller-gates': 'Роллетные ворота',
+    'sun-protection': 'Внешняя солнцезащита',
+    'docking-equipment': 'Перегрузочная техника',
 };
 
 export interface Spec {

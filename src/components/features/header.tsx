@@ -3,38 +3,41 @@
 import {useEffect, useRef, useState} from 'react';
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
-import {ChevronDown, Cog, Factory, Fence, Layers, Menu, Phone, Shield, Warehouse, X} from 'lucide-react';
+import {ChevronDown, Cog, Forklift, Menu, Phone, Sun, X} from 'lucide-react';
+import {
+    BarrierIcon, RemoteIcon, RollerGateIcon, SectionalGateIcon, SlidingGateIcon, SwingGateIcon,
+} from './catalog-icons';
 import {Button} from '../ui/button';
 import {useFeedbackModal} from '@/contexts/FeedbackModalContext';
 
 const catalogItems = [
   {
     title: 'Секционные ворота',
-    icon: Warehouse,
+    icon: SectionalGateIcon,
     description: 'Для гаража и промышленных объектов',
     href: '/catalog/sectional-gates',
   },
   {
     title: 'Роллетные ворота',
-    icon: Layers,
+    icon: RollerGateIcon,
     description: 'Роллетные ворота и роллеты',
     href: '/catalog/roller-gates',
   },
   {
     title: 'Откатные ворота',
-    icon: Fence,
+    icon: SlidingGateIcon,
     description: 'Консольные и подвесные системы',
     href: '/catalog/sliding-gates',
   },
   {
     title: 'Распашные ворота',
-    icon: Shield,
+    icon: SwingGateIcon,
     description: 'Кованые и из сэндвич-панелей',
     href: '/catalog/swing-gates',
   },
   {
     title: 'Шлагбаумы',
-    icon: Factory,
+    icon: BarrierIcon,
     description: 'Nice и Alutech',
     href: '/catalog/barriers',
   },
@@ -58,9 +61,21 @@ const catalogItems = [
   },
   {
     title: 'Аксессуары',
-    icon: Cog,
+    icon: RemoteIcon,
     description: 'Пульты, датчики и GSM-модули',
     href: '/catalog/accessories',
+  },
+  {
+    title: 'Внешняя солнцезащита',
+    icon: Sun,
+    description: 'Перголы, маркизы и роллеты',
+    href: '/vneshnyaya-solncezashchita',
+  },
+  {
+    title: 'Перегрузочная техника',
+    icon: Forklift,
+    description: 'Доклевеллеры, докшелтеры, площадки',
+    href: '/peregruzochnaya-tehnika',
   },
 ];
 
@@ -128,7 +143,7 @@ export const Header = () => {
                     className="flex items-center text-[#2F3E46] hover:text-[#E65F2B] transition-colors font-medium py-2"
                     onClick={() => setIsCatalogOpen(!isCatalogOpen)}
                 >
-                  Каталог
+                  Продукция
                   <ChevronDown className={`w-4 h-4 ml-1 transition-transform ${isCatalogOpen ? 'rotate-180' : ''}`} />
                 </button>
 
@@ -137,16 +152,15 @@ export const Header = () => {
                     /* ИСПРАВЛЕНО: absolute заменен на fixed, а top-full на top-[72px] (или высоту вашего хедера),
                        чтобы меню растягивалось на весь экран и больше никогда не превращалось в суп */
                     <div
-                        className="fixed top-[72px] left-0 w-full pt-4 opacity-100 transition-opacity duration-150 ease-out z-50"
+                        className="fixed top-[72px] left-1/2 -translate-x-1/2 w-[92vw] max-w-5xl pt-4 opacity-100 transition-opacity duration-150 ease-out z-50"
                         onMouseEnter={handleCatalogEnter}
                         onMouseLeave={handleCatalogLeave}
                     >
-                      {/* Ограничитель ширины: узкая карточка, идеально центрированная по экрану */}
-                      <div className="max-w-4xl mx-auto px-4 w-full">
+                      <div className="w-full">
 
-                        <div className="bg-white border border-gray-200 shadow-xl rounded-2xl px-8 py-8 w-full">
-                          {/* 3-колоночная сетка: 9 пунктов складываются в ровно 3 ряда */}
-                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
+                        <div className="bg-white border border-gray-200 shadow-xl rounded-2xl px-6 py-8 w-full">
+                          {/* 4-колоночная сетка: 11 пунктов складываются в ровно 3 ряда */}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-5 gap-y-4">
                             {catalogItems.map((item) => {
                               const Icon = item.icon;
                               const isActive = isActiveCatalogItem(item.href);
@@ -273,7 +287,7 @@ export const Header = () => {
                 className="w-full flex items-center justify-between p-4 rounded-lg text-lg font-medium text-[#2F3E46] hover:bg-[#F8F9FA] transition-colors min-h-[56px]"
                 onClick={() => setIsCatalogAccordionOpen(!isCatalogAccordionOpen)}
               >
-                <span>Каталог ворот и заборов</span>
+                <span>Продукция</span>
                 <ChevronRight
                   className={`w-5 h-5 transition-transform ${isCatalogAccordionOpen ? 'rotate-90' : ''}`}
                 />

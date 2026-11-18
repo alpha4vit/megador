@@ -52,7 +52,7 @@ export const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">Каталог</h4>
+            <h4 className="text-lg font-semibold mb-4">Продукция</h4>
             <ul className="space-y-2">
               <li>
                 <Link href="/catalog/sectional-gates" className="text-gray-300 hover:text-white transition-colors">
@@ -81,6 +81,16 @@ export const Footer = () => {
               <li>
                 <Link href="/catalog/automation-sectional" className="text-gray-300 hover:text-white transition-colors">
                   Автоматика
+                </Link>
+              </li>
+              <li>
+                <Link href="/vneshnyaya-solncezashchita" className="text-gray-300 hover:text-white transition-colors">
+                  Внешняя солнцезащита
+                </Link>
+              </li>
+              <li>
+                <Link href="/peregruzochnaya-tehnika" className="text-gray-300 hover:text-white transition-colors">
+                  Перегрузочная техника
                 </Link>
               </li>
             </ul>

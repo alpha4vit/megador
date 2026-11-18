@@ -4,7 +4,7 @@ import {useMemo, useState} from 'react';
 import Link from 'next/link';
 import {
     ExternalLink, ImageOff, LayoutDashboard, Plus, Pencil, Trash2, CheckCircle2, AlertCircle, X, LogOut,
-    FolderOpen, DoorClosed, MoveHorizontal, DoorOpen, Fence, Package, Settings, Blinds,
+    FolderOpen, DoorClosed, MoveHorizontal, DoorOpen, Fence, Package, Settings, Blinds, Sun, Forklift,
 } from 'lucide-react';
 import type {CatalogProduct, PortfolioProject, ProductSection, ProjectSection} from '@/data/types';
 import {formatPrice, projectTitle} from '@/data/types';
@@ -34,12 +34,16 @@ const SECTIONS: SectionDef[] = [
     {key: 'automation-swing', title: 'Автоматика: Распашные', icon: Settings, kind: 'product', section: 'automation-swing', entity: 'products'},
     {key: 'automation-sliding', title: 'Автоматика: Откатные', icon: Settings, kind: 'product', section: 'automation-sliding', entity: 'products'},
     {key: 'automation-sectional', title: 'Автоматика: Секционные', icon: Settings, kind: 'product', section: 'automation-sectional', entity: 'products'},
+    {key: 'sun-protection', title: 'Внешняя солнцезащита', icon: Sun, kind: 'mixed', section: 'sun-protection', entity: 'both'},
+    {key: 'docking-equipment', title: 'Перегрузочная техника', icon: Forklift, kind: 'mixed', section: 'docking-equipment', entity: 'both'},
 ];
 
 /** Canonical tab order per product section — ensures all groups are offered in the editor. */
 const KNOWN_TABS: Partial<Record<ProductSection, string[]>> = {
     'automation-sliding': ['nice', 'alutech', 'hispeed'],
     'automation-swing': ['nice', 'alutech'],
+    'sun-protection': ['zip', 'cable'],
+    'docking-equipment': ['pato', 'levelers', 'shelters', 'platforms', 'tambours', 'extras'],
 };
 
 const TAB_LABELS: Record<string, string> = {
@@ -53,6 +57,14 @@ const TAB_LABELS: Record<string, string> = {
     safety: 'Элементы безопасности',
     smart: 'Умные модули',
     rollers: 'Серии',
+    zip: 'ZIP-система',
+    cable: 'Тросовая система',
+    pato: 'Система PATO',
+    levelers: 'Доклевеллеры',
+    shelters: 'Докшелтеры',
+    platforms: 'Площадки',
+    tambours: 'Тамбуры',
+    extras: 'Доп. оборудование',
 };
 
 function isProduct(item: ManagedEntity): item is CatalogProduct {

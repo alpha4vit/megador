@@ -9,6 +9,8 @@ const FALLBACK_IMAGES: Record<ProjectSection, string> = {
     sectional: '/sectional_fallback.jpeg',
     'roller-gates': '/sectional_fallback.jpeg',
     barriers: '/barrier_fallback.jpeg',
+    'sun-protection': '/sectional_fallback.jpeg',
+    'docking-equipment': '/barrier_fallback.jpeg',
 };
 
 interface PortfolioImageFallbackProps {

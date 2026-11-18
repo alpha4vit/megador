@@ -62,7 +62,7 @@ export default function PortfolioPage() {
                     <div className="max-w-3xl">
                         <nav className="flex flex-wrap items-center gap-1 text-xs sm:text-sm whitespace-nowrap overflow-x-auto scrollbar-none text-gray-500 mb-4">
                             <Link href="/" className="hover:text-[#E65F2B] transition-colors">Главная</Link>
-                            <span>/</span>
+                            <span className="text-slate-400" aria-hidden="true">›</span>
                             <span className="text-[#2F3E46]">Наши работы</span>
                         </nav>
                         <h1
