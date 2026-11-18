@@ -54,6 +54,7 @@ export function PortfolioImage({src, alt, section, fallbackClassName, className 
             src={src}
             alt={alt}
             draggable={false}
+            loading="lazy"
             onError={() => setFailed(true)}
             className={className}
             {...rest}

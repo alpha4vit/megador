@@ -36,10 +36,15 @@ const SECTIONS: SectionDef[] = [
     {key: 'automation-sectional', title: 'Автоматика: Секционные', icon: Settings, kind: 'product', section: 'automation-sectional', entity: 'products'},
 ];
 
+/** Canonical tab order per product section — ensures all groups are offered in the editor. */
+const KNOWN_TABS: Partial<Record<ProductSection, string[]>> = {
+    'automation-sliding': ['nice', 'alutech', 'hispeed'],
+    'automation-swing': ['nice', 'alutech'],
+};
+
 const TAB_LABELS: Record<string, string> = {
     nice: 'NICE',
     alutech: 'Alutech',
-    'nice-alutech': 'NICE & Alutech',
     hispeed: 'Hi-Speed',
     household: 'Бытовые / гаражные',
     industrial: 'Промышленные',
@@ -110,8 +115,10 @@ export default function AdminPanel({onLogout}: {onLogout: () => void}) {
 
     const tabs = useMemo(() => {
         if (section.entity !== 'products' && section.entity !== 'both') return [];
-        const set = new Set(products.filter((p) => p.section === section.section).map((p) => p.tab));
-        return [...set];
+        const present = new Set(products.filter((p) => p.section === section.section).map((p) => p.tab));
+        const known = (section.section && KNOWN_TABS[section.section as ProductSection]) ?? [];
+        known.forEach((t) => present.add(t));
+        return [...known.filter((t) => present.has(t)), ...[...present].filter((t) => !known.includes(t))];
     }, [section, products]);
 
     const editorConfig: EditorConfig = {

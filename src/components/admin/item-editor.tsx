@@ -4,7 +4,7 @@ import {useEffect, useState} from 'react';
 import {X} from 'lucide-react';
 import type {CatalogProduct, PortfolioProject, ProductSection, ProjectSection, Spec} from '@/data/types';
 import {PROJECT_SECTION_LABELS} from '@/components/features/portfolio/portfolio-data';
-import {Field, ImageManager, PriceFields, Select, SpecEditor, TextArea, TextInput, Checkbox} from './fields';
+import {Field, BadgeStyleSelect, ImageManager, PriceFields, Select, SpecEditor, TextArea, TextInput, Checkbox} from './fields';
 
 export type EditorKind = 'product' | 'project' | 'mixed';
 
@@ -23,8 +23,6 @@ interface ItemEditorProps {
     onSave: (entity: CatalogProduct | PortfolioProject) => void;
     onClose: () => void;
 }
-
-const BADGE_STYLES = ['bg-slate-900', 'bg-zinc-700', 'bg-zinc-800', 'bg-[#E65F2B]', 'bg-black', 'bg-emerald-700', 'bg-blue-800'];
 
 const inputShell =
     'w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-[#2F3E46] focus:outline-none focus:ring-2 focus:ring-[#E65F2B]/40 focus:border-[#E65F2B]';
@@ -89,6 +87,7 @@ export function ItemEditor({config, initial, onSave, onClose}: ItemEditorProps) 
     const [badgesText, setBadgesText] = useState(initial && 'badges' in initial ? initial.badges.join(', ') : '');
     const [coordLat, setCoordLat] = useState(initial && 'coordinates' in initial && initial.coordinates ? String(initial.coordinates[0]) : '');
     const [coordLng, setCoordLng] = useState(initial && 'coordinates' in initial && initial.coordinates ? String(initial.coordinates[1]) : '');
+    const [photoError, setPhotoError] = useState<string | null>(null);
 
     useEffect(() => {
         const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
@@ -188,12 +187,11 @@ export function ItemEditor({config, initial, onSave, onClose}: ItemEditorProps) 
                                     </Field>
                                 )}
                                 <Field label="Стиль бейджа">
-                                    <Select
+                                    <BadgeStyleSelect
                                         value={(draft as CatalogProduct).badgeStyle}
-                                        onChange={(e) => patch({badgeStyle: e.target.value})}
-                                    >
-                                        {BADGE_STYLES.map((s) => <option key={s} value={s}>{s}</option>)}
-                                    </Select>
+                                        badgeText={(draft as CatalogProduct).badgeText}
+                                        onChange={(v) => patch({badgeStyle: v})}
+                                    />
                                 </Field>
                                 <Field label="Кнопка (текст)">
                                     <TextInput value={(draft as CatalogProduct).buttonText ?? ''} onChange={(e) => patch({buttonText: e.target.value || undefined})} placeholder="В корзину"/>
@@ -299,7 +297,8 @@ export function ItemEditor({config, initial, onSave, onClose}: ItemEditorProps) 
                     {/* Photos */}
                     <div>
                         <h3 className="text-sm font-bold text-[#2F3E46] mb-2">Фотографии</h3>
-                        <ImageManager images={images} onChange={(imgs) => patch({images: imgs})}/>
+                        <ImageManager images={images} onChange={(imgs) => patch({images: imgs})} onError={setPhotoError}/>
+                        {photoError && <p className="text-xs text-red-600 mt-2">{photoError}</p>}
                     </div>
                 </div>
 

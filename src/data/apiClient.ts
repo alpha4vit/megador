@@ -68,6 +68,64 @@ export function apiDeleteProject(id: string): Promise<void> {
     return request<void>(`/api/v1/portfolio/${id}`, {method: 'DELETE'});
 }
 
+// ---------- Media uploads ----------
+
+export interface UploadedImage {
+    id: string;
+    /** Relative URL like /api/v1/media/{id} — served lazily, binary never inlined. */
+    url: string;
+    width: number | null;
+    height: number | null;
+    sizeBytes: number;
+}
+
+/** Uploads an image file; backend compresses to WebP and stores it. Requires admin JWT. */
+export async function apiUploadImage(file: File): Promise<UploadedImage> {
+    const token = getAdminToken();
+    const form = new FormData();
+    form.append('file', file);
+    const res = await fetch(`${API_BASE}/api/v1/media`, {
+        method: 'POST',
+        headers: token ? {Authorization: `Bearer ${token}`} : {},
+        body: form,
+    });
+    if (res.status === 401 || res.status === 403) {
+        clearAdminToken();
+        if (typeof window !== 'undefined' && window.location.pathname.startsWith('/admin')) {
+            window.location.assign('/admin');
+        }
+    }
+    if (!res.ok) {
+        const body = await res.text().catch(() => '');
+        throw new Error(`Upload failed: ${res.status} ${body}`);
+    }
+    return res.json() as Promise<UploadedImage>;
+}
+
+/** Downloads a remote image server-side, compresses to WebP and stores it. */
+export async function apiImportImage(url: string): Promise<UploadedImage> {
+    const token = getAdminToken();
+    const res = await fetch(`${API_BASE}/api/v1/media/import`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            ...(token ? {Authorization: `Bearer ${token}`} : {}),
+        },
+        body: JSON.stringify({url}),
+    });
+    if (res.status === 401 || res.status === 403) {
+        clearAdminToken();
+        if (typeof window !== 'undefined' && window.location.pathname.startsWith('/admin')) {
+            window.location.assign('/admin');
+        }
+    }
+    if (!res.ok) {
+        const body = await res.text().catch(() => '');
+        throw new Error(`Import failed: ${res.status} ${body}`);
+    }
+    return res.json() as Promise<UploadedImage>;
+}
+
 // ---------- Payload shaping ----------
 // The backend request DTOs accept the same field names; server-managed fields
 // (id on create, createdAt/updatedAt) are ignored by Spring's Jackson config.

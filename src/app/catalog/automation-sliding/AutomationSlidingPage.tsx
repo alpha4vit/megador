@@ -136,7 +136,7 @@ function ProductGrid({ products, onProductClick }: { products: Product[]; onProd
 export default function AutomationSlidingPage() {
     const { openModal } = useFeedbackModal();
     const { getProducts, hydrated } = useSiteData();
-    const [activeTab, setActiveTab] = useState<'nice-alutech' | 'hispeed'>('nice-alutech');
+    const [activeTab, setActiveTab] = useState<'nice' | 'alutech' | 'hispeed'>('nice');
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [isAnimating, setIsAnimating] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
@@ -184,11 +184,14 @@ export default function AutomationSlidingPage() {
         }
     }, [selectedProduct]);
 
-    // Tab 1: Приводы NICE & Alutech (12 products)
+    // Tab 1: Приводы NICE
     const catalogProducts = getProducts('automation-sliding');
-    const niceAlutechProducts: Product[] = catalogProducts.filter((p) => p.tab === 'nice-alutech').map(toProductCard);
+    const niceProducts: Product[] = catalogProducts.filter((p) => p.tab === 'nice').map(toProductCard);
 
-    // Tab 2: Высокоскоростные приводы (Hi-Speed) (3 products)
+    // Tab 2: Приводы Alutech
+    const alutechProducts: Product[] = catalogProducts.filter((p) => p.tab === 'alutech').map(toProductCard);
+
+    // Tab 3: Высокоскоростные приводы (Hi-Speed)
     const hispeedProducts: Product[] = catalogProducts.filter((p) => p.tab === 'hispeed').map(toProductCard);
 
     const processSteps: Step[] = [
@@ -334,12 +337,20 @@ export default function AutomationSlidingPage() {
                     {/* Tab Navigation */}
                     <div className="w-full max-w-[900px] mx-auto bg-zinc-100/80 p-1.5 rounded-2xl flex items-center justify-between relative select-none border border-zinc-200/30 mt-2 mb-4 lg:mt-6 lg:mb-8">
                         <button
-                            onClick={() => setActiveTab('nice-alutech')}
+                            onClick={() => setActiveTab('nice')}
                             className={`flex-1 text-center py-2.5 px-3 text-xs sm:text-sm font-bold rounded-xl transition-all duration-300 relative z-10 whitespace-normal leading-tight ${
-                                activeTab === 'nice-alutech' ? 'bg-white text-[#E65F2B] shadow-sm' : 'text-gray-500 hover:text-gray-900'
+                                activeTab === 'nice' ? 'bg-white text-[#E65F2B] shadow-sm' : 'text-gray-500 hover:text-gray-900'
                             }`}
                         >
-                            Приводы NICE & Alutech
+                            Приводы NICE
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('alutech')}
+                            className={`flex-1 text-center py-2.5 px-3 text-xs sm:text-sm font-bold rounded-xl transition-all duration-300 relative z-10 whitespace-normal leading-tight ${
+                                activeTab === 'alutech' ? 'bg-white text-[#E65F2B] shadow-sm' : 'text-gray-500 hover:text-gray-900'
+                            }`}
+                        >
+                            Приводы Alutech
                         </button>
                         <button
                             onClick={() => setActiveTab('hispeed')}
@@ -352,11 +363,18 @@ export default function AutomationSlidingPage() {
                     </div>
 
                     {/* Tab Content */}
-                    {activeTab === 'nice-alutech' && (
+                    {activeTab === 'nice' && (
                         <>
-                            <h3 className="text-2xl font-bold text-[#2F3E46] mb-2 text-center">Приводы NICE & Alutech</h3>
+                            <h3 className="text-2xl font-bold text-[#2F3E46] mb-2 text-center">Приводы NICE</h3>
                             <p className="text-gray-600 text-center mb-6">Надежные приводы для откатных ворот различной грузоподъемности</p>
-                            <ProductGrid products={niceAlutechProducts} onProductClick={setSelectedProduct} />
+                            <ProductGrid products={niceProducts} onProductClick={setSelectedProduct} />
+                        </>
+                    )}
+                    {activeTab === 'alutech' && (
+                        <>
+                            <h3 className="text-2xl font-bold text-[#2F3E46] mb-2 text-center">Приводы Alutech</h3>
+                            <p className="text-gray-600 text-center mb-6">Надежные приводы для откатных ворот различной грузоподъемности</p>
+                            <ProductGrid products={alutechProducts} onProductClick={setSelectedProduct} />
                         </>
                     )}
                     {activeTab === 'hispeed' && (
