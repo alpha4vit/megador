@@ -83,13 +83,19 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    line-height: 1;
     font-size: 14px;
     font-weight: 600;
     color: #2F3E46;
     text-decoration: none;
   }
   .phones a:hover { color: #E65F2B; }
-  .phones svg { width: 16px; height: 16px; }
+  .phones svg {
+    display: block;
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+  }
 </style>
 </head>
 <body>
